@@ -1,0 +1,157 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+* {
+    margin: 0;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;
+  height: 100vh;
+  gap: 40px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.pandaimg {
+  width: 103.53px;
+  height: 103.88px;
+}
+
+.pandatext {
+  font-size: 66.34px;
+  font-weight: 700;
+  color: #3692FF;
+  line-height: 89.56px;
+  left: 22.24px;
+  position: relative;
+}
+
+.cont {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.p1 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+  color: #1F2937;
+}
+
+.inputmail, .inputpass {
+  width: 592px;
+  height: 24px;
+  border-radius: 12px;
+  padding: 16px 24px 16px 24px;
+  background-color: #F3F4F6;
+  border: none;
+  font-size: 16px;
+  color: #9CA3AF;
+}
+
+.inputmail:focus, .inputpass:focus {
+  border: 1px solid #3692FF;
+}
+
+.mail, .pass {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.but {
+  width: 640px;
+  height: 56px;
+  border-radius: 40px;
+  background-color: #9CA3AF;
+  color: #F3F4F6;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+}
+
+.simplebox {
+  width: 594px;
+  height: 42px;
+  background-color: #E6F2FF;
+  border-radius: 8px;
+  padding: 16px 23px 16px 23px;
+  display: flex;
+}
+
+.simplecont {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  width: 594px;
+  color: #1F2937;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 26px;
+}
+
+.sns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.snsimg {
+  width: 42px;
+  height: 42px;
+}
+
+.tosignup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.p3 {
+  color: #1F2937;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+a {
+  color: #3692FF;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 24px; 
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.password-container {
+  position: relative;
+  display: inline-block;
+}
