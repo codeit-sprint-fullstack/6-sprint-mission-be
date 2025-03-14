@@ -1,22 +1,28 @@
 import express from 'express';
-
 import { Product } from '../../models/Product.js';
 
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res) => {
-  const { offset = 0, limit = 10, sort = 'recent' } = req.query;
-
-  console.log(offset, limit, sort);
+  const { offset = 0, limit = 10, sort = 'recent', keyword = '' } = req.query;
 
   const sortOption = {
-    createAt: sort === 'recent' ? 'desc' : 'asc',
+    createdAt: sort === 'recent' ? 'desc' : 'asc',
   };
 
-  const products = await Product.find()
-    .sort(sortOption)
+  const searchCondition = keyword
+    ? {
+        name: {
+          $regex: keyword,
+          $options: 'i',
+        },
+      }
+    : {};
+
+  const products = await Product.find(searchCondition)
     .limit(limit)
-    .skip(offset);
+    .skip(offset)
+    .sort(sortOption);
 
   res.status(200).send(products);
 });
