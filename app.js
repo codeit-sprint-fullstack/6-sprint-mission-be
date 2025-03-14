@@ -52,9 +52,18 @@ app.use((err, req, res, next) => {
   next();
 });
 
-mongoose.connect(process.env.DATABASE_URL).then(() => {
-  console.log('Connected to MongoDB');
-});
+mongoose
+  .connect(process.env.DATABASE_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true, // TLS 강제 사용
+  })
+  .then(() => {
+    console.log('MongoDB connected');
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+  });
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
