@@ -31,6 +31,10 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+app.get('/', async (req, res) => {
+  res.send('서버가 연결되었습니다!');
+});
+
 app.use(indexRouter);
 
 app.use((err, req, res, next) => {

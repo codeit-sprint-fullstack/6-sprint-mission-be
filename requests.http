@@ -1,5 +1,8 @@
+### 서버 연결 확인
+GET http://localhost:3000/
+
 ### 제품 목록 조회
-GET http://localhost:3000/products?sort=recent
+GET http://localhost:3000/products?
 
 ### 제품 상세 조회
 GET http://localhost:3000/products/67d244e497d68e56da7b8a8b

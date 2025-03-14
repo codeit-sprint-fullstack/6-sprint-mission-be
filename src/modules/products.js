@@ -5,13 +5,18 @@ import { Product } from '../../models/Product.js';
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res) => {
-  const sort = req.query.sort;
+  const { offset = 0, limit = 10, sort = 'recent' } = req.query;
+
+  console.log(offset, limit, sort);
 
   const sortOption = {
     createAt: sort === 'recent' ? 'desc' : 'asc',
   };
 
-  const products = await Product.find().sort(sortOption);
+  const products = await Product.find()
+    .sort(sortOption)
+    .limit(limit)
+    .skip(offset);
 
   res.status(200).send(products);
 });
