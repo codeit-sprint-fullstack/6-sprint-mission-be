@@ -16,10 +16,9 @@ const productSchema = new mongoose.Schema(
     },
     tags: {
       type: [String],
-      required: true,
     },
     likes: {
-      type: [String],
+      type: Number,
     },
     // TODO: 추후 이미지 업로드 기능 추가 시 사용
     // images: {

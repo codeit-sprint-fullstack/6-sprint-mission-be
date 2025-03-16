@@ -4,27 +4,36 @@ import { Product } from '../../models/Product.js';
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res) => {
-  const { offset = 0, limit = 10, sort = 'recent', keyword = '' } = req.query;
+  const {
+    page = 0,
+    pageSize = 10,
+    orderBy = 'recent',
+    keyWord = '',
+  } = req.query;
 
   const sortOption = {
-    createdAt: sort === 'recent' ? 'desc' : 'asc',
+    createdAt: orderBy === 'recent' ? 'desc' : 'asc',
   };
 
-  const searchCondition = keyword
+  const searchCondition = keyWord
     ? {
         name: {
-          $regex: keyword,
+          $regex: keyWord,
           $options: 'i',
         },
       }
     : {};
 
-  const products = await Product.find(searchCondition)
-    .limit(limit)
-    .skip(offset)
+  console.log(keyWord);
+
+  const productsList = await Product.find(searchCondition)
+    .limit(pageSize)
+    .skip(page)
     .sort(sortOption);
 
-  res.status(200).send(products);
+  const produtcsTotalCount = (await Product.find(searchCondition)).length;
+
+  res.status(200).send({ list: productsList, totalCount: produtcsTotalCount });
 });
 
 productsRouter.get('/:id', async (req, res) => {
@@ -40,6 +49,9 @@ productsRouter.get('/:id', async (req, res) => {
 productsRouter.post('/registration', async (req, res, next) => {
   try {
     const product = await Product.create(req.body);
+
+    console.log(product);
+
     res.status(201).send(product);
   } catch (err) {
     next(err);
