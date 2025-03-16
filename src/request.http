@@ -1,0 +1,26 @@
+GET http://localhost:3000/items
+
+###
+POST http://localhost:3000/items 
+Content-Type: application/json
+
+{
+    "name":"노트북",
+    "description":"나눔",
+    "price":0,
+    "tags": "전자"
+}
+
+###
+PATCH http://localhost:3000/items/67d671e65a66b145bdeaff03
+Content-Type: application/json
+
+{
+    "name":"티비"
+}
+
+
+
+
+###
+DELETE http://localhost:3000/items/67d671f5502e4b1e301813a1
