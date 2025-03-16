@@ -3,47 +3,55 @@ import { Product } from '../../models/Product.js';
 
 const productsRouter = express.Router();
 
-productsRouter.get('/', async (req, res) => {
-  const {
-    page = 0,
-    pageSize = 10,
-    orderBy = 'recent',
-    keyWord = '',
-  } = req.query;
+productsRouter.get('/', async (req, res, next) => {
+  try {
+    const {
+      page = 0,
+      pageSize = 10,
+      orderBy = 'recent',
+      keyWord = '',
+    } = req.query;
 
-  const sortOption = {
-    createdAt: orderBy === 'recent' ? 'desc' : 'asc',
-  };
+    const sortOption = {
+      createdAt: orderBy === 'recent' ? 'desc' : 'asc',
+    };
 
-  const searchCondition = keyWord
-    ? {
-        name: {
-          $regex: keyWord,
-          $options: 'i',
-        },
-      }
-    : {};
+    const searchCondition = keyWord
+      ? {
+          name: {
+            $regex: keyWord,
+            $options: 'i',
+          },
+        }
+      : {};
 
-  console.log(keyWord);
+    const productsList = await Product.find(searchCondition)
+      .limit(pageSize)
+      .skip(page)
+      .sort(sortOption);
 
-  const productsList = await Product.find(searchCondition)
-    .limit(pageSize)
-    .skip(page)
-    .sort(sortOption);
+    const produtcsTotalCount = (await Product.find(searchCondition)).length;
 
-  const produtcsTotalCount = (await Product.find(searchCondition)).length;
-
-  res.status(200).send({ list: productsList, totalCount: produtcsTotalCount });
+    res
+      .status(200)
+      .send({ list: productsList, totalCount: produtcsTotalCount });
+  } catch (err) {
+    next(err);
+  }
 });
 
-productsRouter.get('/:id', async (req, res) => {
-  const product = await Product.findById(req.params.id);
+productsRouter.get('/:id', async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
 
-  if (!product) {
-    return res.status(404).send({ message: 'Product not found' });
+    if (!product) {
+      return res.status(404).send({ message: 'Product not found' });
+    }
+
+    res.status(200).send(product);
+  } catch (err) {
+    next(err);
   }
-
-  res.status(200).send(product);
 });
 
 productsRouter.post('/registration', async (req, res, next) => {

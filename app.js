@@ -39,7 +39,7 @@ app.get('/', async (req, res) => {
 app.use(indexRouter);
 
 app.use((err, req, res, next) => {
-  console.log(err.name);
+  console.log(err);
 
   switch (err.name) {
     case 'ValidationError':
@@ -53,8 +53,6 @@ app.use((err, req, res, next) => {
     default:
       res.status(500).send({ message: err.message });
   }
-
-  next();
 });
 
 mongoose.connect(process.env.DATABASE_URL).then(() => {

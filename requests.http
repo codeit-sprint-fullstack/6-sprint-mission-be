@@ -6,10 +6,10 @@ GET http://localhost:3000/
 GET http://localhost:3000/products?pageSize=4&orderBy=recent
 
 ### 제품 목록 조회 (키워드 포함)
-GET http://localhost:3000/products?page=1&pageSize=4&orderBy=recent&keyWord=70
+GET http://localhost:3000/products?page=1&pageSize=4&orderBy=recent&keyWord=최대
 
 ### 제품 상세 조회
-GET http://localhost:3000/products/67d6fbd987b2e4b147b8a937
+GET http://localhost:3000/products/67d6fbd987b2e4b147b8a93
 
 ### 제품 생성
 POST http://localhost:3000/products/registration
@@ -17,12 +17,11 @@ Content-Type: application/json
 
 {
   "name": "새로 등록한 아이템",
-  "description": "청축 스위치가 장착된 게이밍용 기계식 키보드입니다. RGB 백라이트 기능을 지원합니다.",
-  "price": 159000
+  "description": "청축 스위치가 장착된 게이밍용 기계식 키보드입니다. RGB 백라이트 기능을 지원합니다."
 }
 
 ### 제품 수정
-PATCH http://localhost:3000/products/update/67d3823d24aa5472cc8f60eb
+PATCH http://localhost:3000/products/update/67d6fbd987b2e4b147b8a937
 Content-Type: application/json
 
 {
@@ -31,5 +30,5 @@ Content-Type: application/json
 
 
 ### 제품 삭제
-DELETE http://localhost:3000/products/delete/67d3823d24aa5472cc8f60eb
+DELETE http://localhost:3000/products/delete/67d6fbd987b2e4b147b8a937
 
