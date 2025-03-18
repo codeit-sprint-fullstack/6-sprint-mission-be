@@ -26,8 +26,8 @@ itemsRouter.get("/", async (req, res, next) => {
       .limit(pageSize)
       .skip(page * pageSize)
       .sort(sortOption);
-
-    res.json(items);
+    const totalCount = await Items.countDocuments(searchOption);
+    res.json({ items, totalCount });
   } catch (e) {
     next(e);
   }
