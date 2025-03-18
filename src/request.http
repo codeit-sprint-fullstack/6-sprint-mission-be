@@ -1,4 +1,4 @@
-GET http://localhost:5555/items
+GET http://localhost:5555/items?pageSize=10&page=2
 
 
 
@@ -10,10 +10,10 @@ POST http://localhost:5555/items
 Content-Type: application/json
 
 {
-    "name":"컴퓨터",
+    "name":"옷",
     "description":"나눔",
-    "price":300,
-    "tags": "전자"
+    "price":5000000,
+    "tags": "의류류"
 }
 
 ###

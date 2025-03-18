@@ -5,7 +5,7 @@ const itemsRouter = express.Router();
 itemsRouter.get("/", async (req, res, next) => {
   try {
     const {
-      page = 0,
+      page = 1,
       pageSize = null,
       orderBy = "recent",
       keyWord = "",
@@ -24,7 +24,7 @@ itemsRouter.get("/", async (req, res, next) => {
       : {};
     const items = await Items.find(searchOption)
       .limit(pageSize)
-      .skip(page * pageSize)
+      .skip((page - 1) * pageSize)
       .sort(sortOption);
     const totalCount = await Items.countDocuments(searchOption);
     res.json({ items, totalCount });
