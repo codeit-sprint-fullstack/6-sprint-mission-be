@@ -6,7 +6,7 @@ itemsRouter.get("/", async (req, res, next) => {
   try {
     const {
       page = 0,
-      pageSize = 10,
+      pageSize = null,
       orderBy = "recent",
       keyWord = "",
     } = req.query;
