@@ -1,0 +1,74 @@
+### 상품 등록 (POST)
+POST http://localhost:3000/Products
+Content-Type: application/json
+
+{
+  "name": "테스트 상품 1",
+  "description": "테스트 상품 1에 대한 설명입니다.",
+  "price": 10000,
+  "tags": "테스트,상품,신규",
+  "images": "test.jpg"
+}
+
+### 상품 등록 (POST) - 필수 항목 누락 테스트
+POST http://localhost:3000/Products
+Content-Type: application/json
+
+{
+  "name": "테스트 상품 2",
+  "description": "테스트 상품 2에 대한 설명입니다."
+}
+
+### 상품 상세 조회 (GET) - 
+GET http://localhost:3000/Products/664991735d854634d5496569
+
+### 상품 상세 조회 (GET) - 존재하지 않는 상품 ID 테스트
+GET http://localhost:3000/Products/nonexistentid
+
+### 상품 수정 (PATCH) - 
+PATCH http://localhost:3000/Products/67d26d48e38003108a52caef
+Content-Type: application/json
+
+{
+  "name": "수정된 상품 1",
+  "description": "수정된 상품 1에 대한 설명입니다.",
+  "price": 20000,
+  "tags": "수정,상품,업데이트",
+  "images": "update.jpg"
+}
+
+### 상품 수정 (PATCH) - 존재하지 않는 상품 ID 테스트
+PATCH http://localhost:3000/Products/nonexistentid
+Content-Type: application/json
+
+{
+  "name": "수정된 상품 1",
+  "description": "수정된 상품 1에 대한 설명입니다.",
+  "price": 20000,
+  "tags": "수정,상품,업데이트",
+  "images": "update.jpg"
+}
+
+### 상품 삭제 (DELETE) - 
+DELETE http://localhost:3000/Products/67d26d48e38003108a52caef
+
+### 상품 삭제 (DELETE) - 존재하지 않는 상품 ID 테스트
+DELETE http://localhost:3000/Products/nonexistentid
+
+### 상품 목록 조회 (GET) - 기본 (최신순)
+GET http://localhost:3000/Products
+
+### 상품 목록 조회 (GET) - 좋아요순
+GET http://localhost:3000/Products?sort=favorite
+
+### 상품 목록 조회 (GET) - 페이지네이션 (2페이지, 페이지당 5개)
+GET http://localhost:3000/Products?page=2&pageSize=5
+
+### 상품 목록 조회 (GET) - 검색 (상품명에 '테스트' 포함)
+GET http://localhost:3000/Products?keyword=테스트
+
+### 상품 목록 조회 (GET) - 검색 (상품 설명에 '설명' 포함)
+GET http://localhost:3000/Products?keyword=설명
+
+### 상품 목록 조회 (GET) - 검색 (태그에 '신규' 포함)
+GET http://localhost:3000/Products?keyword=신규
