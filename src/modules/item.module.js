@@ -2,33 +2,33 @@ const express = require("express");
 const Items = require("../models/Items.js");
 const itemsRouter = express.Router();
 
-const asyncHandler = (handler) => {
-  return async (req, res) => {
-    try {
-      await handler(req.res);
-    } catch (e) {
-      switch (e.name) {
-        case "ValidationError":
-          res.status(400).send({ message: e.message });
-          break;
-        case "CastError":
-          res.status(404).send({ message: "Cannot find given id" });
-          break;
-        default:
-          res.status(500).send({ message: e.message });
-          break;
-      }
-    }
-  };
-};
-
 itemsRouter.get("/", async (req, res, next) => {
   try {
-    const items = await Items.find();
+    const {
+      page = 0,
+      pageSize = 10,
+      orderBy = "recent",
+      keyWord = "",
+    } = req.query;
+
+    const sortOption = {
+      createdAt: orderBy === "recent" ? "desc" : "asc",
+    };
+    const searchOption = keyWord
+      ? {
+          $or: [
+            { name: { $regex: keyWord, $options: "i" } },
+            { description: { $regex: keyWord, $options: "i" } },
+          ],
+        }
+      : {};
+    const items = await Items.find(searchOption)
+      .limit(pageSize)
+      .skip(page * pageSize)
+      .sort(sortOption);
 
     res.json(items);
   } catch (e) {
-    console.error(e);
     next(e);
   }
 });
@@ -37,10 +37,9 @@ itemsRouter.get("/:id", async (req, res, next) => {
   try {
     const itemId = req.params.id;
     const item = await Items.findById(itemId);
-
+    if (!item) return res.status(404).send("can't find item");
     res.json(item);
   } catch (e) {
-    console.error(e);
     next(e);
   }
 });
@@ -48,9 +47,8 @@ itemsRouter.get("/:id", async (req, res, next) => {
 itemsRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
-    const result = await Items.create(data);
-    console.log(result);
-    res.status(201).send("created");
+    const item = await Items.create(data);
+    res.status(201).json(item);
   } catch (e) {
     next(e);
   }
@@ -64,7 +62,7 @@ itemsRouter.patch("/:id", async (req, res, next) => {
       new: true,
     });
     if (!updateItem) return res.status(404).send("can't find item");
-    res.status(204).send("no content");
+    res.status(204).json(updateItem);
   } catch (e) {
     next(e);
   }
@@ -77,7 +75,7 @@ itemsRouter.delete("/:id", async (req, res, next) => {
 
     if (!deleteItem) return res.status(404).send("can't find item");
 
-    res.status(204).send("no content");
+    res.status(204).json(deleteItem);
   } catch (e) {
     next(e);
   }

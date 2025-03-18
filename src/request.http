@@ -1,18 +1,23 @@
-GET http://localhost:3000/items
+GET http://localhost:5555/items
+
+
 
 ###
-POST http://localhost:3000/items 
+GET http://localhost:5555/items/67d6718e5a66b145bdeaff01
+
+###
+POST http://localhost:5555/items 
 Content-Type: application/json
 
 {
-    "name":"노트북",
+    "name":"컴퓨터",
     "description":"나눔",
-    "price":0,
+    "price":300,
     "tags": "전자"
 }
 
 ###
-PATCH http://localhost:3000/items/67d671e65a66b145bdeaff03
+PATCH http://localhost:5555/items/67d8f597b1fd944b988380af
 Content-Type: application/json
 
 {
@@ -23,4 +28,4 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:3000/items/67d671f5502e4b1e301813a1
+DELETE http://localhost:5555/items/67d8f597b1fd944b988380af

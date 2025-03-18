@@ -6,9 +6,6 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // id: {
-    //   type: String,
-    // },
     description: {
       type: String,
       required: true,
@@ -21,12 +18,6 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // createdAt: {
-    //   type: String,
-    // },
-    // updatedAt: {
-    //   type: String,
-    // },
   },
   {
     timestamps: true,
