@@ -59,7 +59,7 @@ productsRouter.get("/:productId", async (req, res, next) => {
 productsRouter.patch("/:productId", async (req, res, next) => {
   try {
     const productId = Number(req.params.productId);
-    const { name } = req.body;
+    const { name, description, price, tags } = req.body;
 
     const existingProduct = await prisma.product.findUnique({
       where: { id: productId },
@@ -69,7 +69,7 @@ productsRouter.patch("/:productId", async (req, res, next) => {
 
     const product = await prisma.product.update({
       where: { id: productId },
-      data: { name },
+      data: { name, description, price, tags },
     });
     res.json(product);
   } catch (e) {

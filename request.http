@@ -1,39 +1,42 @@
 
 ###상품 등록
-POST http://localhost:6666/products
+POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-    "name": "상품7" ,
-    "description": "7번째 상품" ,
-    "price": 7000,
-    "tags": "특별히"
+    "name": "상품11" ,
+    "description": "11번째 상품" ,
+    "price": 11000,
+    "tags": "특별"
 
 }
 
 ###상품 목록 조회
-GET http://localhost:6666/products
+GET http://localhost:3000/products
 
 ###상품 상세 조회
-GET http://localhost:6666/products/3
+GET http://localhost:3000/products/3
 
 
 ###상품 수정
-PATCH http://localhost:6666/products/1
+PATCH http://localhost:3000/products/9
 Content-Type: application/json
 
 {
-    "name": "상품1을을 수정"
+    "name": "상품9" ,
+    "description": "9번째 상품" ,
+    "price": 9000,
+    "tags": "특별한"
 }
 
 ###상품 삭제
-DELETE http://localhost:6666/products/1
+DELETE http://localhost:3000/products/15
 
 
 #####################################################
 
 ###게시글 등록
-POST http://localhost:6666/article
+POST http://localhost:3000/article
 Content-Type: application/json
 
 {
