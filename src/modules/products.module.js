@@ -10,7 +10,10 @@ const productsRouter = express.Router();
 productsRouter.post("/", async (req, res, next) => {
   try {
     const { name, description, price, tags } = req.body;
-    if (!name || !description || !price) throw new Error("필수 정보가 누락");
+
+    if (!name || !description || !price || tags)
+      throw new Error("필수 정보가 누락");
+
     const product = await prisma.product.create({
       data: { name, description, price, tags },
     });
@@ -45,7 +48,7 @@ productsRouter.get("/:productId", async (req, res, next) => {
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
-    if (!product) throw new Error("그런 상품은 없습니다...");
+    if (!product) return res.json({ message: "그런 상품은 없습니다..." });
     res.json(product);
   } catch (e) {
     next(e);
