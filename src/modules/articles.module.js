@@ -1,5 +1,6 @@
 const express = require("express");
 const prisma = require("../db/prisma/client.prisma");
+const { create } = require("domain");
 
 const articlesRouter = express.Router();
 
@@ -49,9 +50,27 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
  */
 articlesRouter.get("/", async (req, res, next) => {
   try {
-    const articles = await prisma.article.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const skip = Number(req.query.offset);
+    const search = req.query.search;
+
+    const options = {};
+
+    // 정렬
+    options.orderBy = { createdAt: "desc" };
+
+    // 오프셋
+    if (skip) options.skip = skip;
+
+    // 검색
+    if (search)
+      options.where = {
+        OR: [
+          { title: { contains: search } },
+          { content: { contains: search } },
+        ],
+      };
+
+    const articles = await prisma.article.findMany(options);
 
     res.json(articles);
   } catch (e) {
