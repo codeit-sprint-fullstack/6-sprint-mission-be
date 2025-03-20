@@ -1,0 +1,9 @@
+### 게시물 등록하기
+
+POST http://localhost:5050/articles
+Content-Type: application/json
+
+{
+  "title": "나의 세 번째 아티클",
+  "content": "빛나는 나의 세 번째 아티클~!"
+}
