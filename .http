@@ -24,3 +24,53 @@ DELETE http://localhost:5050/articles/2
 
 ### 게시글 목록 조회
 GET http://localhost:5050/articles?search=수정
+
+
+##### 중고마켓 #####
+### 댓글 등록
+POST http://localhost:5050/market/comments
+Content-Type: application/json
+
+{
+  "content": "댓글댓글"
+}
+
+### 댓글 수정
+PATCH http://localhost:5050/market/comments/5
+Content-Type: application/json
+
+{
+  "content": "수정된 댓글"
+}
+
+### 댓글 삭제
+DELETE http://localhost:5050/market/comments/1
+
+### 댓글 목록 조회
+GET http://localhost:5050/market/comments?cursor=8&limit=3
+
+
+##### 자유게시판 #####
+### 댓글 등록
+POST http://localhost:5050/community/comments
+Content-Type: application/json
+
+{
+  "articleId": 2,
+  "content": "댓글123"
+}
+
+### 댓글 수정
+PATCH http://localhost:5050/community/comments/1
+Content-Type: application/json
+
+{
+  "articledId": 1,
+  "content": "수정된 댓글"
+}
+
+### 댓글 삭제
+DELETE http://localhost:5050/community/comments/2
+
+### 댓글 목록 조회
+GET http://localhost:5050/community/comments?cursor=3
