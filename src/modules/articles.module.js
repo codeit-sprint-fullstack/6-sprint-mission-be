@@ -13,20 +13,40 @@ articleRouter.post("/", async (req, res, next) => {
     const article = await prisma.article.create({
       data: { title, content },
     });
-    res.json(article);
+
+    res.status(201).json(article);
   } catch (e) {
     next(e);
   }
 });
 
 /**
- * 게시글 조회하기
+ * 게시글 목록 조회하기
  */
 articleRouter.get("/", async (req, res, next) => {
   try {
-    const articles = await prisma.article.findMany();
+    const skip = Number(req.query.offset);
+    const search = req.query.search;
 
-    if (!articles) throw new Error("게시글이 존재하지 않습니다.");
+    const options = {};
+
+    //정렬
+    options.orderBy = { createdAt: "desc" };
+
+    //오프셋
+    if (skip) options.skip = skip;
+
+    //검색
+    if (search)
+      options.where = {
+        OR: [
+          { title: { contains: search } },
+          { content: { contains: search } },
+        ],
+      };
+
+    const articles = await prisma.article.findMany(options);
+
     res.json(articles);
   } catch (e) {
     next(e);
@@ -39,12 +59,15 @@ articleRouter.get("/", async (req, res, next) => {
 articleRouter.get("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
+    if (articleId === NaN) throw new Error("아이디가 숫자가 아닙니다.");
+
     const existingArticle = await prisma.article.findUnique({
       where: { id: articleId },
+      select: { id: true, title: true, content: true, createdAt: true },
     });
 
     if (!existingArticle)
-      return res.status(404).json({ message: "존재하지 않는 게시글입니다." });
+      return res.status(404).send("존재하지 않는 게시글입니다.");
 
     res.json(existingArticle);
   } catch (e) {
@@ -89,11 +112,11 @@ articleRouter.delete("/:articleId", async (req, res, next) => {
     });
 
     if (!deleteArticle)
-      return res.status(404).json({ message: "존재하지 않는 게시글입니다." });
+      return res.status(404).json("존재하지 않는 게시글입니다.");
 
     await prisma.article.delete({ where: { id: articleId } });
 
-    res.status(200).send("상품이 삭제되었습니다.");
+    res.status(200).send("게시글이 삭제되었습니다.");
   } catch (e) {
     next(e);
   }

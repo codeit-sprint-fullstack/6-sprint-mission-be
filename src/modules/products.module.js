@@ -11,7 +11,7 @@ productsRouter.post("/", async (req, res, next) => {
   try {
     const { name, description, price, tags } = req.body;
 
-    if (!name || !description || !price || tags)
+    if (!name || !description || !price || !tags)
       throw new Error("필수 정보가 누락");
 
     const product = await prisma.product.create({
@@ -48,7 +48,7 @@ productsRouter.get("/:productId", async (req, res, next) => {
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
-    if (!product) return res.json({ message: "그런 상품은 없습니다..." });
+    if (!product) return res.json("그런 상품은 없습니다...");
     res.json(product);
   } catch (e) {
     next(e);
@@ -88,11 +88,15 @@ productsRouter.delete("/:productId", async (req, res, next) => {
   try {
     const productId = Number(req.params.productId);
 
-    const deleteProduct = await prisma.product.delete({
+    const existingProduct = await prisma.product.findUnique({
       where: { id: productId },
     });
+    if (!existingProduct)
+      return res.status(404).json("존재하지 않는 상품입니다");
 
-    if (!deleteProduct) return res.status(404).json("존재하지 않는 상품입니다");
+    await prisma.product.delete({
+      where: { id: productId },
+    });
 
     res.status(200).json("상품이 삭제되었습니다.");
   } catch (e) {
