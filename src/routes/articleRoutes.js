@@ -7,16 +7,15 @@ const articleRouter = express.Router();
 articleRouter.get("/", async (req, res, next) => {
   try {
     const { offset, limit, orderBy, keyword } = req.query;
+    const filter = {
+      OR: [
+        { title: { contains: keyword || "", mode: "insensitive" } },
+        { content: { contains: keyword || "", mode: "insensitive" } },
+      ],
+    };
 
     const articles = await prisma.article.findMany({
-      where: {
-        OR: [
-          {
-            title: { contains: keyword || "" },
-          },
-          { content: { contains: keyword || "" } },
-        ],
-      },
+      where: filter,
       skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
       orderBy: { creatdAt: orderBy === "recent" ? "desc" : "asc" },
@@ -72,12 +71,17 @@ articleRouter.patch("/:articleId", async (req, res, next) => {
     const articleId = Number(req.params.articleId);
     if (!(title || content)) throw new Error("수정할 내용을 입력해주세요.");
 
-    const updateArticle = await prisma.article.update({
-      where: { id: articleId },
-      data: { title, content },
-    });
+    await prisma.$transaction(async (tx) => {
+      const article = await tx.article.findUnique({ where: { id: articleId } });
+      if (!article) throw new Error("게시글을 찾을 수 없습니다.");
 
-    res.status(200).json(updateArticle);
+      const updateArticle = await tx.article.update({
+        where: { id: articleId },
+        data: { title, content },
+      });
+
+      res.status(200).json(updateArticle);
+    });
   } catch (e) {
     next(e);
   }

@@ -14,17 +14,19 @@ productRouter.get("/", async (req, res, next) => {
       ],
     };
 
-    const products = await prisma.product.findMany({
-      where: filter,
-      skip: (Number(offset) - 1) * Number(limit) || 0,
-      take: Number(limit) || 10,
-      orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
-      omit: { description: true, updatedAt: true },
+    await prisma.$transaction(async (tx) => {
+      const products = await tx.product.findMany({
+        where: filter,
+        skip: (Number(offset) - 1) * Number(limit) || 0,
+        take: Number(limit) || 10,
+        orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
+        omit: { description: true, updatedAt: true },
+      });
+
+      const totalCount = await tx.product.count({ where: filter });
+
+      res.json({ list: products, totalCount });
     });
-
-    const totalCount = await prisma.product.count({ where: filter });
-
-    res.json({ list: products, totalCount });
   } catch (e) {
     next(e);
   }
@@ -79,7 +81,7 @@ productRouter.post("/", async (req, res, next) => {
           if (!tag) tag = await tx.tag.create({ data: { name: tagName } });
 
           await tx.productTag.create({
-            data: { productId: product.id, tagId: tag.id },
+            data: { productId: newProduct.id, tagId: tag.id },
           });
           return tag.name;
         })
