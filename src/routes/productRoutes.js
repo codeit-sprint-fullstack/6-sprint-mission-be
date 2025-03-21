@@ -7,21 +7,22 @@ const productRouter = express.Router();
 productRouter.get("/", async (req, res, next) => {
   try {
     const { offset, limit, orderBy, keyword } = req.query;
+    const filter = {
+      OR: [
+        { name: { contains: keyword || "", mode: "insensitive" } },
+        { description: { contains: keyword || "", mode: "insensitive" } },
+      ],
+    };
 
     const products = await prisma.product.findMany({
-      where: {
-        OR: [
-          { name: { contains: keyword || "", mode: "insensitive" } },
-          { description: { contains: keyword || "", mode: "insensitive" } },
-        ],
-      },
+      where: filter,
       skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
       orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
       omit: { description: true, updatedAt: true },
     });
 
-    const totalCount = products.length;
+    const totalCount = await prisma.product.count({ where: filter });
 
     res.json({ list: products, totalCount });
   } catch (e) {

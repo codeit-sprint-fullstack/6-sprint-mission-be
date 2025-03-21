@@ -23,7 +23,7 @@ articleRouter.get("/", async (req, res, next) => {
       omit: { updatedAt: true },
     });
 
-    const totalCount = articles.length;
+    const totalCount = await prisma.article.count({ where: filter });
 
     res.json({ list: articles, totalCount });
   } catch (e) {
