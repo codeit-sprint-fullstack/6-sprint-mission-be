@@ -51,12 +51,12 @@ commentRouter.patch(`${ARTICLE_COMMENT}/:commentId`, async (req, res, next) => {
     const commentId = Number(req.params.commentId);
     const { content } = req.body;
 
-    const comment = await prisma.articleComment.update({
+    const updateArticleComment = await prisma.articleComment.update({
       where: { articleId, id: commentId },
       data: { content },
     });
 
-    res.status(200).json(comment);
+    res.status(200).json(updateArticleComment);
   } catch (e) {
     next(e);
   }

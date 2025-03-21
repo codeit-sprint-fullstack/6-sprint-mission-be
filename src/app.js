@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 // 1. 서버 객체 생성
 const app = express();
 
-// 3. 미들웨어 등록
+// 2. 미들웨어 등록
 app.use(express.json()); // json 데이터를 parsing.
 app.use(
   cors({
@@ -20,12 +20,12 @@ app.use(
       "http://localhost:5173",
     ],
   })
-); // CORS를 허용.
+);
 
-// 4-1. routes 등록
+// 3. routes 등록
 app.use(router);
 
-// 4-2. 에러 미들웨어 등록
+// 4. 에러 미들웨어 등록
 app.use(handleError);
 
 // 5. 서버 연결

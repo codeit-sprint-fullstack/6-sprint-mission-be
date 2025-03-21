@@ -26,11 +26,29 @@ model Product {
   name            String
   description     String
   price           Int
-  tags            String
-  // user            User             @relation(fields: [userId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  // user            User             @relation(fields: [userId], references: [id], onDelete: SetNull)
   // userId          String
   productLikes    ProductLike[]
   productComments ProductComment[]
+  productTags     ProductTag[]
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  productTags ProductTag[]
+}
+
+model ProductTag {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId     Int
+
+  @@unique([productId, tagId])
 }
 
 // 상품 댓글
@@ -40,7 +58,7 @@ model ProductComment {
   createdAt DateTime @default(now())
   // author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   // authorId  String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
   productId Int
 }
 
@@ -48,9 +66,9 @@ model ProductComment {
 model ProductLike {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  // user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // user      User     @relation(fields: [userId], references: [id], onDelete: SetNull)
   // userId    String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
   productId Int
 }
 
@@ -61,7 +79,7 @@ model Article {
   content         String
   creatdAt        DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  // author          User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  // author          User             @relation(fields: [authorId], references: [id], onDelete: SetNull)
   // authorId        String
   articleComments ArticleComment[]
 }
@@ -71,8 +89,8 @@ model ArticleComment {
   id        Int      @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
-  // author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  // author    User     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   // authorId  String
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id])
   articleId Int
 }

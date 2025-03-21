@@ -6,20 +6,6 @@ const articleRouter = express.Router();
 // 게시글 목록 불러오기
 articleRouter.get("/", async (req, res, next) => {
   try {
-    // const offset = Number(req.query.offset)
-    // const keyword = req.query.keyword
-    // const options = {}
-    // options.orderBy = {createdAt: "desc"}
-    // if (offset) options.offset = offset
-    // if (keyword) options.where =
-    // OR: [
-    //       {
-    //         title: { contains: keyword || "" },
-    //       },
-    //       { content: { contains: keyword || "" } },
-    //     ]
-    // const articles = await prisma.article.findMany(options)
-
     const { offset, limit, orderBy, keyword } = req.query;
 
     const articles = await prisma.article.findMany({
@@ -31,8 +17,8 @@ articleRouter.get("/", async (req, res, next) => {
           { content: { contains: keyword || "" } },
         ],
       },
-      skip: Number(offset) || undefined,
-      take: Number(limit) || undefined,
+      skip: Number(offset) || 0,
+      take: Number(limit) || 10,
       orderBy: { creatdAt: orderBy === "recent" ? "desc" : "asc" },
       omit: { updatedAt: true },
     });
