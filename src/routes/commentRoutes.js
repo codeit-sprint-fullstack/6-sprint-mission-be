@@ -17,6 +17,8 @@ commentRouter.get(`${ARTICLE_COMMENT}`, async (req, res, next) => {
 
     const comment = await prisma.articleComment.findMany({
       where: { articleId },
+      skip: 1,
+      take: 3,
       cursor: commentId,
       omit: { articleId: true },
     });

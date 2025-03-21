@@ -17,13 +17,15 @@ articleRouter.get("/", async (req, res, next) => {
           { content: { contains: keyword || "" } },
         ],
       },
-      skip: Number(offset) || 0,
+      skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
       orderBy: { creatdAt: orderBy === "recent" ? "desc" : "asc" },
       omit: { updatedAt: true },
     });
 
-    res.json(articles);
+    const totalCount = products.length;
+
+    res.json({ list: articles, totalCount });
   } catch (e) {
     next(e);
   }
@@ -38,6 +40,7 @@ articleRouter.get("/:articleId", async (req, res, next) => {
       where: { id: articleId },
       omit: { updatedAt: true },
     });
+    if (!article) throw new Error("해당 게시글을 찾을 수 없습니다.");
 
     res.json(article);
   } catch (e) {

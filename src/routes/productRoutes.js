@@ -17,7 +17,7 @@ productRouter.get("/", async (req, res, next) => {
       },
       skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
-      orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
+      // orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
       omit: { description: true, updatedAt: true },
     });
 
