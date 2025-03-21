@@ -8,17 +8,17 @@ datasource db {
 }
 
 // 사용자
-// model User {
-//   id                String           @id @default(uuid())
-//   email             String           @unique
-//   encryptedPassword String
-//   nickname          String
-//   products          Product[]
-//   productLikes      ProductLike[]
-//   productComments   ProductComment[]
-//   articles          Article[]
-//   articleComments   ArticleComment[]
-// }
+model User {
+  id                String @id @default(uuid())
+  email             String @unique
+  encryptedPassword String
+  nickname          String
+  //   products          Product[]
+  //   productLikes      ProductLike[]
+  //   productComments   ProductComment[]
+  //   articles          Article[]
+  //   articleComments   ArticleComment[]
+}
 
 // 상품
 model Product {

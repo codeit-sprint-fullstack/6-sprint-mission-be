@@ -23,7 +23,7 @@ articleRouter.get("/", async (req, res, next) => {
       omit: { updatedAt: true },
     });
 
-    const totalCount = products.length;
+    const totalCount = articles.length;
 
     res.json({ list: articles, totalCount });
   } catch (e) {
@@ -52,12 +52,14 @@ articleRouter.get("/:articleId", async (req, res, next) => {
 articleRouter.post("/", async (req, res, next) => {
   try {
     const { title, content } = req.body;
+    if (!title) throw new Error("제목을 입력해주세요.");
+    if (!content) throw new Error("내용을 입력해주세요.");
 
-    const article = await prisma.article.create({
+    const newArticle = await prisma.article.create({
       data: { title, content },
     });
 
-    res.status(201).json(article);
+    res.status(201).json(newArticle);
   } catch (e) {
     next(e);
   }
@@ -68,6 +70,7 @@ articleRouter.patch("/:articleId", async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const articleId = Number(req.params.articleId);
+    if (!(title || content)) throw new Error("수정할 내용을 입력해주세요.");
 
     const updateArticle = await prisma.article.update({
       where: { id: articleId },
@@ -84,9 +87,15 @@ articleRouter.patch("/:articleId", async (req, res, next) => {
 articleRouter.delete("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
-    await prisma.article.delete({ where: { id: articleId } });
 
-    res.sendStatus(204);
+    await prisma.$transaction(async (tx) => {
+      const article = await tx.article.findUnique({ where: { id: articleId } });
+      if (!article) throw new Error("이미 삭제된 게시글 입니다.");
+
+      await prisma.article.delete({ where: { id: articleId } });
+
+      res.sendStatus(204);
+    });
   } catch (e) {
     next(e);
   }
