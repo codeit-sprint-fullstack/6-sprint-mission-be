@@ -13,9 +13,11 @@ commentRouter.get(`${ARTICLE_COMMENT}`, async (req, res, next) => {
     const { limit, cursor } = req.query;
 
     await prisma.$transaction(async (tx) => {
-      const articleCommentId = await tx.articleComment.findFirst({
-        where: { articleId, id: Number(cursor) },
-      });
+      const articleCommentId = cursor
+        ? await tx.articleComment.findFirst({
+            where: { articleId, id: Number(cursor) },
+          })
+        : false;
 
       const articleComment = await tx.articleComment.findMany({
         where: { articleId },
