@@ -124,4 +124,21 @@ articlesRouter.patch("/:articleId", async (req, res, next) => {
   }
 });
 
+// delete article
+articlesRouter.delete("/:articleId", async (req, res, next) => {
+  try {
+    const articleId = Number(req.params.articleId);
+    if (isNaN(articleId))
+      throw new Error("조회하려는 게시글 id는 숫자여야 합니다");
+
+    await prisma.article.delete({
+      where: { id: articleId },
+    });
+
+    res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = articlesRouter;
