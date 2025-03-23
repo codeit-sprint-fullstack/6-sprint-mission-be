@@ -43,7 +43,7 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
 // get article list
 articlesRouter.get("/", async (req, res, next) => {
   try {
-    const { page = 1, pageSize = 5, sort = "recent", search = "" } = req.query;
+    const { page = 1, pageSize = 10, sort = "recent", search = "" } = req.query;
     const pageNum = Number(page);
     const pageSizeNum = Number(pageSize);
 
