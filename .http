@@ -1,0 +1,47 @@
+GET http://localhost:5678/
+
+### 상품 등록
+POST http://localhost:5678/products
+Content-Type: application/json
+
+{
+  "name": "갤럭시S20",
+  "description": "삼성의 갤럭시S20 입니다",
+  "price": 500000,
+  "tags": "삼성"
+}
+
+### 상품 상세 조회
+GET http://localhost:5678/products/2
+
+### 상품 수정
+PATCH http://localhost:5678/products/1
+Content-Type: application/json
+
+{
+  "name": "갤럭시S25",
+  "description": "삼성의 갤럭시S25 입니다",
+  "price": 1500000,
+  "tags": "샘송"
+}
+
+### 상품 삭제
+DELETE http://localhost:5678/products/2
+
+### 상품 목록 조회
+GET http://localhost:5678/products
+
+### 게시글 등록
+POST http://localhost:5678/articles
+Content-Type: application/json
+
+{
+  "title": "나의 첫 번째 아티클5",
+  "content": "빛나는 나의 첫 번째 아티클5"
+}
+
+### 게시글 조회
+GET http://localhost:5678/articles/1
+
+### 게시글 목록 조회
+GET http://localhost:5678/articles?offset=2
