@@ -1,9 +1,10 @@
 import express from 'express';
-import { Product } from '../../models/Product.js';
-
+import { prisma } from '../db/prisma/client.prisma.js';
 const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res, next) => {
+  console.log('asd');
+
   try {
     const {
       page = 0,
@@ -12,29 +13,39 @@ productsRouter.get('/', async (req, res, next) => {
       keyWord = '',
     } = req.query;
 
-    const sortOption = {
-      createdAt: orderBy === 'recent' ? 'desc' : 'asc',
-    };
+    const skip = Number(page) * Number(pageSize);
+    const take = Number(pageSize);
 
-    const searchCondition = keyWord
+    const where = keyWord
       ? {
           name: {
-            $regex: keyWord,
-            $options: 'i',
+            contains: keyWord,
+            mode: 'insensitive',
           },
         }
       : {};
 
-    const productsList = await Product.find(searchCondition)
-      .limit(pageSize)
-      .skip(page)
-      .sort(sortOption);
+    const [products, total] = await prisma.$transaction([
+      prisma.product.findMany({
+        where,
+        skip,
+        take,
+        orderBy: {
+          createdAt: orderBy === 'recent' ? 'desc' : 'asc',
+        },
+      }),
+      prisma.product.count({ where }),
+    ]);
 
-    const produtcsTotalCount = (await Product.find(searchCondition)).length;
-
-    res
-      .status(200)
-      .send({ list: productsList, totalCount: produtcsTotalCount });
+    res.status(200).json({
+      data: products,
+      pagination: {
+        total,
+        page: Number(page),
+        pageSize: take,
+        totalPages: Math.ceil(total / take),
+      },
+    });
   } catch (err) {
     next(err);
   }
@@ -42,56 +53,86 @@ productsRouter.get('/', async (req, res, next) => {
 
 productsRouter.get('/:id', async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const productId = req.params.id;
 
-    if (!product) {
-      return res.status(404).send({ message: 'Product not found' });
-    }
-
-    res.status(200).send(product);
-  } catch (err) {
-    next(err);
-  }
-});
-
-productsRouter.post('/registration', async (req, res, next) => {
-  try {
-    const product = await Product.create(req.body);
-
-    console.log(product);
-
-    res.status(201).send(product);
-  } catch (err) {
-    next(err);
-  }
-});
-
-productsRouter.patch('/update/:id', async (req, res, next) => {
-  try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
     });
 
-    if (!product) {
-      return res.status(404).send({ message: 'Product not found' });
+    res.status(200).json({ data: product });
+  } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({
+        message: '상품을 찾을 수 없습니다.',
+      });
     }
+    next(err);
+  }
+});
 
-    res.status(200).send(product);
+productsRouter.post('/', async (req, res, next) => {
+  try {
+    const { name, description, price, tags = [] } = req.body;
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        description,
+        price: Number(price),
+        tags,
+        likes: 0,
+      },
+    });
+
+    res.status(201).json({
+      message: '상품이 성공적으로 등록되었습니다.',
+      data: product,
+    });
   } catch (err) {
     next(err);
   }
 });
 
-productsRouter.delete('/delete/:id', async (req, res, next) => {
+productsRouter.patch('/:id', async (req, res, next) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const productId = req.params.id;
 
-    if (!product) {
-      return res.status(404).send({ message: 'Product not found' });
-    }
+    const product = await prisma.product.update({
+      where: { id: productId },
+      data: req.body,
+    });
 
-    res.send({ message: 'Product deleted' });
+    res.status(200).json({
+      message: '상품이 성공적으로 수정되었습니다.',
+      data: product,
+    });
   } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({
+        message: '상품을 찾을 수 없습니다.',
+      });
+    }
+    next(err);
+  }
+});
+
+productsRouter.delete('/:id', async (req, res, next) => {
+  try {
+    const productId = Number(req.params.id);
+
+    await prisma.product.delete({
+      where: { id: productId },
+    });
+
+    res.status(200).json({
+      message: '상품이 성공적으로 삭제되었습니다.',
+    });
+  } catch (err) {
+    if (err.code === 'P2025') {
+      return res.status(404).json({
+        message: '상품을 찾을 수 없습니다.',
+      });
+    }
     next(err);
   }
 });

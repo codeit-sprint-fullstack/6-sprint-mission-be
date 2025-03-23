@@ -1,16 +1,16 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import indexRouter from './src/modules/index.js';
 
 dotenv.config();
 
+const PORT = 7777;
 const app = express();
 
 // 허용할 도메인들
 const allowedOrigins = [
-  'http://localhost:3000', // 로컬 환경
+  `http://localhost:${PORT}`, // 로컬 환경
   'https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app', // 배포된 환경
 ];
 
@@ -55,10 +55,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-mongoose.connect(process.env.DATABASE_URL).then(() => {
-  console.log('Connected to MongoDB');
-});
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
