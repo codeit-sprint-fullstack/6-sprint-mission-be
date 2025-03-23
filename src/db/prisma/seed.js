@@ -21,7 +21,7 @@ async function main() {
   }
   await Promise.all(items);
   for (let i = 1; i <= 10; i++) {
-    items.push(
+    articles.push(
       prisma.article.create({
         data: {
           title: `${i}번째 아티클`,
