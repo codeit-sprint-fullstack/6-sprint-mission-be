@@ -3,10 +3,19 @@ POST http://localhost:3170/articles
 Content-Type: application/json
 
 {
-  "title": "My second article",
-  "content": "Hello"
+  "title": "My article blah blah",
+  "content": "Hi"
 }
 
 
 ### retrieve article by id
-GET http://localhost:5050/articles/2
+GET http://localhost:3170/articles/2
+
+### retrieve list of articles with pagination
+GET http://localhost:3170/articles?page=2&pageSize=5
+
+### retrieve list of articles with sorting
+GET http://localhost:3170/articles?sort=recent
+
+### retrieve list of articles with search
+GET http://localhost:3170/articles?search=Hello

@@ -20,9 +20,10 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId); // needed to convert string to number
     // if the articleId not found throw error
-    if (articleId === NaN) throw new Error("ArticleId must be number!");
+    if (isNaN(articleId))
+      throw new Error("조회하려는 게시글 id는 숫자여야 합니다");
 
-    const article = prisma.article.findUnique({
+    const article = await prisma.article.findUnique({
       where: { id: articleId },
       select: {
         id: true,
@@ -31,11 +32,62 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
         createdAt: true,
       },
     });
-    // if article not found handle error
-    if (!article) throw new Error("No articles found");
 
-    // below executed when article is found
+    if (!article) throw new Error("게시물이 존재하지 않습니다");
     res.json(article);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// get article list
+articlesRouter.get("/", async (req, res, next) => {
+  try {
+    const { page = 1, pageSize = 5, sort = "recent", search = "" } = req.query;
+    const pageNum = Number(page);
+    const pageSizeNum = Number(pageSize);
+
+    // for offset pagination
+    const skip = (pageNum - 1) * pageSizeNum;
+
+    // where var detail for search in db
+    const where = search
+      ? {
+          OR: [
+            { title: { contains: search } },
+            { content: { contains: search } },
+          ],
+        }
+      : {};
+
+    // retrieving list of articles
+    const articles = await prisma.article.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+      },
+      skip,
+      take: pageSizeNum,
+      orderBy: {
+        createdAt: sort === "recent" ? "desc" : "asc",
+      },
+    });
+
+    // total count for pagination
+    const totalCount = await prisma.article.count({ where });
+
+    res.json({
+      data: articles,
+      meta: {
+        total: totalCount,
+        page: pageNum,
+        pageSize: pageSizeNum,
+        totalPages: Math.ceil(totalCount / pageSizeNum),
+      },
+    });
   } catch (e) {
     next(e);
   }
