@@ -93,4 +93,35 @@ articlesRouter.get("/", async (req, res, next) => {
   }
 });
 
+// update article
+articlesRouter.patch("/:articleId", async (req, res, next) => {
+  try {
+    const articleId = Number(req.params.articleId);
+    if (isNaN(articleId))
+      throw new Error("조회하려는 게시글 id는 숫자여야 합니다");
+
+    // assign values from requested body
+    const { title, content } = req.body;
+
+    // validation check
+    if (!title && !content) {
+      throw new Error("게시글 제목이나 내용이 새로 수정되어야 합니다");
+    }
+
+    // new data
+    const updateData = {};
+    if (title) updateData.title = title;
+    if (content) updateData.content = content;
+
+    const updatedArticle = await prisma.article.update({
+      where: { id: articleId },
+      data: updateData,
+    });
+
+    res.json(updatedArticle);
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = articlesRouter;
