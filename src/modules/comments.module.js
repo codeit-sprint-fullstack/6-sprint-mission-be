@@ -108,46 +108,65 @@ commentsRouter.delete(
 );
 
 /**
- * 댓글 목록 조회 (중고마켓)
+ * 댓글 목록 조회 (중고마켓) - Cursor 기반 페이지네이션 적용
  */
 commentsRouter.get("/market/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
+    const take = Number(req.query.take) || 10; // 기본 10개 가져오기
+    const cursor = req.query.cursor ? Number(req.query.cursor) : null;
 
-    if (isNaN(articleId)) throw new Error("Comments must be a number");
+    if (isNaN(articleId)) throw new Error("Article ID must be a number");
 
     const queryOptions = {
       where: { articleId, boardType: "market" },
       select: { id: true, content: true, createdAt: true },
       orderBy: { id: "desc" },
+      take: take,
     };
 
-    const comments = await prisma.comment.findMany(queryOptions);
+    if (cursor) {
+      queryOptions.skip = 1; // cursor 값을 제외하고 가져옴
+      queryOptions.cursor = { id: cursor };
+    }
 
-    res.status(200).json({ comments });
+    const comments = await prisma.comment.findMany(queryOptions);
+    const nextCursor = comments.length === take ? comments[take - 1].id : null;
+
+    res.status(200).json({ comments, nextCursor });
   } catch (e) {
     next(e);
   }
 });
 
+
 /**
- * 댓글 목록 조회 (자유게시판)
+ * 댓글 목록 조회 (자유게시판) - Cursor 기반 페이지네이션 적용
  */
 commentsRouter.get("/freeboard/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
+    const take = Number(req.query.take) || 10;
+    const cursor = req.query.cursor ? Number(req.query.cursor) : null;
 
-    if (isNaN(articleId)) throw new Error("Comments must be a number");
+    if (isNaN(articleId)) throw new Error("Article ID must be a number");
 
     const queryOptions = {
       where: { articleId, boardType: "freeboard" },
       select: { id: true, content: true, createdAt: true },
       orderBy: { id: "desc" },
+      take: take,
     };
 
-    const comments = await prisma.comment.findMany(queryOptions);
+    if (cursor) {
+      queryOptions.skip = 1;
+      queryOptions.cursor = { id: cursor };
+    }
 
-    res.status(200).json({ comments });
+    const comments = await prisma.comment.findMany(queryOptions);
+    const nextCursor = comments.length === take ? comments[take - 1].id : null;
+
+    res.status(200).json({ comments, nextCursor });
   } catch (e) {
     next(e);
   }
