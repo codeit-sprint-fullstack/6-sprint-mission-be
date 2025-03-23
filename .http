@@ -1,0 +1,8 @@
+### create post
+POST http://localhost:5050/articles
+Content-Type: application/json
+
+{
+  "title": "My first article",
+  "content": "Hello"
+}
