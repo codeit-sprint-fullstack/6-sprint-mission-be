@@ -11,6 +11,8 @@ marketCommentsRouter.post("/comments", async (req, res, next) => {
     const data = req.body;
     const { content } = data;
 
+    if (!content) throw new Error("Enter the content");
+
     const comment = await prisma.marketComment.create({ data: { content } });
 
     res.status(201).json(comment);
@@ -27,6 +29,8 @@ marketCommentsRouter.patch("/comments/:commentId", async (req, res, next) => {
     const commentId = Number(req.params.commentId);
     const data = req.body;
     const { content } = data;
+
+    if (!isNaN(commentId)) throw new Error("commentId must be a number");
 
     await prisma.$transaction(async (tx) => {
       const comment = await tx.marketComment.update({
@@ -48,9 +52,9 @@ marketCommentsRouter.delete("/comments/:commentId", async (req, res, next) => {
   try {
     const commentId = Number(req.params.commentId);
     await prisma.marketComment.delete({ where: { id: commentId } });
-    if (!commentId) throw new Error("Comment Not Founded");
+    if (!commentId) throw new Error("Comment Not Found");
 
-    res.status(204).send("Comment Deleted");
+    res.status(204).send();
   } catch (e) {
     next(e);
   }

@@ -10,6 +10,7 @@ articlesRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
     const { title, content } = data;
+    if (!title || !content) throw new Error("Enter the title and content");
 
     const article = await prisma.article.create({ data: { title, content } });
 
@@ -25,7 +26,7 @@ articlesRouter.post("/", async (req, res, next) => {
 articlesRouter.get("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
-    if (articleId === NaN) throw new Error("ArticleId must be number");
+    if (isNaN(articleId)) throw new Error("articleId must be a number");
 
     const article = await prisma.article.findUnique({
       where: { id: articleId },
@@ -36,7 +37,7 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
         createdAt: true,
       },
     });
-    if (!article) throw new Error("No article found");
+    if (!article) throw new Error("article Not Found");
 
     res.json(article);
   } catch (e) {
@@ -52,6 +53,8 @@ articlesRouter.patch("/:articleId", async (req, res, next) => {
     const articleId = Number(req.params.articleId);
     const data = req.body;
     const { title, content } = data;
+
+    if (isNaN(articleId)) throw new Error("articleId must be a number");
 
     await prisma.$transaction(async (tx) => {
       const article = await tx.article.update({
@@ -73,9 +76,10 @@ articlesRouter.delete("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
     await prisma.article.delete({ where: { id: articleId } });
-    if (!articleId) throw new Error("Article Not Founded");
 
-    res.status(204).send("Article Deleted");
+    if (!articleId) throw new Error("article Not Found");
+
+    res.status(204).send();
   } catch (e) {
     next(e);
   }

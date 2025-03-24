@@ -11,6 +11,8 @@ communityCommentsRouter.post("/comments", async (req, res, next) => {
     const data = req.body;
     const { articleId, content } = data;
 
+    if (!articleId || !content) throw new Error("Enter the title and content");
+
     const comment = await prisma.communityComment.create({
       data: { articleId, content },
     });
@@ -31,6 +33,8 @@ communityCommentsRouter.patch(
       const commentId = Number(req.params.commentId);
       const data = req.body;
       const { articleId, content } = data;
+
+      if (isNaN(commentId)) throw new Error("commentId must be a nummber");
 
       await prisma.$transaction(async (tx) => {
         const comment = await tx.communityComment.update({
@@ -55,9 +59,9 @@ communityCommentsRouter.delete(
     try {
       const commentId = Number(req.params.commentId);
       await prisma.communityComment.delete({ where: { id: commentId } });
-      if (!commentId) throw new Error("Comment Not Founded");
+      if (!commentId) throw new Error("Comment Not Found");
 
-      res.status(204).send("Comment Deleted");
+      res.status(204).send();
     } catch (e) {
       next(e);
     }
