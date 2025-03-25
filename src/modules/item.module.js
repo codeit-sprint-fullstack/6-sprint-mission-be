@@ -1,9 +1,10 @@
 const express = require("express");
 const prisma = require("../db/prisma/client.prisma");
+const errorHandler = require("../middleware/errorHandle.middleware");
 
 const itemsRouter = express.Router();
 
-itemsRouter.post("/", async (req, res, next) => {
+itemsRouter.post("/", errorHandler, async (req, res, next) => {
   try {
     const data = req.body;
     const { name, description, price, tags } = data;
@@ -16,83 +17,71 @@ itemsRouter.post("/", async (req, res, next) => {
   }
 });
 
-// itemsRouter.get("/", async (req, res, next) => {
-//   try {
-//     const {
-//       page = 1,
-//       pageSize = null,
-//       orderBy = "recent",
-//       keyWord = "",
-//     } = req.query;
+itemsRouter.get("/:itemId", errorHandler, async (req, res, next) => {
+  try {
+    const itemId = req.params.itemId;
+    const item = await prisma.item.findUnique({
+      where: { id: itemId },
+    });
+    if (!item) return res.status(404).send("can't find item");
+    res.json(item);
+  } catch (e) {
+    next(e);
+  }
+});
 
-//     const sortOption = {
-//       createdAt: orderBy === "recent" ? "desc" : "asc",
-//     };
-//     const searchOption = keyWord
-//       ? {
-//           $or: [
-//             { name: { $regex: keyWord, $options: "i" } },
-//             { description: { $regex: keyWord, $options: "i" } },
-//           ],
-//         }
-//       : {};
-//     const items = await Items.find(searchOption)
-//       .limit(pageSize)
-//       .skip((page - 1) * pageSize)
-//       .sort(sortOption);
-//     const totalCount = await Items.countDocuments(searchOption);
-//     res.json({ items, totalCount });
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+itemsRouter.get("/", errorHandler, async (req, res, next) => {
+  try {
+    const skip = Number(req.query.page);
+    const take = Number(req.query.pageSize);
+    const search = req.query.keyword;
+    const orderBy = req.query.orderBy;
+    const options = {};
+    if (orderBy === "recent") options.orderBy = { createdAt: "desc" };
+    if (take) options.take = take;
+    if (skip) options.skip = (skip - 1) * take;
+    if (search)
+      options.where = {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+        ],
+      };
 
-// itemsRouter.get("/:id", async (req, res, next) => {
-//   try {
-//     const itemId = req.params.id;
-//     const item = await Items.findById(itemId);
-//     if (!item) return res.status(404).send("can't find item");
-//     res.json(item);
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+    const items = await prisma.item.findMany(options);
+    res.json(items);
+  } catch (e) {
+    next(e);
+  }
+});
 
-// itemsRouter.post("/", async (req, res, next) => {
-//   try {
-//     const data = req.body;
-//     const item = await Items.create(data);
-//     res.status(201).json(item);
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+itemsRouter.patch("/:itemId", errorHandler, async (req, res, next) => {
+  try {
+    const data = req.body;
+    const itemId = req.params.itemId;
+    const updateItem = await prisma.item.update({
+      where: { id: itemId },
+      data,
+    });
+    if (!updateItem) return res.status(404).send("can't find item");
+    res.status(204).json(updateItem);
+  } catch (e) {
+    next(e);
+  }
+});
 
-// itemsRouter.patch("/:id", async (req, res, next) => {
-//   try {
-//     const data = req.body;
-//     const itemId = req.params.id;
-//     const updateItem = await Items.findByIdAndUpdate(itemId, data, {
-//       new: true,
-//     });
-//     if (!updateItem) return res.status(404).send("can't find item");
-//     res.status(204).json(updateItem);
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+itemsRouter.delete("/:itemId", errorHandler, async (req, res, next) => {
+  try {
+    const itemId = req.params.itemId;
+    const deleteItem = await prisma.item.delete({
+      where: { id: itemId },
+    });
 
-// itemsRouter.delete("/:id", async (req, res, next) => {
-//   try {
-//     const itemId = req.params.id;
-//     const deleteItem = await Items.findByIdAndDelete(itemId);
-
-//     if (!deleteItem) return res.status(404).send("can't find item");
-
-//     res.status(204).json(deleteItem);
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+    if (!deleteItem) return res.status(404).send("can't find item");
+    res.status(204).json(deleteItem);
+  } catch (e) {
+    next(e);
+  }
+});
 
 module.exports = itemsRouter;
