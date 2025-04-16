@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,37 +7,124 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * 사용자
+ */
+model User {
+  // 고유
+  id              Int             @id @default(autoincrement())
+  nickname        String          @unique
+  email           String          @unique
+  password        String
+  // 참고
+  articles        Article[]
+  comments        Comment[]
+  likesToArticles LikeToArticle[]
+  likesToProducts LikeToProduct[]
+}
+
+/**
+ * 게시글
+ */
 model Article {
-  id        String           @id @default(uuid())
-  title     String
-  content   String
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
-  comments  ArticleComment[]
+  // 고유
+  id             Int             @id @default(autoincrement())
+  title          String
+  content        String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  // 참고
+  user           User            @relation(fields: [userId], references: [id])
+  userId         Int
+  comments       Comment[] // 댓글
+  likesToArticle LikeToArticle[] // 게시글 좋아요
+  // 이미지 처리
+  thumbnailImg   String?
+  images         ArticleImage[]
 }
 
-model ArticleComment {
+/**
+ * 게시글 이미지
+ */
+model ArticleImage {
+  id        Int     @id @default(autoincrement())
+  url       String?
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int
+}
+
+/**
+ * 댓글
+ */
+model Comment {
+  // 고유
   id        Int      @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
-
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId String
+  updatedAt DateTime @updatedAt
+  // 참고
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
 }
 
+/**
+ * 제품
+ */
 model Product {
-  id        Int              @id @default(autoincrement())
-  name      String
-  price     Int
-  createdAt DateTime         @default(now())
-  comments  ProductComment[]
+  // 고유
+  id           Int             @id @default(autoincrement())
+  name         String
+  description  String
+  price        Int
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  // 참고
+  likes        LikeToProduct[] // 제품 좋아요
+  // 이미지 처리
+  thumbnailImg String?
+  ProductImage ProductImage[]
 }
 
-model ProductComment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+/**
+ * 제품 이미지
+ */
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  url       String?
+  product   Product @relation(fields: [productId], references: [id])
   productId Int
+}
+
+/**
+ * 게시글 좋아요
+ */
+model LikeToArticle {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  // 참고
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+
+  @@unique([articleId, userId])
+}
+
+/**
+ * 제품 좋아요
+ */
+model LikeToProduct {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  // 참고
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+
+  @@unique([productId, userId])
 }
