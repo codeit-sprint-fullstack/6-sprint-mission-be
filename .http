@@ -10,9 +10,6 @@ Content-Type: application/json
 ### 게시글 조회
 GET http://localhost:5050/articles/1
 
-### 게시글 조회
-GET http://localhost:5050/articles
-
 ### 게시글 수정
 PATCH http://localhost:5050/articles/1
 Content-Type: application/json
