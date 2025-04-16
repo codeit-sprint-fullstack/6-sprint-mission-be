@@ -24,10 +24,13 @@ articlesRouter.post("/", async (req, res, next) => {
 /**
  * 게시글 조회
  */
+/**
+ * 게시글 조회
+ */
 articlesRouter.get("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
-    if (articleId === NaN) throw new Error("ArticleId must be number");
+    if (isNaN(articleId)) throw new Error("ArticleId must be a number");
 
     const data = await prisma.article.findUnique({
       where: { id: articleId },
@@ -36,12 +39,26 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
         title: true,
         content: true,
         createdAt: true,
+        heartCount: true, // 좋아요 수
+        user: {
+          select: {
+            name: true, // 작성자 이름
+          },
+        },
         comments: true,
       },
     });
-    if (!data) throw new Error("NO article found");
 
-    res.json(data);
+    if (!data) throw new Error("No article found");
+
+    const responseData = {
+      ...data,
+      username: data.user.name,
+    };
+
+    delete responseData.user;
+
+    res.json(responseData);
   } catch (e) {
     next(e);
   }
