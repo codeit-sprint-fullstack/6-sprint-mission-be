@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ### 게시글 삭제
-DELETE http://localhost:5050/articles/2
+DELETE http://localhost:5050/articles/11
 
 ### 게시글 목록 조회
 GET http://localhost:5050/articles?search=스프린트4
