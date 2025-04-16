@@ -22,47 +22,54 @@ articlesRouter.post("/", async (req, res, next) => {
 });
 
 /**
- * 게시글 조회
+ * 게시글 목록 조회
  */
-/**
- * 게시글 조회
- */
-articlesRouter.get("/:articleId", async (req, res, next) => {
+articlesRouter.get("/", async (req, res, next) => {
   try {
-    const articleId = Number(req.params.articleId);
-    if (isNaN(articleId)) throw new Error("ArticleId must be a number");
+    const skip = Number(req.query.offset);
+    const search = req.query.search;
 
-    const data = await prisma.article.findUnique({
-      where: { id: articleId },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        createdAt: true,
-        heartCount: true, // 좋아요 수
+    const options = {
+      orderBy: { createdAt: "desc" },
+      include: {
         user: {
           select: {
-            name: true, // 작성자 이름
+            name: true,
           },
         },
-        comments: true,
       },
-    });
-
-    if (!data) throw new Error("No article found");
-
-    const responseData = {
-      ...data,
-      username: data.user.name,
     };
 
-    delete responseData.user;
+    if (!isNaN(skip)) {
+      options.skip = skip;
+    }
 
-    res.json(responseData);
+    if (search) {
+      options.where = {
+        OR: [
+          { title: { contains: search } },
+          { content: { contains: search } },
+        ],
+      };
+    }
+
+    const articles = await prisma.article.findMany(options);
+
+    const formatted = articles.map((article) => {
+      const { user, ...rest } = article;
+      return {
+        ...rest,
+        username: user.name,
+      };
+    });
+
+    res.json(formatted);
   } catch (e) {
     next(e);
   }
 });
+
+
 
 /**
  * 게시글 목록 조회
