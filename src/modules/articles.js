@@ -1,13 +1,14 @@
-import express from 'express';
-import { prisma } from '../db/prisma/client.prisma.js';
+import express from "express";
+import { prisma } from "../db/prisma/client.prisma.js";
 
 const articlesRouter = express.Router();
 
-articlesRouter.get('/:articleId', async (req, res, next) => {
+// 특정 게시글 상세 조회
+articlesRouter.get("/:articleId", async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
 
-    const aricle = await prisma.article.findUnique({
+    const article = await prisma.article.findUnique({
       where: {
         id: articleId,
       },
@@ -15,50 +16,80 @@ articlesRouter.get('/:articleId', async (req, res, next) => {
         id: true,
         title: true,
         content: true,
+        likes: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
 
-    if (!aricle) throw new Error('No articles found');
+    if (!article) {
+      return res.status(404).json({
+        message: "게시글을 찾을 수 없습니다.",
+      });
+    }
 
-    res.status(200).json(aricle);
+    res.status(200).json({
+      data: article,
+    });
   } catch (error) {
     next(error);
   }
 });
 
-articlesRouter.post('/', async (req, res, next) => {
+// 새 게시글 작성
+articlesRouter.post("/", async (req, res, next) => {
   try {
     const { title, content } = req.body;
 
-    const aricle = await prisma.article.create({
+    const article = await prisma.article.create({
       data: {
         title,
         content,
+        likes: 0,
       },
     });
 
-    res.status(201).json(aricle);
+    res.status(201).json({
+      message: "게시글이 성공적으로 등록되었습니다.",
+      data: article,
+    });
   } catch (error) {
     next(error);
   }
 });
 
-articlesRouter.get('/', async (req, res, next) => {
+// 게시글 목록 조회 (검색 및 페이지네이션)
+articlesRouter.get("/", async (req, res, next) => {
   try {
-    const skip = Number(req.query.offset);
+    const skip = Number(req.query.offset) || 0;
+    const take = Number(req.query.limit) || 10;
     const search = req.query.search;
 
-    const options = {};
+    const sort = req.query.sort || "latest"; // 기본 정렬은 최신순
 
-    // 정렬
-    options.orderBy = { createdAt: 'desc' };
+    const options = {
+      skip,
+      take,
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        likes: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    };
 
-    // offset
-    if (skip) options.skip = skip;
+    // 정렬 옵션 설정
+    if (sort === "popular") {
+      // 인기순(좋아요 많은 순)으로 정렬
+      options.orderBy = { likes: "desc" };
+    } else {
+      // 최신순으로 정렬 (기본값)
+      options.orderBy = { createdAt: "desc" };
+    }
 
-    // .검색
-
+    // 검색 조건 설정
     if (search) {
       options.where = {
         OR: [
@@ -68,38 +99,63 @@ articlesRouter.get('/', async (req, res, next) => {
       };
     }
 
-    const aricle = await prisma.article.findMany(options);
+    const [articles, total] = await prisma.$transaction([
+      prisma.article.findMany(options),
+      prisma.article.count({
+        where: options.where,
+      }),
+    ]);
 
-    res.status(201).json(aricle);
+    res.status(200).json({
+      data: articles,
+      pagination: {
+        total,
+        offset: skip,
+        limit: take,
+        hasMore: total > skip + take,
+      },
+      sort, // 현재 적용된 정렬 방식을 응답에 포함
+    });
   } catch (error) {
     next(error);
   }
 });
 
-articlesRouter.patch('/:articleId', async (req, res, next) => {
+// 게시글 수정
+articlesRouter.patch("/:articleId", async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const { title, content } = req.body;
 
-    const aricle = await prisma.article.update({
+    const article = await prisma.article.update({
       where: { id: articleId },
       data: { title, content },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        likes: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    if (!aricle) throw new Error('No articles found');
-
-    res.status(200).json(aricle);
+    res.status(200).json({
+      message: "게시글이 성공적으로 수정되었습니다.",
+      data: article,
+    });
   } catch (err) {
-    if (err.name === 'PrismaClientKnownRequestError' && err.code === 'P2025') {
+    if (err.name === "PrismaClientKnownRequestError" && err.code === "P2025") {
       return res.status(404).json({
-        message: 'Article을 찾을 수 없습니다.',
+        message: "게시글을 찾을 수 없습니다.",
       });
     }
     next(err);
   }
 });
 
-articlesRouter.delete('/:articleId', async (req, res, next) => {
+// 게시글 삭제
+articlesRouter.delete("/:articleId", async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
 
@@ -108,41 +164,43 @@ articlesRouter.delete('/:articleId', async (req, res, next) => {
     });
 
     res.status(200).json({
-      message: '게시글이 성공적으로 삭제되었습니다.',
+      message: "게시글이 성공적으로 삭제되었습니다.",
     });
   } catch (err) {
-    if (err.name === 'PrismaClientKnownRequestError' && err.code === 'P2025') {
+    if (err.name === "PrismaClientKnownRequestError" && err.code === "P2025") {
       return res.status(404).json({
-        message: '게시글을 찾을 수 없습니다.',
+        message: "게시글을 찾을 수 없습니다.",
       });
     }
     next(err);
   }
 });
 
-articlesRouter.get('/:articleId/comments', async (req, res, next) => {
+// 특정 게시글의 댓글 목록 조회
+articlesRouter.get("/:articleId/comments", async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
 
     const comments = await prisma.comment.findMany({
       where: { articleId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     res.status(200).json({
       data: comments,
     });
   } catch (err) {
-    if (err.name === 'PrismaClientKnownRequestError' && err.code === 'P2025') {
+    if (err.name === "PrismaClientKnownRequestError" && err.code === "P2025") {
       return res.status(404).json({
-        message: '댓글에 해당하는 게시글을 찾을 수 없습니다.',
+        message: "댓글에 해당하는 게시글을 찾을 수 없습니다.",
       });
     }
     next(err);
   }
 });
 
-articlesRouter.post('/:articleId/comments', async (req, res, next) => {
+// 특정 게시글에 댓글 작성
+articlesRouter.post("/:articleId/comments", async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const { content } = req.body;
@@ -160,14 +218,14 @@ articlesRouter.post('/:articleId/comments', async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: '댓글이 성공적으로 등록되었습니다.',
+      message: "댓글이 성공적으로 등록되었습니다.",
       data: comment,
     });
   } catch (err) {
-    if (err.name === 'PrismaClientKnownRequestError') {
-      if (err.code === 'P2025') {
+    if (err.name === "PrismaClientKnownRequestError") {
+      if (err.code === "P2025") {
         return res.status(404).json({
-          message: '게시글을 찾을 수 없습니다.',
+          message: "게시글을 찾을 수 없습니다.",
         });
       }
     }
@@ -175,8 +233,9 @@ articlesRouter.post('/:articleId/comments', async (req, res, next) => {
   }
 });
 
+// 댓글 수정
 articlesRouter.patch(
-  '/:articleId/comments/:commentId',
+  "/:articleId/comments/:commentId",
   async (req, res, next) => {
     try {
       const commentId = req.params.commentId;
@@ -188,16 +247,16 @@ articlesRouter.patch(
       });
 
       res.status(200).json({
-        message: '댓글이 성공적으로 수정되었습니다.',
+        message: "댓글이 성공적으로 수정되었습니다.",
         data: comment,
       });
     } catch (err) {
       if (
-        err.name === 'PrismaClientKnownRequestError' &&
-        err.code === 'P2025'
+        err.name === "PrismaClientKnownRequestError" &&
+        err.code === "P2025"
       ) {
         return res.status(404).json({
-          message: '댓글을 찾을 수 없습니다.',
+          message: "댓글을 찾을 수 없습니다.",
         });
       }
       next(err);
@@ -205,8 +264,9 @@ articlesRouter.patch(
   }
 );
 
+// 댓글 삭제
 articlesRouter.delete(
-  '/:articleId/comments/:commentId',
+  "/:articleId/comments/:commentId",
   async (req, res, next) => {
     try {
       const commentId = req.params.commentId;
@@ -216,20 +276,60 @@ articlesRouter.delete(
       });
 
       res.status(200).json({
-        message: '댓글이 성공적으로 삭제되었습니다.',
+        message: "댓글이 성공적으로 삭제되었습니다.",
       });
     } catch (err) {
       if (
-        err.name === 'PrismaClientKnownRequestError' &&
-        err.code === 'P2025'
+        err.name === "PrismaClientKnownRequestError" &&
+        err.code === "P2025"
       ) {
         return res.status(404).json({
-          message: '댓글을 찾을 수 없습니다.',
+          message: "댓글을 찾을 수 없습니다.",
         });
       }
       next(err);
     }
   }
 );
+
+// 특정 게시글 좋아요 증가
+articlesRouter.patch("/:articleId/like", async (req, res, next) => {
+  try {
+    const articleId = req.params.articleId;
+
+    // 현재 게시글 조회
+    const article = await prisma.article.findUniqueOrThrow({
+      where: { id: articleId },
+    });
+
+    // 좋아요 수 증가
+    const updatedArticle = await prisma.article.update({
+      where: { id: articleId },
+      data: {
+        likes: (article.likes || 0) + 1,
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        likes: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    res.status(200).json({
+      message: "게시글에 좋아요를 눌렀습니다.",
+      data: updatedArticle,
+    });
+  } catch (err) {
+    if (err.name === "PrismaClientKnownRequestError" && err.code === "P2025") {
+      return res.status(404).json({
+        message: "게시글을 찾을 수 없습니다.",
+      });
+    }
+    next(err);
+  }
+});
 
 export default articlesRouter;
