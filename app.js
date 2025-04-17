@@ -14,6 +14,7 @@ const allowedOrigins = [
   `http://localhost:${ALLOWEPORT}`, // 로컬 환경
   "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
+  "https://panda-market.vercel.app",
   // 배포된 환경
 ];
 
