@@ -18,7 +18,7 @@ articleRouter.get("/", async (req, res, next) => {
       where: filter,
       skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
-      orderBy: { creatdAt: orderBy === "recent" ? "desc" : "asc" },
+      orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
       omit: { updatedAt: true },
     });
 
