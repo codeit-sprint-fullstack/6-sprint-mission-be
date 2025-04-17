@@ -1,12 +1,10 @@
 const express = require("express");
 const articlesRouter = require("./articles.module");
-const marketCommentsRouter = require("./marketComments.module");
-const communityCommentsRouter = require("./communityComments.module");
+const productsRouter = require("./products.module");
 
 const router = express.Router();
 
 router.use("/articles", articlesRouter);
-router.use("/market", marketCommentsRouter);
-router.use("/community", communityCommentsRouter);
+router.use("/products", productsRouter);
 
 module.exports = router;
