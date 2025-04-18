@@ -56,9 +56,9 @@ model ProductComment {
   id        Int      @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
-  // author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  // author    User     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   // authorId  String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 }
 
@@ -68,7 +68,7 @@ model ProductLike {
   createdAt DateTime @default(now())
   // user      User     @relation(fields: [userId], references: [id], onDelete: SetNull)
   // userId    String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 }
 
@@ -91,6 +91,6 @@ model ArticleComment {
   createdAt DateTime @default(now())
   // author    User     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   // authorId  String
-  article   Article  @relation(fields: [articleId], references: [id])
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId Int
 }
