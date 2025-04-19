@@ -29,7 +29,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"], // 허용할 HTTP 메서드 설정
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // PATCH 추가
     allowedHeaders: ["Content-Type", "Authorization"], // 허용할 헤더 설정
   })
 );
