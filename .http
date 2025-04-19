@@ -3,7 +3,7 @@ POST http://localhost:5050/articles
 Content-Type: application/json
 
 { 
-  "title": "코드잇 스프린트6",
+  "title": "코드잇 스프린트7",
   "content": "코드잇 스프린트 6기입니다."
 }
 
@@ -11,7 +11,7 @@ Content-Type: application/json
 GET http://localhost:5050/articles/1
 
 ### 게시글 수정
-PATCH http://localhost:5050/articles/1
+PATCH http://localhost:5050/articles/6
 Content-Type: application/json
 
 {
@@ -21,6 +21,9 @@ Content-Type: application/json
 
 ### 게시글 삭제
 DELETE http://localhost:5050/articles/11
+
+### 게시글 목록 조회
+GET http://localhost:5050/articles
 
 ### 게시글 목록 조회
 GET http://localhost:5050/articles?search=스프린트4
@@ -61,13 +64,13 @@ Content-Type: application/json
 DELETE http://localhost:5050/comments/market/1/1
 
 ### 댓글 삭제 (자유게시판)
-DELETE http://localhost:5050/comments/freeboard/1/4
+DELETE http://localhost:5050/comments/freeboard/1/1
 
 ### 댓글 목록 조회 (중고마켓)
 GET http://localhost:5050/comments/market/1?take=10
 
 ### 댓글 목록 조회 (중고마켓) - 커서 기반
-GET http://localhost:5050/comments/market/1?take=10&cursor=6
+GET http://localhost:5050/comments/market/1?take=10&cursor=1
 
 
 ### 댓글 목록 조회 (자유게시판)
