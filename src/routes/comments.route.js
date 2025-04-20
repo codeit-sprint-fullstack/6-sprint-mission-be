@@ -4,83 +4,78 @@ const prisma = require("../db/prisma/client.prisma");
 const commentsRouter = express.Router();
 
 // 자유게시판 댓글 등록
-commentsRouter.post("/articles/:articleId/comments", async (req, res, next) => {
+commentsRouter.post("/articles/:articleId", async (req, res, next) => {
+  const articleId = Number(req.params.articleId);
+  const content = req.body.content;
+
+  // 게시글이 있어야 함
+  const article = await prisma.article.findUnique({
+    where: { id: articleId },
+  });
+
+  if (!article)
+    return res.status(404).json({ error: "해당 게시글을 찾을 수 없습니다." });
+
+  // 댓글 내용이 있어야 함
+  if (!content) {
+    return res.status(400).json({ message: "댓글을 입력해 주세요." });
+  }
+
   try {
-    const articleId = req.params.articleId;
-    const content = req.body.content;
+    const comment = await prisma.comment.create({
+      data: { content, article: { connect: { id: articleId } } },
+    });
+
+    res.status(201).json(comment);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// 자유게시판 댓글 목록 조회 및 검색 -- 수정할 것임
+commentsRouter.get("/articles/:articleId", async (req, res, next) => {
+  try {
+    const articleId = Number(req.params.articleId);
+    const { cursor, limit = 10 } = req.query;
 
     const article = await prisma.article.findUnique({
       where: { id: articleId },
     });
 
-    if (!article) {
-      return res.status(404).json({ message: "게시글을 찾을 수 없습니다." });
-    }
+    if (!article) return res.status(404).json({ message: "게시물이 없습니다" });
 
-    const comment = await prisma.articleComment.create({
-      data: { content, articleId },
+    // 최대 개수 설정 (30개)
+    const commentsLimit = Math.min(Number(limit), 30);
+
+    // 댓글 조회 (커서 포함)
+    const articleComments = await prisma.comment.findMany({
+      where: { articleId },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+      },
+      skip: cursor ? 1 : 0,
+      orderBy: {
+        createdAt: "asc",
+      },
+      take: commentsLimit + 1,
+      cursor: cursor ? { id: Number(cursor) } : undefined,
     });
 
-    res.status(201).json(comment);
+    // 페이지 넘기기(커서)
+    const hasNextPage = articleComments.length > commentsLimit;
+    const nextCursor = hasNextPage ? articleComments[commentsLimit].id : null;
+
+    res.status(201).json({
+      message: `${articleId}번 게시글의 댓글 목록`,
+      comments: hasNextPage
+        ? articleComments.slice(0, commentsLimit)
+        : articleComments,
+      nextCursor,
+    });
   } catch (e) {
-    next(e);
-  }
-});
-
-// 중고마켓 댓글 등록
-commentsRouter.post("/products/:productId/comments", async (req, res, next) => {
-  try {
-    const productId = req.params.productId;
-    const content = req.body.content;
-
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-    });
-
-    if (!product) {
-      return res.status(404).json({ message: "게시글을 찾을 수 없습니다." });
-    }
-
-    const comment = await prisma.productComment.create({
-      data: { productId: productId, content },
-    });
-
-    res.status(201).json(comment);
-  } catch (e) {
-    next(e);
-  }
-});
-
-// 자유게시판 댓글 목록 조회 및 검색
-commentsRouter.get("/comments/articles", async (req, res, next) => {
-  try {
-    const cursor = Number(req.query.cursor) || 0;
-    const limit = Number(req.query.limit) || 10;
-
-    const articleComment = await prisma.articleComment.findMany({
-      skip: cursor,
-      take: limit,
-    });
-
-    res.json(articleComment);
-  } catch (e) {
-    next(e);
-  }
-});
-
-// 중고마켓 댓글 목록 조회 및 검색
-commentsRouter.get("/comments/products", async (req, res, next) => {
-  try {
-    const cursor = Number(req.query.cursor) || 0;
-    const limit = Number(req.query.limit) || 10;
-
-    const productComment = await prisma.productComment.findMany({
-      skip: cursor,
-      take: limit,
-    });
-
-    res.json(productComment);
-  } catch (e) {
+    console.error("댓글 오류", e);
     next(e);
   }
 });

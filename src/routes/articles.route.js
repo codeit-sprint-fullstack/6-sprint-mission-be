@@ -3,7 +3,9 @@ const prisma = require("../db/prisma/client.prisma");
 
 const articlesRouter = express.Router();
 
-// 게시글 등록
+/**
+ * 게시글 등록
+ **/
 articlesRouter.post("/", async (req, res, next) => {
   try {
     const { title, content, thumbnailImg, userId } = req.body;
@@ -16,7 +18,7 @@ articlesRouter.post("/", async (req, res, next) => {
     }
 
     // 로그인 제대로 되었나 확인
-    const user = await prisma.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ message: "존재하지 않는 사용자입니다." });
     }
@@ -29,16 +31,25 @@ articlesRouter.post("/", async (req, res, next) => {
     }
 
     const article = await prisma.article.create({
-      data: { title, content, thumbnailImg, user: { connect: { id: userId } } },
+      data: {
+        title,
+        content,
+        thumbnailImg,
+        user: { connect: { id: userId } },
+      },
+      include: { user: true },
     });
 
     res.status(201).json(article);
   } catch (e) {
+    console.error(e);
     next(e);
   }
 });
 
-// 게시글 조회
+/**
+ * 게시글 조회
+ */
 articlesRouter.get("/:articleId", async (req, res, next) => {
   try {
     const articleId = Number(req.params.articleId);
@@ -69,13 +80,15 @@ articlesRouter.get("/:articleId", async (req, res, next) => {
         .status(404)
         .json({ message: "해당 게시글이 존재하지 않습니다." });
 
-    res.json(article);
+    res.json({ article });
   } catch (e) {
     next(e);
   }
 });
 
-// 게시글 목록 조회 및 검색
+/**
+ * 게시글 목록 조회 및 검색
+ **/
 articlesRouter.get("/", async (req, res, next) => {
   try {
     const offset = Number(req.query.offset) || 0;
@@ -91,6 +104,7 @@ articlesRouter.get("/", async (req, res, next) => {
         }
       : undefined;
 
+    // 정렬
     const orderBy =
       sort === "likes"
         ? { likesToArticle: { _count: "desc" } }
@@ -98,7 +112,6 @@ articlesRouter.get("/", async (req, res, next) => {
 
     const [articles, totalCount] = await Promise.all([
       prisma.article.findMany({
-        orderBy: { createdAt: "desc" },
         skip: offset,
         take: limit,
         where,
@@ -122,20 +135,25 @@ articlesRouter.get("/", async (req, res, next) => {
   }
 });
 
-// 게시글 수정
+/**
+ * 게시글 수정
+ */
 articlesRouter.patch("/:articleId", async (req, res, next) => {
   try {
-    const articleId = req.params.articleId;
-    const { title, content } = req.body;
+    const articleId = Number(req.params.articleId);
+    const { title, content, thumbnailImg } = req.body;
 
     const updatedArticle = await prisma.article.update({
       where: { id: articleId },
-      data: { title, content },
+      data: { title, content, thumbnailImg },
     });
 
-    if (!articleId) throw new Error("해당 id에 게시글이 없습니다.");
+    if (!articleId)
+      return res
+        .status(404)
+        .json({ message: "해당 게시글이 존재하지 않습니다." });
 
-    res.json(updatedArticle);
+    res.status(200).json(updatedArticle);
   } catch (e) {
     next(e);
   }
@@ -144,11 +162,18 @@ articlesRouter.patch("/:articleId", async (req, res, next) => {
 // 게시글 삭제
 articlesRouter.delete("/:articleId", async (req, res, next) => {
   try {
-    const articleId = req.params.articleId;
+    const articleId = Number(req.params.articleId);
+
+    const article = await prisma.article.findUnique({
+      where: { id: articleId },
+    });
+
+    if (!article)
+      return res.status(404).json({ message: "게시글을 찾을 수 없습니다." });
 
     await prisma.article.delete({ where: { id: articleId } });
 
-    res.sendStatus(204);
+    res.sendStatus(204).json({ message: "게시글이 삭제되었습니다." });
   } catch (e) {
     next(e);
   }
