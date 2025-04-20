@@ -1,5 +1,10 @@
 const express = require("express");
 const prisma = require("../db/prisma/client.prisma");
+const {
+  GetArticleListReqStruct,
+} = require("../structs/article/GetArticleListReqStruct");
+const { create } = require("domain");
+const { Article } = require("../models/Article");
 
 const articleRouter = express.Router();
 
@@ -24,28 +29,47 @@ articleRouter.post("/", async (req, res, next) => {
  * 게시글 목록 조회하기
  */
 articleRouter.get("/", async (req, res, next) => {
+  const { cursor, orderBy, word } = create(req.query, GetArticleListReqStruct);
+
+  const parsedTake = parseInt(req.query.take) || 10;
+
   try {
-    const skip = Number(req.query.offset);
-    const search = req.query.search;
+    const articleEntities = await prisma.article.findMany({
+      cursor: cursor ? { id: cursor } : undefined,
+      take: parsedTake + 1,
+      orderBy: orderBy === "recent" ? { id: "desc" } : { id: "asc" },
+      where: word ? { title: { contains: word } } : undefined,
+    });
 
-    const options = {};
+    const articles = articleEntities.map(
+      (articleEntitiy) => new Article(articleEntitiy)
+    );
 
-    //정렬
-    options.orderBy = { createdAt: "desc" };
+    const hasNext = articles.length === parsedTake + 1;
 
-    //오프셋
-    if (skip) options.skip = skip;
+    return res.send({
+      data: articles.slice(0, parsedTake).map((article) => ({
+        id: article.getId(),
+        title: article.getTitle(),
+        content: article.getContent(),
+        createdAt: article.getCreatedAt(),
+      })),
+      hasNext,
+      nextCursor: hasNext ? articles[articles.length - 1].getId() : null,
+    });
 
-    //검색
-    if (search)
-      options.where = {
-        OR: [
-          { title: { contains: search } },
-          { content: { contains: search } },
-        ],
-      };
+    // res.json(articles);
+  } catch (e) {
+    next(e);
+  }
+});
 
-    const articles = await prisma.article.findMany(options);
+// 게시글 목록 조회하기 (베스트 3개만)
+articleRouter.get("/", async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit) || 5;
+
+    const articles = await prisma.article.findMany({ take: limit });
 
     res.json(articles);
   } catch (e) {

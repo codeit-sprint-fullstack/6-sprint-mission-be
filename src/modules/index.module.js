@@ -10,6 +10,6 @@ router.use("/products", productsRouter);
 router.use("/product", productCommentsRouter);
 
 router.use("/articles", articleRouter);
-router.use("/article", articleCommentsRouter);
+router.use("/", articleCommentsRouter);
 
 module.exports = router;

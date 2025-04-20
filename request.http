@@ -39,12 +39,15 @@ POST http://localhost:3000/articles
 Content-Type: application/json
 
 {
-    "title": "10번째 게시글이에요",
-    "content": "10번째 내용"
+    "title": "날씨가ㅗㄱ쇼도ㅓㅜㅜ아요",
+    "content": "오늘 날씨가 참 좋아요"
 }
 
 ###게시글 목록 조회
 GET http://localhost:3000/articles
+
+###베스트 게시글 목록 조회
+GET http://localhost:3000/articles?take=3
 
 
 ###게시글 상세 조회
@@ -52,30 +55,30 @@ GET http://localhost:3000/articles/5
 
 
 ###게시글 수정
-PATCH  http://localhost:3000/articles/5
+PATCH  http://localhost:3000/articles/24
 Content-Type: application/json
 
 {
-    "title": "5번째 게시글 수정했어요",
-    "content": "수정한 5번째 내용"
+    "title": "날씨가 좋아요",
+    "content": "어제는 추었어요"
 }
 
 ###게시글 삭제
-DELETE http://localhost:3000/articles/5
+DELETE http://localhost:3000/articles/25
 
 
 #######################################################
 
 ### 상품 댓글 등록
-POST http://localhost:3000/product/5/comment
+POST http://localhost:3000/product/4/comment
 Content-Type: application/json
 
 {
-    "content": "5번째 상품의 1번째 댓글이에요"
+    "content": "4번째 상품의 4번째 댓글이에요"
 }
 
 ###상품 댓글 목록 조회
-GET http://localhost:3000/product/4/comments
+GET http://localhost:3000/product/4/comments?cursor=7
 
 
 ###상품 댓글 수정
@@ -92,24 +95,24 @@ DELETE  http://localhost:3000/product/comment/3
 #####################################################
 
 ###게시글 댓글 등록
-POST http://localhost:3000/article/6/comment
+POST http://localhost:3000/articles/1/comments
 Content-Type: application/json
 
 {
-    "content": "6번째 게시글의 2번째 댓글이에요"
+    "content": "리셋하고 댓글등록 테스트트"
 }
 
 ###게시글 댓글 목록 조회
-GET http://localhost:3000/article/3/comments
+GET http://localhost:3000/articles/1/comments
 
 
 ###게시글 댓글 수정
-PATCH http://localhost:3000/article/comment/3
+PATCH http://localhost:3000/comments/13
 Content-Type: application/json
 
 {
-    "content": "3번째 게시글에 있는 3번째 댓글을 수정했어요"
+    "content": "13번째 댓글을 수정했어요"
 }
 
 ###게시글 댓글 삭제
-DELETE  http://localhost:3000/article/comment/3
+DELETE  http://localhost:3000/comments/13

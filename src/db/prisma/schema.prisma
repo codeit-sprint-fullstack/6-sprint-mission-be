@@ -14,37 +14,48 @@ datasource db {
 }
 
 model Product {
-  id              Int              @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   name            String
-  description     String           @default("")
+  description     String    @default("")
   price           Int
-  tags            String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  productComments ProductComment[]
+  tags            Json
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  ProductComments Comment[]
 }
 
 model Article {
-  id              Int              @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   title           String
   content         String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  articleComments ArticleComment[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  ArticleComments Comment[]
 }
 
-model ProductComment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-}
+// model ProductComment {
+//   id        Int      @id @default(autoincrement())
+//   content   String
+//   createdAt DateTime @default(now())
+//   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   productId Int
+// }
 
-model ArticleComment {
+// model ArticleComment {
+//   id        Int      @id @default(autoincrement())
+//   content   String
+//   createdAt DateTime @default(now())
+//   article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+//   articleId Int
+// }
+
+model Comment {
   id        Int      @id @default(autoincrement())
   content   String
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int?
+  article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int?
   createdAt DateTime @default(now())
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId Int
+  updatedAt DateTime @updatedAt
 }
