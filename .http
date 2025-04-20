@@ -1,0 +1,55 @@
+GET http://localhost:3000/api-docs
+
+###
+
+GET http://localhost:3000/articles
+
+###
+
+POST http://localhost:3000/articles
+Content-Type: application/json
+
+{
+    "title": "신발 팔아요",
+    "content": "100만원에 ㅋㅋㅋㅋㅋ"
+}
+
+###
+
+DELETE http://localhost:3000/articles/6
+
+###
+
+PATCH http://localhost:3000/articles/7
+Content-Type: application/json
+
+{
+    "title": "맥북 16인치, 얼마에 팔아야하나요?",
+    "content": "맥북 16인치, 얼마에 팔아야하나요?"
+}
+
+### 댓글 api
+
+POST http://localhost:3000/articles/7/comments
+Content-Type: application/json
+
+{
+    "content": "그러"
+}
+
+###
+
+GET http://localhost:3000/articles/8/comments
+
+###
+
+PATCH http://localhost:3000/comments/8
+Content-Type: application/json
+
+{
+    "content": "이러네ㅋㅋㅋㅋㅋ"
+}
+
+###
+
+DELETE http://localhost:3000/comments/8
