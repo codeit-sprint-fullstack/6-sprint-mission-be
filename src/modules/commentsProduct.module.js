@@ -1,8 +1,8 @@
 /********************************
  * 상품 관련 댓글 코드입니다
  ********************************/
-const express = require("express");
-const prisma = require("../db/client.prisma");
+import express from "express";
+import prisma from "../config/client.prisma.js";
 
 const productCommentsRouter = express.Router();
 

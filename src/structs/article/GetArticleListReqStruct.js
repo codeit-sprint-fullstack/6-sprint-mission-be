@@ -1,4 +1,4 @@
-const {
+import {
   coerce,
   defaulted,
   enums,
@@ -9,7 +9,7 @@ const {
   object,
   optional,
   string,
-} = require("superstruct");
+} from "superstruct";
 
 //article list 요청의 쿼리 스트링 구조 디버깅
 const GetArticleListReqStruct = object({

@@ -1,0 +1,18 @@
+### 회원가입
+POST http://localhost:3000/auth/signUp
+Content-Type: application/json
+
+{
+    "email": "test2@naver.com",
+    "nickname": "test2",
+    "password": "2222"
+}
+
+### 로그인
+POST http://localhost:3000/auth/signIn
+Content-Type: application/json
+
+{
+    "email": "test1@naver.com",
+    "password": "1111"
+}

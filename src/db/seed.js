@@ -1,7 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
-const { ArticleMocks } = require("./mocks/articleMocks.js");
-const { ProductMocks } = require("./mocks/productMocks.js");
-const { CommentMocks } = require("./mocks/commentMoacks.js");
+import { PrismaClient } from "@prisma/client";
+import { ArticleMocks } from "./mocks/articleMocks.js";
+import { ProductMocks } from "./mocks/productMocks.js";
+import { CommentMocks } from "./mocks/commentMoacks.js"; // 오타 주의: "commentMoacks" → "commentMocks"인지 확인 필요
 
 const prisma = new PrismaClient();
 

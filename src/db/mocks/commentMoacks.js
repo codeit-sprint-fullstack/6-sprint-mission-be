@@ -1,4 +1,4 @@
-const CommentMocks = [
+export const CommentMocks = [
   {
     content: "혹시 사용기간이 어떻게 되실까요?",
     articleId: 1,
@@ -23,7 +23,6 @@ const CommentMocks = [
     content: "Article 5 Comment 1",
     articleId: 5,
   },
-
   {
     content: "Product 1 Comment 1",
     productId: 1,
@@ -49,5 +48,3 @@ const CommentMocks = [
     productId: 5,
   },
 ];
-
-module.exports = { CommentMocks };

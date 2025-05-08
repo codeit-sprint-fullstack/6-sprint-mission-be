@@ -1,4 +1,4 @@
-const ProductMocks = [
+export const ProductMocks = [
   {
     name: "Product 1",
     description: "Product 1 description",
@@ -30,5 +30,3 @@ const ProductMocks = [
     tags: [],
   },
 ];
-
-module.exports = { ProductMocks };

@@ -1,10 +1,8 @@
-const express = require("express");
-const prisma = require("../db/client.prisma");
-const {
-  GetArticleListReqStruct,
-} = require("../structs/article/GetArticleListReqStruct");
-const { create } = require("domain");
-const { Article } = require("../models/Article");
+import express from "express";
+import prisma from "../config/client.prisma.js";
+import { GetArticleListReqStruct } from "../structs/article/GetArticleListReqStruct.js";
+import { create } from "domain";
+import { Article } from "../models/Article.js";
 
 const articleRouter = express.Router();
 

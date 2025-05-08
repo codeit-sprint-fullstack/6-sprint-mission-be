@@ -1,4 +1,4 @@
-class Article {
+export class Article {
   /** ID */
   _id;
 
@@ -42,5 +42,3 @@ class Article {
     return this._updatedAt;
   }
 }
-
-module.exports = { Article };

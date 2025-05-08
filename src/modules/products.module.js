@@ -1,28 +1,25 @@
-const express = require("express");
-const prisma = require("../db/client.prisma");
-
-const productsRouter = express.Router();
+import express from "express";
 
 /**
  * 상품 등록
  */
 
-productsRouter.post("/", async (req, res, next) => {
-  try {
-    const { name, description, price, tags } = req.body;
+// productsRouter.post("/", async (req, res, next) => {
+//   try {
+//     const { name, description, price, tags } = req.body;
 
-    if (!name || !description || !price || !tags)
-      throw new Error("필수 정보가 누락");
+//     if (!name || !description || !price || !tags)
+//       throw new Error("필수 정보가 누락");
 
-    const product = await prisma.product.create({
-      data: { name, description, price, tags },
-    });
+//     const product = await prisma.product.create({
+//       data: { name, description, price, tags },
+//     });
 
-    res.json(product);
-  } catch (e) {
-    next(e);
-  }
-});
+//     res.json(product);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 /**
  * 상품 목록 조회
@@ -42,18 +39,18 @@ productsRouter.get("/", async (req, res, next) => {
  * 상품 상세 조회
  */
 
-productsRouter.get("/:productId", async (req, res, next) => {
-  try {
-    const productId = Number(req.params.productId);
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-    });
-    if (!product) return res.json("그런 상품은 없습니다...");
-    res.json(product);
-  } catch (e) {
-    next(e);
-  }
-});
+// productsRouter.get("/:productId", async (req, res, next) => {
+//   try {
+//     const productId = Number(req.params.productId);
+//     const product = await prisma.product.findUnique({
+//       where: { id: productId },
+//     });
+//     if (!product) return res.json("그런 상품은 없습니다...");
+//     res.json(product);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 /**
  * 상품 수정

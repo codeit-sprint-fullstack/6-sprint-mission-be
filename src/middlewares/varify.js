@@ -1,0 +1,39 @@
+//잘못된 요청을 보낸 경우 400 Bad request 에러를 발생
+function throwBadRequestError() {
+  const error = new Error("Bad Request, 필수 정보가 누락되었습니다.");
+  error.code = 400;
+  throw error;
+}
+
+//정보가 없는 경우 404 Not Found 에러를 발생
+function throwNotFoundError() {
+  const error = new Error("Not Found, 상품 정보를 찾을 수 없습니다.");
+  error.code = 404;
+  throw error;
+}
+
+//상품 등록 req에 필수 정보의 여부 확인
+async function requestStructure(req, res, next) {
+  const { name, description, price, tags } = req.body;
+
+  if (!name || !description || !price || !tags) {
+    throwBadRequestError();
+  }
+  next();
+}
+
+//회원가입 req에 필수 정보의 여부 확인
+async function signUpRequestStructure(req, res, next) {
+  const { email, nickname, password } = req.body;
+
+  if (!email || !nickname || !password) {
+    throwBadRequestError();
+  }
+  next();
+}
+
+export default {
+  requestStructure,
+  throwNotFoundError,
+  signUpRequestStructure,
+};

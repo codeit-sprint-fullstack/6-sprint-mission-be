@@ -13,15 +13,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  nickname          String
+  image             String?
+  encryptedPassword String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
 model Product {
   id              Int       @id @default(autoincrement())
   name            String
   description     String    @default("")
   price           Int
-  tags            Json
+  tags            String[]  @default([])
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   ProductComments Comment[]
+  isFavorite      Boolean?
 }
 
 model Article {
