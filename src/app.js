@@ -1,5 +1,6 @@
 const express = require("express");
 const indexRouter = require("./modules/indexModule.js");
+const multer = require("multer");
 
 const app = express();
 const PORT = 5050;
@@ -30,7 +31,16 @@ const upload = multer({ storage: storage });
 // 3. 라우트 설정
 app.post("/upload", upload.single("userfile"), (req, res) => {
   console.log(req.file); // 업로드된 파일 정보 확인
-  res.send("파일 업로드 성공!");
+  const fileUrl = `/uploads/${req.file.filename}`;
+  res.send({ url: fileUrl });
+});
+
+app.use((err, req, res, next) => {
+  console.error("에러 발생:", err);
+  res.status(500).json({
+    errorCode: err.code || "UNKNOWN_ERROR",
+    errorMessage: err.message || "알 수 없는 오류가 발생했습니다.",
+  });
 });
 
 app.listen(PORT, () => {

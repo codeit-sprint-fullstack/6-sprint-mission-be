@@ -1,0 +1,33 @@
+### 게시물 등록하기
+
+POST http://localhost:5050/articles
+Content-Type: application/json
+
+{
+  "title": "나의 다섯 번째 아티클",
+  "content": "빛나는 나의 다섯 번째 아티클~!"
+}
+
+### 게시물 조회하기
+
+GET http://localhost:5050/articles/1
+
+### 게시물 목록 조회
+
+GET http://localhost:5050/articles?offset=3
+
+### multer 업로드
+
+POST http://localhost:5050/upload
+Content-Type: multipart/form-data; boundary=---------------------------abcd123456
+
+-----------------------------abcd123456
+Content-Disposition: form-data; name="userfile"; filename="example.txt"
+Content-Type: text/plain
+
+This is the content of the file.
+-----------------------------abcd123456
+Content-Disposition: form-data; name="someText"
+
+Some text value
+-----------------------------abcd123456--
