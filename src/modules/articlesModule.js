@@ -1,6 +1,5 @@
 const express = require("express");
 const prisma = require("../db/prisma/client.prisma");
-const { create } = require("domain");
 
 const articlesRouter = express.Router();
 

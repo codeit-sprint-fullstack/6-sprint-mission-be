@@ -20,7 +20,8 @@
   "homepage": "https://github.com/rakaso598/6-sprint-mission-be#readme",
   "dependencies": {
     "@prisma/client": "^6.5.0",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
