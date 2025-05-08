@@ -12,7 +12,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 GET http://localhost:3000/articles
 
 ###베스트 게시글 목록 조회
-GET http://localhost:3000/articles?take=3
+# GET http://localhost:3000/articles?take=3
 
 
 ###게시글 상세 조회

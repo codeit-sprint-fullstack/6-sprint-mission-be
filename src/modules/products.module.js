@@ -25,15 +25,15 @@ import express from "express";
  * 상품 목록 조회
  */
 
-productsRouter.get("/", async (req, res, next) => {
-  try {
-    const products = await prisma.product.findMany();
-    if (!products) throw new Error("등록된 상품이 없습니다...");
-    res.json(products);
-  } catch (e) {
-    next(e);
-  }
-});
+// productsRouter.get("/", async (req, res, next) => {
+//   try {
+//     const products = await prisma.product.findMany();
+//     if (!products) throw new Error("등록된 상품이 없습니다...");
+//     res.json(products);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 /**
  * 상품 상세 조회
