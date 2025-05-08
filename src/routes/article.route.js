@@ -1,80 +1,179 @@
+// src/routes/article.route.js
 const express = require("express");
-const prisma = require("../models/prisma/prismaClient");
+const articleController = require("../controllers/article.controller.js");
+const authMiddleware = require("../middlewares/auth.middleware.js");
 
-const articlesRouter = express.Router();
-
-/**
- * 게시물 등록
- */
-articlesRouter.post("/", async (req, res, next) => {
-  try {
-    const data = req.body;
-    const { title, content } = data;
-
-    const article = await prisma.article.create({ data: { title, content } });
-
-    res.status(201).json(article);
-  } catch {
-    next(e);
-  }
-});
+const router = express.Router();
 
 /**
- * 게시물 조회
+ * @swagger
+ * /articles:
+ * post:
+ * summary: Create a new article
+ * security:
+ * - bearerAuth: []
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * title:
+ * type: string
+ * content:
+ * type: string
+ * writer:
+ * type: string
+ * responses:
+ * 201:
+ * description: Successful creation
+ * 400:
+ * description: Bad Request
+ * 401:
+ * description: Unauthorized
  */
-articlesRouter.get("/:articleId", async (req, res, next) => {
-  try {
-    const articleId = Number(req.params.articleId);
-    if (articleId === NaN) throw new Error("articleId must be number");
-
-    const article = await prisma.article.findUnique({
-      where: { id: articleId },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        createdAt: true,
-      },
-    });
-    if (!article) throw new Error("No article found");
-
-    res.status(200).json(article);
-  } catch (e) {
-    next(e);
-  }
-});
+router.post("/", authMiddleware, articleController.createArticle);
 
 /**
- * 게시물 목록 조회
+ * @swagger
+ * /articles:
+ * get:
+ * summary: Get all articles
+ * responses:
+ * 200:
+ * description: Successful response
  */
-articlesRouter.get("/", async (req, res, next) => {
-  try {
-    const skip = Number(req.query.offset);
-    const search = req.query.search;
+router.get("/", articleController.getAllArticles);
 
-    const options = {};
+/**
+ * @swagger
+ * /articles/{articleId}:
+ * get:
+ * summary: Get an article by ID
+ * parameters:
+ * - in: path
+ * name: articleId
+ * required: true
+ * schema:
+ * type: integer
+ * responses:
+ * 200:
+ * description: Successful response
+ * 404:
+ * description: Article not found
+ */
+router.get("/:articleId", articleController.getArticleById);
 
-    // 정렬
-    options.orderBy = { createdAt: "desc" };
+/**
+ * @swagger
+ * /articles/{articleId}:
+ * patch:
+ * summary: Update an article by ID
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: articleId
+ * required: true
+ * schema:
+ * type: integer
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * title:
+ * type: string
+ * content:
+ * type: string
+ * writer:
+ * type: string
+ * responses:
+ * 200:
+ * description: Successful response
+ * 400:
+ * description: Bad Request
+ * 401:
+ * description: Unauthorized
+ * 404:
+ * description: Article not found
+ */
+router.patch("/:articleId", authMiddleware, articleController.updateArticle);
 
-    // 오프셋
-    if (skip) options.skip = skip;
+/**
+ * @swagger
+ * /articles/{articleId}:
+ * delete:
+ * summary: Delete an article by ID
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: articleId
+ * required: true
+ * schema:
+ * type: integer
+ * responses:
+ * 204:
+ * description: Successful deletion
+ * 401:
+ * description: Unauthorized
+ * 404:
+ * description: Article not found
+ */
+router.delete("/:articleId", authMiddleware, articleController.deleteArticle);
 
-    // 검색
-    if (search)
-      options.where = {
-        OR: [
-          { title: { contains: search } },
-          { content: { contains: search } },
-        ],
-      };
+/**
+ * @swagger
+ * /articles/{articleId}/like:
+ * post:
+ * summary: Like an article
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: articleId
+ * required: true
+ * schema:
+ * type: integer
+ * responses:
+ * 200:
+ * description: Article liked
+ * 401:
+ * description: Unauthorized
+ * 404:
+ * description: Article not found
+ */
+router.post("/:articleId/like", authMiddleware, articleController.likeArticle);
 
-    const articles = await prisma.article.findMany(options);
+/**
+ * @swagger
+ * /articles/{articleId}/like:
+ * delete:
+ * summary: Unlike an article
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: articleId
+ * required: true
+ * schema:
+ * type: integer
+ * responses:
+ * 204:
+ * description: Article unliked
+ * 401:
+ * description: Unauthorized
+ * 404:
+ * description: Article not found
+ */
+router.delete(
+  "/:articleId/like",
+  authMiddleware,
+  articleController.unlikeArticle
+);
 
-    res.json(articles);
-  } catch (e) {
-    next(e);
-  }
-});
-
-module.exports = articlesRouter;
+module.exports = router;
