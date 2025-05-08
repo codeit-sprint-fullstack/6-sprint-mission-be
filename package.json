@@ -19,6 +19,7 @@
   "homepage": "https://github.com/suKyoung25/6-sprint-mission-be#readme",
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "superstruct": "^2.0.2"

@@ -1,5 +1,5 @@
 const express = require("express");
-const prisma = require("../db/prisma/client.prisma");
+const prisma = require("../db/client.prisma");
 
 const productsRouter = express.Router();
 

@@ -1,0 +1,33 @@
+
+###상품 등록
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+    "name": "상품12" ,
+    "description": "12번째 상품" ,
+    "price": 12000,
+    "tags": "일반반"
+
+}
+
+###상품 목록 조회
+GET http://localhost:3000/products
+
+###상품 상세 조회
+GET http://localhost:3000/products/3
+
+
+###상품 수정
+PATCH http://localhost:3000/products/3
+Content-Type: application/json
+
+{
+    "name": "상품3" ,
+    "description": "3번째 상품" ,
+    "price": 3000,
+    "tags": "수정"
+}
+
+###상품 삭제
+DELETE http://localhost:3000/products/3
