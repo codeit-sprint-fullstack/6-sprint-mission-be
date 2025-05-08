@@ -1,5 +1,5 @@
 const express = require("express");
-const indexRouter = require("./modules/indexModule.js");
+const indexRouter = require("./routes/indexRouter.js");
 const multer = require("multer");
 
 const app = express();
