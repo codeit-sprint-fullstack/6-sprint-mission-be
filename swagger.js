@@ -5,9 +5,9 @@ const options = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Your API Documentation",
+      title: "6-sprint-mission-be",
       version: "1.0.0",
-      description: "API documentation for your Express application",
+      description: "API documentation for 6-sprint-mission-be Application",
     },
     servers: [
       {
