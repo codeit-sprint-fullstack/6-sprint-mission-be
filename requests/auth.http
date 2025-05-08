@@ -1,0 +1,28 @@
+# 인증 API
+
+### 로그인
+POST http://localhost:7777/signIn
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123"
+}
+
+### 회원가입
+POST http://localhost:7777/signUp
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123",
+  "nickname": "홍길동"
+}
+
+
+### 토큰 갱신
+// 왜 유저 아이디가 다르게 전달되지?
+// 이전 쿠키값이 아직 남아 있었음 이유는 로그인시에만 쿠키가 저장되기 때문!
+POST http://localhost:7777/token/refresh
+Content-Type: application/json
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFmNWdjaWkwMDAwdXA1ZzJ6b3h0dTg2IiwiaWF0IjoxNzQ2Njk2NDM1LCJleHAiOjE3NDY4NjkyMzV9.Z0TOkiPSb932LAHDAZlwPbyQ5tjc8HA2m1Y4GLJkqBU

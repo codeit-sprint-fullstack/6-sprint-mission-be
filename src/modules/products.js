@@ -1,16 +1,16 @@
-import express from 'express';
-import { prisma } from '../db/prisma/client.prisma.js';
+import express from "express";
+import { prisma } from "../db/prisma/client.prisma.js";
 const productsRouter = express.Router();
 
-productsRouter.get('/', async (req, res, next) => {
-  console.log('asd');
+productsRouter.get("/", async (req, res, next) => {
+  console.log("asd");
 
   try {
     const {
       page = 0,
       pageSize = 10,
-      orderBy = 'recent',
-      keyWord = '',
+      orderBy = "recent",
+      keyWord = "",
     } = req.query;
 
     const skip = Number(page) * Number(pageSize);
@@ -20,7 +20,7 @@ productsRouter.get('/', async (req, res, next) => {
       ? {
           name: {
             contains: keyWord,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
         }
       : {};
@@ -31,7 +31,7 @@ productsRouter.get('/', async (req, res, next) => {
         skip,
         take,
         orderBy: {
-          createdAt: orderBy === 'recent' ? 'desc' : 'asc',
+          createdAt: orderBy === "recent" ? "desc" : "asc",
         },
       }),
       prisma.product.count({ where }),
@@ -51,7 +51,7 @@ productsRouter.get('/', async (req, res, next) => {
   }
 });
 
-productsRouter.get('/:id', async (req, res, next) => {
+productsRouter.get("/:id", async (req, res, next) => {
   try {
     const productId = req.params.id;
 
@@ -61,16 +61,16 @@ productsRouter.get('/:id', async (req, res, next) => {
 
     res.status(200).json({ data: product });
   } catch (err) {
-    if (err.code === 'P2025') {
+    if (err.code === "P2025") {
       return res.status(404).json({
-        message: '상품을 찾을 수 없습니다.',
+        message: "상품을 찾을 수 없습니다.",
       });
     }
     next(err);
   }
 });
 
-productsRouter.post('/', async (req, res, next) => {
+productsRouter.post("/", async (req, res, next) => {
   try {
     const { name, description, price, tags = [] } = req.body;
 
@@ -85,7 +85,7 @@ productsRouter.post('/', async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: '상품이 성공적으로 등록되었습니다.',
+      message: "상품이 성공적으로 등록되었습니다.",
       data: product,
     });
   } catch (err) {
@@ -93,7 +93,7 @@ productsRouter.post('/', async (req, res, next) => {
   }
 });
 
-productsRouter.patch('/:id', async (req, res, next) => {
+productsRouter.patch("/:id", async (req, res, next) => {
   try {
     const productId = req.params.id;
 
@@ -103,20 +103,20 @@ productsRouter.patch('/:id', async (req, res, next) => {
     });
 
     res.status(200).json({
-      message: '상품이 성공적으로 수정되었습니다.',
+      message: "상품이 성공적으로 수정되었습니다.",
       data: product,
     });
   } catch (err) {
-    if (err.code === 'P2025') {
+    if (err.code === "P2025") {
       return res.status(404).json({
-        message: '상품을 찾을 수 없습니다.',
+        message: "상품을 찾을 수 없습니다.",
       });
     }
     next(err);
   }
 });
 
-productsRouter.delete('/:id', async (req, res, next) => {
+productsRouter.delete("/:id", async (req, res, next) => {
   try {
     const productId = Number(req.params.id);
 
@@ -125,12 +125,12 @@ productsRouter.delete('/:id', async (req, res, next) => {
     });
 
     res.status(200).json({
-      message: '상품이 성공적으로 삭제되었습니다.',
+      message: "상품이 성공적으로 삭제되었습니다.",
     });
   } catch (err) {
-    if (err.code === 'P2025') {
+    if (err.code === "P2025") {
       return res.status(404).json({
-        message: '상품을 찾을 수 없습니다.',
+        message: "상품을 찾을 수 없습니다.",
       });
     }
     next(err);

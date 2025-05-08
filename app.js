@@ -2,12 +2,20 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import indexRouter from "./src/modules/index.js";
+import userController from "./src/controllers/userController.js";
+import cookieParser from "cookie-parser";
+import path from "path";
 
 dotenv.config();
 
 const PORT = 7777;
 const ALLOWEPORT = 3000;
 const app = express();
+
+// ✅ 정적 파일 서빙 (최상단에 위치하는 것이 안전)
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.use(cookieParser()); // ✅ 필수!
 
 // 허용할 도메인들
 const allowedOrigins = [
@@ -36,10 +44,7 @@ app.use(
 
 app.use(express.json());
 
-app.get("/", async (req, res) => {
-  res.send("서버가 연결되었습니다!");
-});
-
+app.use("", userController);
 app.use(indexRouter);
 
 app.use((err, req, res, next) => {
