@@ -5,17 +5,18 @@ const options = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Panda Market API",
+      title: "Your API Documentation",
       version: "1.0.0",
-      description: "Sprint Misson BE",
+      description: "API documentation for your Express application",
     },
     servers: [
       {
-        url: "http://localhost:5050",
+        url: "http://localhost:5050", // 실제 서버 URL로 변경: 5050
+        description: "Development server",
       },
     ],
   },
-  apis: ["./routes/*.js", "./app.js"],
+  apis: ["./src/routes/*.js", "./src/controllers/*.js"], // API 라우트 및 컨트롤러 파일 경로
 };
 
 const swaggerSpec = swaggerJsdoc(options);
