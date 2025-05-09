@@ -3,16 +3,25 @@ POST http://localhost:3000/auth/signUp
 Content-Type: application/json
 
 {
-    "email": "test2@naver.com",
+    "email": "test2@test.com",
     "nickname": "test2",
     "password": "2222"
 }
 
-### 로그인
+### 로그인 유저1
 POST http://localhost:3000/auth/signIn
 Content-Type: application/json
 
 {
-    "email": "test1@naver.com",
+    "email": "test1@test.com",
     "password": "1111"
+}
+
+### 로그인 유저2
+POST http://localhost:3000/auth/signIn
+Content-Type: application/json
+
+{
+   "email": "test2@test.com",
+    "password": "2222"
 }

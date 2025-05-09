@@ -1,4 +1,5 @@
 export default function errorHandler(error, req, res, next) {
+  //expressjwt를 위한 예외처리
   if (error.name === "UnauthorizedError") {
     res.status(401).send("invalid token...");
   }

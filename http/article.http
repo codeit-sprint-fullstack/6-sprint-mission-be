@@ -33,3 +33,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 ###게시글 삭제
 DELETE http://localhost:3000/articles/7
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NjY5NTI5OCwiZXhwIjoxNzQ2Njk4ODk4fQ.9r9oqbCtOi0cm49CqLEjHNL4dlza8qnWdTRFichvwL0
+
+
+###게시글 댓글 등록
+POST http://localhost:3000/articles/2/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc1ODA2OSwiZXhwIjoxNzQ2NzYxNjY5fQ.sSRk_Fx2xmtMHOU8c1Fb7Hfw0F_54hKHV7tr8y1a0ew
+
+{
+    "content": "2번째 게시글의 1 댓글"
+}
+
+###게시글 댓글 목록 조회
+GET http://localhost:3000/articles/1/comments

@@ -20,10 +20,20 @@ async function deleteById(id) {
   return articleRepository.deleteById(id);
 }
 
+async function createArticleComment(comment) {
+  return articleRepository.saveArticleComment(comment);
+}
+
+async function getAllArticleComment(id) {
+  return articleRepository.getAllArticleComment(id);
+}
+
 export default {
   create,
   getById,
   getAll,
   update,
   deleteById,
+  createArticleComment,
+  getAllArticleComment,
 };

@@ -71,10 +71,32 @@ async function deleteById(id) {
   });
 }
 
+async function saveProductComment(comment) {
+  const createdComment = await prisma.comment.create({
+    data: {
+      content: comment.content,
+      productId: comment.productId,
+      authorId: comment.authorId,
+    },
+  });
+  return createdComment;
+}
+
+async function getAllProductComment(id) {
+  const productComments = await prisma.comment.findMany({
+    where: {
+      productId: id,
+    },
+  });
+  return productComments;
+}
+
 export default {
   save,
   getById,
   getAll,
   update,
   deleteById,
+  saveProductComment,
+  getAllProductComment,
 };

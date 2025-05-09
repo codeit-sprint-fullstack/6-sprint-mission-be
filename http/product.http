@@ -37,11 +37,11 @@ Content-Type: application/json
 
 }
 
-###전체 상품 조회
+###상품 목록 조회
 GET http://localhost:3000/products
 
 ###상품 상세 조회
-GET http://localhost:3000/products/3
+GET http://localhost:3000/products/2
 
 ###상품 수정
 PATCH http://localhost:3000/products/9
@@ -58,3 +58,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 ###상품 삭제
 DELETE http://localhost:3000/products/8
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NjY4NDI0MCwiZXhwIjoxNzQ2Njg3ODQwfQ.SOESrOEWFQEA_1_MI6Ftwd8o_iZ9V3WwRfuUmIv4bTk
+
+
+### 상품 댓글 등록
+POST http://localhost:3000/products/2/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0Njc1NjkzOCwiZXhwIjoxNzQ2NzYwNTM4fQ.PH2JhJUsyjwoWY-ValrCum0iBSNth-oYAZ7LvHIcaEg
+
+{
+    "content": "첫번째 사용자의 댓글글"
+}
+
+###상품 댓글 목록 조회
+GET http://localhost:3000/products/4/comments

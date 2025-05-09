@@ -43,10 +43,30 @@ async function deleteById(id) {
   });
 }
 
+async function saveArticleComment(comment) {
+  return await prisma.comment.create({
+    data: {
+      content: comment.content,
+      articleId: comment.articleId,
+      authorId: comment.authorId,
+    },
+  });
+}
+
+async function getAllArticleComment(articleId) {
+  return await prisma.comment.findMany({
+    where: {
+      articleId: articleId,
+    },
+  });
+}
+
 export default {
   save,
   getById,
   getAll,
   update,
   deleteById,
+  saveArticleComment,
+  getAllArticleComment,
 };

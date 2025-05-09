@@ -2,16 +2,22 @@ import { PrismaClient } from "@prisma/client";
 import { ArticleMocks } from "./mocks/articleMocks.js";
 import { ProductMocks } from "./mocks/productMocks.js";
 import { CommentMocks } from "./mocks/commentMoacks.js"; // 오타 주의: "commentMoacks" → "commentMocks"인지 확인 필요
+import { UserMocks } from "./mocks/userMocks.js";
 
 const prisma = new PrismaClient();
 
 async function main() {
   // 기존 데이터 삭제
+  await prisma.user.deleteMany();
   await prisma.article.deleteMany();
   await prisma.product.deleteMany();
   await prisma.comment.deleteMany();
 
   // 목 데이터 삽입
+  await prisma.user.createMany({
+    data: UserMocks,
+    skipDuplicates: true,
+  });
   await prisma.article.createMany({
     data: ArticleMocks,
     skipDuplicates: true,
