@@ -6,11 +6,10 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
-        "start": "node ./src/main",
+        "dev": "node ./src/app.js",
         "precompose": "docker-compose build --no-cache",
         "compose": "docker-compose down && docker-compose up",
         "seed": "node ./prisma/seed"
-        
     },
     "repository": {
         "type": "git",
@@ -28,9 +27,11 @@
     },
     "dependencies": {
         "@prisma/client": "^5.16.2",
+        "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
+        "express-session": "^1.18.1",
         "superstruct": "^2.0.2",
         "swagger-ui-express": "^5.0.1",
         "yaml": "^2.4.5"
