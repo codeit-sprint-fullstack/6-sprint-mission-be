@@ -39,11 +39,11 @@ Content-Type: application/json
 
 POST http://localhost:3000/articles
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc2ODE0NiwiZXhwIjoxNzQ2NzcxNzQ2fQ.EfCH4FjhhbqwDUIf7g8k2gqztIBIYbSoVW-Dr8nWExA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc3ODk3NSwiZXhwIjoxNzQ2NzgyNTc1fQ.6OBUQY4Oyw0D93w8Y2dle2xlMYN2w2FP1SfUkjatdJo
 
 {
-  "title": "한성노트북 중고",
-  "content": "낡긴했지만 쓸만해요! 저렴하게 판매해요",
+  "title": "LG모니터 중고",
+  "content": "LCD 모니터에요. 확인 후 연락주세요!",
   "writer": "sevendays"
 }
 
