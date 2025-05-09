@@ -3,7 +3,7 @@ import commentRepository from "../repositories/commentRepository.js";
 
 //인증된 사용자인지 검증
 const varifyAccessToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET_KEY,
   algorithms: ["HS256"],
 });
 

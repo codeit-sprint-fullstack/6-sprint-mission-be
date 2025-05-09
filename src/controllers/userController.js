@@ -1,37 +1,30 @@
 import express from "express";
-import varify from "../middlewares/varify.js";
 import userService from "../services/userService.js";
+import generateAccessToken from "../middlewares/utils.jwt.js";
+import auth from "../middlewares/auth.js";
 
 const userController = express.Router();
 
-//회원가입
-userController.post(
-  "/signUp",
-  varify.signUpRequestStructure,
-  async (req, res, next) => {
-    try {
-      const createUser = await userService.create(req.body);
-      return res.json(createUser);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+//사용자 정보 가져오기
+userController.get("/", auth.varifyAccessToken, async (req, res, next) => {
+  const userId = req.auth.userId;
 
-//로그인
-userController.post("/signIn", async (req, res, next) => {
+  //디버깅
+  console.log("userId", userId);
+  console.log("userId", typeof userId);
+
   try {
-    const user = await userService.getByEmail(req.body);
+    const user = await userService.getById(userId);
 
-    if (!user) {
-      const error = new Error("Not Found, 존재하지 않는 사용자입니다.");
-      error.code = 404;
-      throw error;
-    }
-
-    const accessToken = userService.createToken(user);
-
-    return res.json({ ...user, accessToken });
+    const accessToken = generateAccessToken(user);
+    return res.json({
+      accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        nickname: user.nickname,
+      },
+    });
   } catch (error) {
     next(error);
   }
