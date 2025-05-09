@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(
       null,
-      file.fieldname + "-" + Date.now() + "." + path.extname(file.originalname) // 확장자 추출
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname) // 확장자 추출
     ); // "이름-날짜.확장자" 형식으로 저장
   },
 });
@@ -85,7 +85,7 @@ app.use("/images", imageRouter);
  * 401:
  * description: Unauthorized
  */
-app.post("/images/upload", upload.single("image"), (req, res) => {
+app.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).send({ message: "No image file uploaded." });
   }

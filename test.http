@@ -24,7 +24,7 @@ POST http://localhost:3000/upload
 Content-Type: multipart/form-data; boundary=---------------------------abcd123456
 
 -----------------------------abcd123456
-Content-Disposition: form-data; name="userfile"; filename="example.txt"
+Content-Disposition: form-data; name="image"; filename="blank.png"
 Content-Type: text/plain
 
 This is the content of the file.
