@@ -1,51 +1,51 @@
 // src/controllers/product.controller.js
-const prismaClient = require("../models/prisma/prismaClient.js");
+const productService = require("../services/product.service.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.createProduct = catchAsync(async (req, res) => {
-  const newProduct = await prismaClient.product.create({
-    data: { ...req.body, userId: req.user.id },
+  const newProduct = await productService.createProduct({
+    ...req.body,
+    userId: req.user.id,
   });
   res.status(201).send(newProduct);
 });
 
 exports.getAllProducts = catchAsync(async (req, res) => {
-  const products = await prismaClient.product.findMany();
+  const products = await productService.getAllProducts();
   res.send(products);
 });
 
 exports.getProductById = catchAsync(async (req, res) => {
-  const product = await prismaClient.product.findUnique({
-    where: { id: parseInt(req.params.productId) },
-    include: { tags, user, comments }, // 필요에 따라 include
+  const product = await productService.getProductById(req.params.productId, {
+    tags,
+    user,
+    comments,
   });
-  if (!product) {
-    return res.status(404).send({ message: "Product not found" });
-  }
   res.send(product);
 });
 
 exports.updateProduct = catchAsync(async (req, res) => {
-  const updatedProduct = await prismaClient.product.update({
-    where: { id: parseInt(req.params.productId) },
-    data: req.body,
-  });
+  const updatedProduct = await productService.updateProduct(
+    req.params.productId,
+    req.body
+  );
   res.send(updatedProduct);
 });
 
 exports.deleteProduct = catchAsync(async (req, res) => {
-  await prismaClient.product.delete({
-    where: { id: parseInt(req.params.productId) },
-  });
+  await productService.deleteProduct(req.params.productId);
   res.status(204).send();
 });
 
 exports.addToFavorites = catchAsync(async (req, res) => {
-  // 찜 목록 추가 로직 구현 (User 모델에 favorites 관계 추가 필요)
-  res.send({ message: "Added to favorites" });
+  const result = await productService.addToFavorites(
+    req.user.id,
+    req.params.productId
+  );
+  res.send(result);
 });
 
 exports.removeFromFavorites = catchAsync(async (req, res) => {
-  // 찜 목록 제거 로직 구현 (User 모델에 favorites 관계 추가 필요)
+  await productService.removeFromFavorites(req.user.id, req.params.productId);
   res.status(204).send();
 });
