@@ -1,0 +1,23 @@
+### 회원가입
+POST http://localhost:5050/auth/signUp
+Content-Type: application/json
+
+{
+  "email": "test3@test.com",
+  "nickname": "test3",
+  "password": "test"
+}
+
+
+### 로그인
+POST http://localhost:5050/auth/signIn
+Content-Type: application/json
+
+{
+  "email": "test1@test.com",
+  "password": "test"
+}
+
+### 토큰 갱신
+POST http://localhost:5050/auth/refresh-token
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc0OTgzNiwiZXhwIjoxNzQ3OTU5NDM2fQ.y2XpB0hE1o1sDFaik1MEIHeatOUylAEHpXGaWCApCVw

@@ -1,0 +1,67 @@
+paths:
+  /auth/signUp:
+    post:
+      summary: 회원가입
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: example@email.com
+                nickname:
+                  type: string
+                  example: nickname
+                password:
+                  type: string
+                  example: password
+                passwordConfirmation:
+                  type: string
+                  example: password
+              required:
+                - email
+                - nickname
+                - password
+                - passwordConfirmation
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 123
+                      nickname:
+                        type: string
+                        example: nickname
+                      image:
+                        type: string
+                        nullable: true
+                        example: null
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: "2025-05-08T08:13:52.165Z"
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        example: "2025-05-08T08:13:52.165Z"
+                      email:
+                        type: string
+                        example: example1@email.com
+                  accessToken:
+                    type: string
+                    example: accessToken
+                  refreshToken:
+                    type: string
+                    example: refreshToken
