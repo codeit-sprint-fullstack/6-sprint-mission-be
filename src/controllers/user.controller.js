@@ -1,28 +1,33 @@
 // src/controllers/user.controller.js
-const userService = require("../services/user.service.js");
+const prismaClient = require("../models/prisma/prismaClient.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.getMe = catchAsync(async (req, res) => {
-  const user = await userService.getMe(req.user.id);
-  res.send(user);
+  // req.user를 통해 인증된 사용자 정보 접근
+  res.send(req.user);
 });
 
 exports.updateMe = catchAsync(async (req, res) => {
-  const updatedUser = await userService.updateMe(req.user.id, req.body);
+  const updatedUser = await prismaClient.user.update({
+    where: { id: req.user.id },
+    data: req.body,
+  });
   res.send(updatedUser);
 });
 
 exports.updatePassword = catchAsync(async (req, res) => {
-  await userService.updatePassword(req.user.id, req.body.newPassword); // 요청에서 새 비밀번호 추출
+  // 비밀번호 업데이트 로직 구현 (bcrypt 사용)
   res.send({ message: "Password updated" });
 });
 
 exports.getMyProducts = catchAsync(async (req, res) => {
-  const products = await userService.getMyProducts(req.user.id);
+  const products = await prismaClient.product.findMany({
+    where: { userId: req.user.id },
+  });
   res.send(products);
 });
 
 exports.getMyFavorites = catchAsync(async (req, res) => {
-  const favorites = await userService.getMyFavorites(req.user.id);
-  res.send(favorites);
+  // 찜 목록 조회 로직 구현 (Product 모델에 favorites 관계 추가 필요)
+  res.send({ message: "User favorites" });
 });

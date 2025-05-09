@@ -3,8 +3,8 @@ const authService = require("../services/auth.service.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.signUp = catchAsync(async (req, res) => {
-  const { user, token } = await authService.signUp(req.body);
-  res.status(201).send({ user, token });
+  const user = await authService.signUp(req.body);
+  res.status(201).send(user);
 });
 
 exports.signIn = catchAsync(async (req, res) => {

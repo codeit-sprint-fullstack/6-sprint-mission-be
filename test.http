@@ -1,10 +1,51 @@
-### 게시물 조회하기 (진행도: OK)
+### 아티클 조회 (진행도: OK)
 
 GET http://localhost:3000/articles/1
 
-### 게시물 목록 조회 (진행도: OK)
+### 아티클 목록조회 (진행도: OK)
 
 GET http://localhost:3000/articles
+
+### 프로덕트 목록조회 (진행도: OK)
+
+GET http://localhost:3000/products
+
+### 프로덕트 조회 (진행도: OK)
+
+GET http://localhost:3000/products/1
+
+### 로그인 (진행도: OK)
+
+POST http://localhost:3000/auth/signIn
+Content-Type: application/json
+
+{
+  "email":"friday123@email.com",
+  "password":"friday123"
+}
+
+### 회원가입 (진행도: OK)
+
+POST http://localhost:3000/auth/signUp
+Content-Type: application/json
+
+{
+  "nickname": "friday",
+  "email": "friday123@email.com",
+  "password": "friday123"
+}
+
+### 게시물 등록 (로그인 필요, 진행도: 로그인 토큰으로 게시물등록 OK)
+
+POST http://localhost:3000/articles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc2ODE0NiwiZXhwIjoxNzQ2NzcxNzQ2fQ.EfCH4FjhhbqwDUIf7g8k2gqztIBIYbSoVW-Dr8nWExA
+
+{
+  "title": "한성노트북 중고",
+  "content": "낡긴했지만 쓸만해요! 저렴하게 판매해요",
+  "writer": "sevendays"
+}
 
 ### multer 업로드 (진행도: text/plain OK -> 실제 이미지 전송시 image/png 로 개선 필요)
 
@@ -17,38 +58,5 @@ Content-Type: text/plain
 
 This is the content of the file.
 -----------------------------abcd123456--
-
-### 로그인 하기 (진행도: 로그인 확인 OK)
-
-POST http://localhost:3000/auth/signIn
-Content-Type: application/json
-
-{
-  "email":"friday123@email.com",
-  "password":"friday123"
-}
-
-### 회원가입 하기 (진행도: 회원가입 확인 OK)
-
-POST http://localhost:3000/auth/signUp
-Content-Type: application/json
-
-{
-  "nickname": "friday",
-  "email": "friday123@email.com",
-  "password": "friday123"
-}
-
-### 게시물 등록하기 (로그인 필요, 진행도: 로그인 토큰으로 게시물등록 OK)
-
-POST http://localhost:3000/articles
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc2ODE0NiwiZXhwIjoxNzQ2NzcxNzQ2fQ.EfCH4FjhhbqwDUIf7g8k2gqztIBIYbSoVW-Dr8nWExA
-
-{
-  "title": "한성노트북 중고",
-  "content": "낡긴했지만 쓸만해요! 저렴하게 판매해요",
-  "writer": "sevendays"
-}
 
 ###
