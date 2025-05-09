@@ -17,7 +17,7 @@ exports.getAllArticles = catchAsync(async (req, res) => {
 exports.getArticleById = catchAsync(async (req, res) => {
   const article = await prisma.article.findUnique({
     where: { id: parseInt(req.params.articleId) },
-    include: { user, comments }, // 필요에 따라 include
+    // include: { user, comments }, // 필요에 따라 include
   });
   if (!article) {
     return res.status(404).send({ message: "Article not found" });

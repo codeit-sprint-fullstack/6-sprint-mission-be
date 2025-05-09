@@ -1,17 +1,17 @@
 // src/app.js
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("../swagger");
-const userRouter = require("./routes/user.route");
-const productRouter = require("./routes/product.route");
-const commentRouter = require("./routes/comment.route");
-const authRouter = require("./routes/auth.route");
-const articleRouter = require("./routes/article.route");
-const imageRouter = require("./routes/image.route");
+const swaggerSpec = require("../swagger.js");
+const userRouter = require("./routes/user.route.js");
+const productRouter = require("./routes/product.route.js");
+const commentRouter = require("./routes/comment.route.js");
+const authRouter = require("./routes/auth.route.js");
+const articleRouter = require("./routes/article.route.js");
+const imageRouter = require("./routes/image.route.js");
 const {
   errorConverter,
   errorHandler,
-} = require("./middlewares/error.middleware");
+} = require("./middlewares/error.middleware.js");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
