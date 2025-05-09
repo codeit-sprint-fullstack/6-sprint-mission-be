@@ -1,48 +1,56 @@
 // src/services/auth.service.js
-const prisma = require("../models/prisma/prismaClient.js");
-const bcrypt = require("bcrypt");
+const userModel = require("../models/user.model.js");
 const jwt = require("jsonwebtoken");
-const config = require("../config/config.js");
-const ApiError = require("../utils/apiError.js");
+const bcrypt = require("bcrypt");
+const config = require("../config/config"); // 환경 변수 설정 파일
 
 async function signUp(userData) {
-  if (await prisma.user.findUnique({ where: { email: userData.email } })) {
-    throw new ApiError(400, "Email already taken");
+  // 1. 이메일 중복 확인
+  const existingUser = await userModel.findByEmail(userData.email);
+  if (existingUser) {
+    throw new Error("Email already taken"); // 또는 사용자 정의 에러
   }
-  const hashedPassword = await bcrypt.hash(userData.password, 10);
-  const user = await prisma.user.create({
-    data: { ...userData, password: hashedPassword },
+
+  // 2. 사용자 생성 (비밀번호는 Model에서 암호화)
+  const newUser = await userModel.create(userData);
+
+  // 3. 토큰 생성 (선택 사항: 회원가입 후 바로 로그인 처리)
+  const token = jwt.sign({ userId: newUser.id }, config.jwtSecret, {
+    expiresIn: config.jwtExpiresIn,
   });
-  return user;
+
+  return { user: newUser, token };
 }
 
 async function signIn(email, password) {
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new ApiError(401, "Incorrect email or password");
+  // 1. 사용자 조회
+  const user = await userModel.findByEmail(email);
+  if (!user) {
+    throw new Error("Invalid credentials");
   }
-  const token = generateToken(user.id);
+
+  // 2. 비밀번호 검증
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatch) {
+    throw new Error("Invalid credentials");
+  }
+
+  // 3. 토큰 생성
+  const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
+    expiresIn: config.jwtExpiresIn,
+  });
+
   return { user, token };
 }
 
 async function refreshToken(refreshToken) {
-  // Refresh token 검증 로직 구현 (일반적으로 Redis 등에 저장하여 관리)
-  // ...
-  const userId = verifyRefreshToken(refreshToken);
-  const newToken = generateToken(userId);
+  // 1. Refresh Token 검증 로직 (DB에 저장된 토큰과 비교 등) - 구현 필요
+  // 2. 새로운 Access Token 생성
+  const decoded = jwt.verify(refreshToken, config.jwtSecret); // Refresh Token 검증
+  const newToken = jwt.sign({ userId: decoded.userId }, config.jwtSecret, {
+    expiresIn: config.jwtExpiresIn,
+  });
   return newToken;
 }
 
-function generateToken(userId) {
-  return jwt.sign({ userId }, config.jwtSecret, {
-    expiresIn: config.jwtExpiration,
-  });
-}
-
-// function verifyRefreshToken(token) { ... } // Refresh token 검증 함수 구현
-
-module.exports = {
-  signUp,
-  signIn,
-  refreshToken,
-};
+module.exports = { signUp, signIn, refreshToken };
