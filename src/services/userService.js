@@ -1,0 +1,76 @@
+//import * as productRepository from '../repositories/productRepository.js';
+import jwt from 'jsonwebtoken';
+import * as userRepository from '../repositories/userRepository.js';
+
+export const getMe = async (id) => {
+    // 유저 존재 확인
+    const user = await userRepository.findById(id);
+    if (!user) {
+        throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
+    }
+
+    return {
+        user: {
+            id: user.id,
+            image: user.image,
+            nickname: user.nickname,
+            updatedAt: user.updatedAt,
+            createdAt: user.createdAt,
+        },
+    };
+};
+
+export const updateMe = async (id, data) => {
+    const user = await userRepository.findById(id);
+    if (!user) {
+        throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
+    }
+    const updatedUser = await userRepository.update(id, { image: data.image });
+
+    return {
+        user: {
+            id: updatedUser.id,
+            image: updatedUser.image,
+            nickname: updatedUser.nickname,
+            updatedAt: updatedUser.updatedAt,
+            createdAt: updatedUser.createdAt,
+        },
+    };
+};
+
+export const updateMyPassword = async (id, data) => {
+    // 유저 존재 확인
+    const user = await userRepository.findById(id);
+    if (!user) {
+        throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
+    }
+
+    // 현재 비밀번호 확인
+    const isMatch = await bcrypt.compare(data.currentPassword, user.password);
+    if (!isMatch) {
+        throw new HttpError(401, '현재 비밀번호가 일치하지 않습니다.');
+    }
+
+    // 새 비밀번호와 확인용 비밀번호 일치 확인
+    if (data.password !== data.passwordConfirmation) {
+        throw new HttpError(401, '새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+    }
+
+    // 새 비밀번호 해싱 후 업데이트
+    const updatedUser = await userRepository.update(id, { password: data.password });
+
+    return {
+        user: {
+            id: updatedUser.id,
+            image: updatedUser.image,
+            nickname: updatedUser.nickname,
+            updatedAt: updatedUser.updatedAt,
+            createdAt: updatedUser.createdAt,
+        },
+    };
+};
+
+//유저 프로덕트랑
+//유저 페이보릿은 프로덕트 api들 만들고 만들기
+export const getMyProduct = async (id) => {};
+export const getMyFavorites = async (id) => {};

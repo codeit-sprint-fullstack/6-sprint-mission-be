@@ -1,3 +1,4 @@
+import { HttpError } from '../middlewares/HttpError.js';
 import * as articleRepository from '../repositories/articleRepository.js';
 import * as commentRepository from '../repositories/commentRepository.js';
 
@@ -13,7 +14,8 @@ export const createArticle = async (data) => {
 
 export const getArticle = async (id) => {
     const entity = await articleRepository.FindById(id);
-    if (!entity) throw new Error('Article not found');
+    if (!entity) throw new HttpError(404, '게시글이 존재하지 않습니다');
+
     return {
         id: entity.id,
         title: entity.title,
@@ -43,6 +45,7 @@ export const getArticles = async ({ cursor, take, orderBy, word }) => {
 
 export const updateArticle = async (id, data) => {
     const entity = await articleRepository.Update(id, data);
+    if (!entity) throw new HttpError(404, '게시글이 존재하지 않습니다');
     return {
         id: entity.id,
         title: entity.title,
@@ -54,9 +57,10 @@ export const updateArticle = async (id, data) => {
 };
 
 export const deleteArticle = async (id) => {
+    const entity = await articleRepository.FindById(id);
+    if (!entity) throw new HttpError(404, '게시글이 존재하지 않습니다');
     await articleRepository.Delete(id);
 };
-
 
 export const createComment = async (articleId, content) => {
     const entity = await commentRepository.create(articleId, content);

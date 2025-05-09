@@ -3,6 +3,7 @@ import { ArticleMocks } from './mocks/articleMocks.js';
 import { ProductMocks } from './mocks/productMocks.js';
 import { CommentMocks } from './mocks/commentMocks.js';
 import { UserMocks } from './mocks/userMocks.js';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -16,11 +17,13 @@ async function main() {
     // User 생성
     const createdUsers = [];
     for (const user of UserMocks) {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
         const created = await prisma.user.create({
             data: {
                 nickname: user.nickname,
+                email: user.email,
                 image: user.image,
-                password: user.password,
+                password: hashedPassword,
                 token: user.token,
             },
         });
