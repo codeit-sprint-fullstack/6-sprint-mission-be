@@ -16,9 +16,9 @@ function throwNotFoundError() {
 
 //상품 등록 req에 필수 정보의 여부 확인
 async function requestStructure(req, res, next) {
-  const { name, description, price, tags } = req.body;
+  const { name, description, price, tags, images } = req.body;
 
-  if (!name || !description || !price || !tags) {
+  if (!name || !description || !price || !tags || !images) {
     throwBadRequestError();
   }
   next();

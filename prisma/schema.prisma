@@ -30,6 +30,7 @@ model Product {
   description     String    @default("")
   price           Int
   tags            String[]  @default([])
+  imageUrl        String[]  @default([])
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   ProductComments Comment[]

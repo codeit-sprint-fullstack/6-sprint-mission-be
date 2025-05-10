@@ -33,9 +33,12 @@ const productCommentController = express.Router();
 productController
   .route("/")
   .post(
-    varify.requestStructure,
+    // varify.requestStructure,
     auth.varifyAccessToken,
     async (req, res, next) => {
+      //디버깅
+      console.log("req.body", req.body);
+
       try {
         const createProduct = await productService.create(req.body);
         return res.json(createProduct);
