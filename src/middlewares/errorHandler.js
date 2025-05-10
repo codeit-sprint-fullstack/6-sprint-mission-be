@@ -1,12 +1,19 @@
-export default function errorHandler(error, req, res, next) {
-  if (error.name === "UnauthorizedError") {
-    res.status(401).send("invalid token...");
-  }
-  const status = error.code ?? 500;
+import { HttpError } from "../exceptions.js";
 
-  console.error(error);
-  return res.status(status).json({
-    message: error.message ?? "Internal Server Error",
-    details: error.data ?? undefined,
+export default function errorHandler(err, req, res, next) {
+  const httpError = toHttpError(err);
+  res.status(httpError.status).json({
+    message: httpError.message,
+    details: httpError.details ?? undefined,
+  });
+}
+
+// 예외를 HttpError 형태로 변환
+function toHttpError(error) {
+  if (error instanceof HttpError) return error;
+
+  return new HttpError({
+    status: 500,
+    message: error.message || "Internal server error",
   });
 }

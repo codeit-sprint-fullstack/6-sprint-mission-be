@@ -2,10 +2,12 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
-import articlesRouter from "./routes/articlesRouter.js";
+import articleRouter from "./routes/articleRouter.js";
+import productRouter from "./routes/productRouter.js";
+import imageRouter from "./routes/imageRouter.js";
 import errorHandler from "./middlewares/errorHandler.js";
-import "dotenv/config";
 import { swaggerUi, specs } from "./swagger.js";
+import "dotenv/config";
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -13,9 +15,12 @@ const PORT = process.env.PORT || 5050;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use("/image", express.static("uploads"));
 
 app.use("/", userRouter);
-app.use("/articles", articlesRouter);
+app.use("/articles", articleRouter);
+app.use("/products", productRouter);
+app.use("/images", imageRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(errorHandler);

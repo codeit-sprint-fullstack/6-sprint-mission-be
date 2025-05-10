@@ -15,24 +15,25 @@ model Article {
   likeCount      Int       @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  userId         Int
+  writedId       Int
   articleComment Comment[]
-  user           User      @relation(fields: [userId], references: [id])
+  writer         User      @relation(fields: [writedId], references: [id])
 }
 
 model Product {
-  id             Int       @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   name           String
   description    String
   price          Int
   tags           String[]
   images         String[]
-  ownerId        Int       @map("userId")
-  favoriteCount  Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  ownerId        Int
+  favoriteCount  Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   productComment Comment[]
-  user           User      @relation(fields: [ownerId], references: [id])
+  owner          User       @relation(fields: [ownerId], references: [id])
+  favorites      Favorite[]
 }
 
 model Comment {
@@ -45,19 +46,29 @@ model Comment {
   writerId  Int
   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [writerId], references: [id])
+  writer    User     @relation(fields: [writerId], references: [id])
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
-  email          String    @unique
-  nickname       String    @unique
+  id             Int        @id @default(autoincrement())
+  email          String     @unique
+  nickname       String     @unique
   image          String?
   hashedPassword String
   refreshToken   String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   articles       Article[]
   products       Product[]
+  favorites      Favorite[]
   comments       Comment[]
+}
+
+model Favorite {
+  userId    Int
+  productId Int
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@id([userId, productId])
 }
