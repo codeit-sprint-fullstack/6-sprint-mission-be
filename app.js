@@ -1,8 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import indexRouter from "./src/modules/index.js";
-import userController from "./src/controllers/userController.js";
+import indexRouter from "./src/routes/index.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 
@@ -44,7 +43,6 @@ app.use(
 
 app.use(express.json());
 
-app.use("", userController);
 app.use(indexRouter);
 
 app.use((err, req, res, next) => {
@@ -59,6 +57,10 @@ app.use((err, req, res, next) => {
     case "CastError":
       res.status(400).send({ message: "Invalid product ID" });
       break;
+    case "UnauthorizedError":
+      return res
+        .status(401)
+        .json({ message: "인증에 실패했습니다. 다시 로그인해주세요." });
     default:
       res.status(500).send({ message: err.message });
   }

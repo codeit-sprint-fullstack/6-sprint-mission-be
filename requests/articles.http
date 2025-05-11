@@ -1,40 +1,59 @@
 # 게시글 API
 
-### 게시글 조회 (인기순)
-GET http://localhost:7777/articles/?sort=popular
-
-### 게시글 상세 조회
-GET http://localhost:7777/articles/cm9ntweau0012upa80uhz3mfg
 
 ### 게시글 목록 조회
 GET http://localhost:7777/articles/?offset=0&limit=4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
 
-### 게시글 목록 검색
-GET http://localhost:7777/articles/?search=새
+### 게시글 조회 (인기순)
+GET http://localhost:7777/articles/?sort=popular
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTU5NzU4LCJleHAiOjE3NDY5NjA2NTh9.rrIDq_9x-fXFZYcWxx0XdteTsSWg465QWarG3Q-xBfc
 
-### 게시글 목록 검색 및 조회
-GET http://localhost:7777/articles/?search=새로&offset=2&limit=2
+
+### 게시글 상세 조회
+GET http://localhost:7777/articles/cmahxebnw0001upkssl351hyy
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
+
 
 ### 게시글 등록
 POST http://localhost:7777/articles
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTYwNDEyLCJleHAiOjE3NDY5NjEzMTJ9.96CMYohkjPxxzPcjsAus4oczX3IzWeMFCVsO53fgAB0
 
 {
-  "title": "진짜 새로",
+  "title": "테스트할 게시글",
   "content": "새로 등록한 게시글의 내용입니다.5"
 }
 
 ### 게시글 수정
-PATCH http://localhost:7777/articles/cm8md0i0j0000upmodrikb00w
+PATCH http://localhost:7777/articles/cmajis9h10001uph0a5sng09a
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTU5NzU4LCJleHAiOjE3NDY5NjA2NTh9.rrIDq_9x-fXFZYcWxx0XdteTsSWg465QWarG3Q-xBfc
+
 
 {
-  "title": "수정된 게시글",
+  "title": "저녁에 러닝 뛰어야겠다 하하하",
   "content": "수정된 게시글의 내용입니다."
 }
 
 ### 게시글 삭제
-DELETE http://localhost:7777/articles/cm8md14bf0001upmoq1iiftar
+DELETE http://localhost:7777/articles/cmajis9h10001uph0a5sng09a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTU5NzU4LCJleHAiOjE3NDY5NjA2NTh9.rrIDq_9x-fXFZYcWxx0XdteTsSWg465QWarG3Q-xBfc
+
 
 ### 게시글 좋아요 증가
-PATCH http://localhost:7777/articles/cm9ntweau0012upa80uhz3mfg/like 
+PATCH http://localhost:7777/articles/cmahxebnw0001upkssl351hyy
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTYwNDEyLCJleHAiOjE3NDY5NjEzMTJ9.96CMYohkjPxxzPcjsAus4oczX3IzWeMFCVsO53fgAB0
+
+
+
+### 게시글 좋아요 추가
+POST http://localhost:7777/articles/cmahxebnw0001upkssl351hyy/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
+
+
+### 게시글 좋아요 삭제
+DELETE http://localhost:7777/articles/cmajj59xd0001upmo074v489w/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTYwNDEyLCJleHAiOjE3NDY5NjEzMTJ9.96CMYohkjPxxzPcjsAus4oczX3IzWeMFCVsO53fgAB0
+
+
