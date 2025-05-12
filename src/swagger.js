@@ -1,5 +1,7 @@
-import swaggerUi from "swagger-ui-express";
-import swaggereJsdoc from "swagger-jsdoc";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -31,9 +33,9 @@ const options = {
     host: "localhost:5050",
     basePath: "/",
   },
-  apis: [path.resolve(__dirname, "swagger/user.yaml")],
+  apis: [path.resolve(__dirname, "swagger/*.yaml")],
 };
 
-const specs = swaggereJsdoc(options);
+const specs = swaggerJsdoc(options);
 
 export { swaggerUi, specs };
