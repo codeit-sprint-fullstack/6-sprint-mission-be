@@ -20,6 +20,7 @@ model User {
   ProductLike       ProductLike[]
   Article           Article[]
   Product           Product[]
+  Comment           Comment[]
 }
 
 model Product {
@@ -36,7 +37,7 @@ model Product {
   ProductLike ProductLike[]
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Article {
@@ -51,7 +52,7 @@ model Article {
   comments    Comment[]
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ProductLike {
@@ -59,8 +60,8 @@ model ProductLike {
   userId    String
   productId String
   createdAt DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -70,8 +71,8 @@ model ArticleLike {
   userId    String
   articleId String
   createdAt DateTime @default(now())
-  article   Article  @relation(fields: [articleId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, articleId])
 }
@@ -80,9 +81,15 @@ model Comment {
   id        String   @id @default(cuid())
   content   String
   createdAt DateTime @default(now())
-  articleId String?
   updatedAt DateTime @updatedAt
+
+  // Relations
+  articleId String?
+  Article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
   productId String?
-  Article   Article? @relation(fields: [articleId], references: [id])
-  Product   Product? @relation(fields: [productId], references: [id])
+  Product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

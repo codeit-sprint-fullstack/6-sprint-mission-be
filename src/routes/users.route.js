@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import userController from "../controllers/userController.js";
 import auth from "../middlewares/users/auth.js";
+import authErrorHandler from "../middlewares/errors/authErrorHandler.js";
 
 const usersRouter = express.Router();
 
@@ -17,24 +18,353 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// 로그인
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Error:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: 에러 메시지
+ *           example: 인증에 실패했습니다. 다시 로그인해주세요.
+ *     ErrorWithData:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: 에러 메시지
+ *           example: User already exists
+ *         data:
+ *           type: object
+ *           description: 추가 에러 데이터
+ *           example: { "email": "test@example.com" }
+ *   responses:
+ *     UnauthorizedError:
+ *       description: 인증 실패
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Error'
+ *     ForbiddenError:
+ *       description: 권한 없음
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Error'
+ *     NotFoundError:
+ *       description: 리소스를 찾을 수 없음
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Error'
+ *     ValidationError:
+ *       description: 중복 데이터 또는 유효성 검사 실패
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ErrorWithData'
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *
+ * security:
+ *   - bearerAuth: []
+ *
+ * tags:
+ *   name: Users
+ *   description: 사용자 관련 API
+ */
+
+/**
+ * @swagger
+ * /signIn:
+ *   post:
+ *     summary: 로그인
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: test@test.com
+ *               password:
+ *                 type: string
+ *                 example: yourPassword123
+ *     responses:
+ *       200:
+ *         description: 로그인 성공 시 사용자 정보와 액세스 토큰 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: cmagdgpio0000upao3nnzc1mo
+ *                     email:
+ *                       type: string
+ *                       example: test@test.com
+ *                     nickname:
+ *                       type: string
+ *                       example: 홍길동
+ *                     image:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-05-09T05:45:06.864Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-05-11T12:45:01.613Z
+ *                 accessToken:
+ *                   type: string
+ *                   description: JWT 액세스 토큰
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       401:
+ *         description: 인증 실패 (존재하지 않는 이메일, 잘못된 비밀번호)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 존재하지 않는 이메일입니다.
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 usersRouter.post("/signIn", userController.signIn);
 
-// 회원가입
+/**
+ * @swagger
+ * /signUp:
+ *   post:
+ *     summary: 회원가입
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - nickname
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: test123@test.com
+ *               password:
+ *                 type: string
+ *                 example: yourSecurePassword!
+ *               nickname:
+ *                 type: string
+ *                 example: 홍길동
+ *     responses:
+ *       201:
+ *         description: 회원가입 성공 시 생성된 유저 데이터 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 signUpRefreshUpdate:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: cmajnvff10000upyoxesn9nrs
+ *                     email:
+ *                       type: string
+ *                       example: test123@test.com
+ *                     nickname:
+ *                       type: string
+ *                       example: 홍길동
+ *                     image:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-05-11T12:59:48.301Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-05-11T12:59:48.301Z
+ *       400:
+ *         description: 유효하지 않은 요청 데이터
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       422:
+ *         description: 이미 존재하는 사용자
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorWithData'
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 usersRouter.post("/signUp", userController.signUp);
 
-// 토큰 재발급
+/**
+ * @swagger
+ * /token/refresh:
+ *   post:
+ *     summary: 액세스 토큰 재발급
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 토큰 재발급 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: 새로 발급된 JWT 액세스 토큰
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 newRefreshToken:
+ *                   type: string
+ *                   description: 새로 발급된 리프레시 토큰 (필요한 경우에만 발급)
+ *                   nullable: true
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       401:
+ *         description: 인증 실패 (유효하지 않은 리프레시 토큰)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 usersRouter.post(
   "/token/refresh",
   auth.verifyRefreshToken,
   userController.refreshToken
 );
 
-// 유저 정보 수정
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: 유저 정보 수정
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profile:
+ *                 type: string
+ *                 format: binary
+ *               nickname:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: 유저 정보 수정 완료
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     nickname:
+ *                       type: string
+ *                     image:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: 유효하지 않은 요청 데이터
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 usersRouter.patch(
   "/users/:id",
   upload.single("profile"),
   userController.updateUser
 );
+
+/**
+ * 인증 관련 에러를 처리하는 미들웨어
+ * 이 미들웨어는 라우터의 맨 마지막에 위치하여 이전 핸들러에서 발생한 인증 관련 에러를 처리합니다.
+ * next()로 전달된 에러가 code 속성이 401 또는 403인 경우 또는 name이 'UnauthorizedError'인 경우
+ * 적절한 HTTP 상태 코드와 메시지로 응답합니다.
+ */
+usersRouter.use(authErrorHandler);
 
 export default usersRouter;

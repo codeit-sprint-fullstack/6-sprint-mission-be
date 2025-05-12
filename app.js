@@ -5,6 +5,9 @@ import indexRouter from "./src/routes/index.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./src/config/swagger.js";
+
 dotenv.config();
 
 const PORT = 7777;
@@ -42,6 +45,9 @@ app.use(
 );
 
 app.use(express.json());
+
+// 스웨거 링크
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(indexRouter);
 

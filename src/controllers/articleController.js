@@ -133,63 +133,6 @@ const unlikeArticle = async (req, res, next) => {
   }
 };
 
-// 댓글 목록 조회
-const getCommentsByArticleId = async (req, res, next) => {
-  try {
-    const articleId = req.params.articleId;
-    const comments = await articleService.getCommentsByArticleId(articleId);
-    res.status(200).json({ data: comments });
-  } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
-  }
-};
-
-// 댓글 생성
-const createComment = async (req, res, next) => {
-  try {
-    const articleId = req.params.articleId;
-    const { content } = req.body;
-    const comment = await articleService.createComment(articleId, { content });
-
-    res.status(201).json({
-      message: "댓글이 성공적으로 등록되었습니다.",
-      data: comment,
-    });
-  } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
-  }
-};
-
-// 댓글 수정
-const updateComment = async (req, res, next) => {
-  try {
-    const commentId = req.params.commentId;
-    const { content } = req.body;
-    const comment = await articleService.updateComment(commentId, { content });
-
-    res.status(200).json({
-      message: "댓글이 성공적으로 수정되었습니다.",
-      data: comment,
-    });
-  } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
-  }
-};
-
-// 댓글 삭제
-const deleteComment = async (req, res, next) => {
-  try {
-    const commentId = req.params.commentId;
-    await articleService.deleteComment(commentId);
-
-    res.status(200).json({
-      message: "댓글이 성공적으로 삭제되었습니다.",
-    });
-  } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
-  }
-};
-
 export default {
   getArticleById,
   createArticle,
@@ -199,8 +142,4 @@ export default {
   increaseLike,
   likeArticle,
   unlikeArticle,
-  getCommentsByArticleId,
-  createComment,
-  updateComment,
-  deleteComment,
 };

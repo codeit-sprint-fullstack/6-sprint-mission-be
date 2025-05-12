@@ -16,7 +16,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZ
 ### 제품 생성
 POST http://localhost:7777/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2ODY1NTgzLCJleHAiOjE3NDY4NjY0ODN9.6AVeJoIE0IumfrRylR6RnmBg1YxfsoEE2l27C3D-P_0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDEyNzY1LCJleHAiOjE3NDcwMTM2NjV9.vc0Zo2am-Y-wOU51MWWFP2Ld34Sg4-6E0xCv1ncqEGI
 
 {
   "name": "새로 등록한 아이템",
@@ -41,9 +41,9 @@ DELETE http://localhost:7777/products/cm8l6qo1d0000upho3quprcu3
 
 
 ### 제품 좋아요 추가
-POST http://localhost:7777/products/cmahyolz50001upr0bxi950kc/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2ODY2NTQ1LCJleHAiOjE3NDY4Njc0NDV9.xIuMrIDB9E4MHGJNPNkqVJ8fZci7XUJaKAGYsL3PUdM
+POST http://localhost:7777/products/cmakeb05k0002upeckjdt0alq/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDEyNzY1LCJleHAiOjE3NDcwMTM2NjV9.vc0Zo2am-Y-wOU51MWWFP2Ld34Sg4-6E0xCv1ncqEGI
 
 ### 제품 좋아요 삭제
-DELETE http://localhost:7777/products/cmahyolz50001upr0bxi950kc/like
+DELETE http://localhost:7777/products/cmakeb05k0002upeckjdt0alq/like
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3NTAxLCJleHAiOjE3NDY5Njg0MDF9.dckNWnMCZuSHm9oDYEltsj-VMpC7pCSKbS17EMzQyF4

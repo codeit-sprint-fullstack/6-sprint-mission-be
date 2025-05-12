@@ -27,6 +27,7 @@ const signIn = async (req, res, next) => {
 };
 
 // 회원가입
+// TODO: 회원가입시에 바로 로그인을 진행시킬까 말까
 const signUp = async (req, res, next) => {
   try {
     const { nickname, email, password } = req.body;
@@ -38,12 +39,12 @@ const signUp = async (req, res, next) => {
     });
     const refreshToken = userService.createToken(signUpResult, "refresh");
 
-    const signUpRefreshUpdate = await userService.updateUser(signUpResult.id, {
+    const signUpUserData = await userService.updateUser(signUpResult.id, {
       ...signUpResult,
       refreshToken,
     });
 
-    res.status(201).json({ signUpRefreshUpdate });
+    res.status(201).json({ signUpUserData });
   } catch (error) {
     next(error);
   }

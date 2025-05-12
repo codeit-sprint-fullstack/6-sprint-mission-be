@@ -1,23 +1,38 @@
 # 댓글 API
 
 ### 게시글 댓글 목록 조회
-GET http://localhost:7777/articles/cm9ntweau0012upa80uhz3mfg/comments
+GET http://localhost:7777/articles/cmakee9sq0008upec9kcofe3f/comments
 
 ### 게시글 댓글 등록
-POST http://localhost:7777/articles/cm9ntweau0012upa80uhz3mfg/comments
+POST http://localhost:7777/articles/cmakee9sq0008upec9kcofe3f/comments
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDEyOTI2LCJleHAiOjE3NDcwMTM4MjZ9.g81DEl30sMPsnA7jR9eTiMHuNmNNShHeiLutCMe_5AQ
 
 {
-  "content": "새로 등록한 댓글입니다."
+  "content": "게시글에 새로 등록한 댓글입니다. 3"
 }
 
-### 게시글 댓글 수정
-PATCH http://localhost:7777/articles/cm9ntweau0012upa80uhz3mfg/comments/cm9nxl60o0001upt8d5xkrx9g
+### 상품 댓글 목록 조회
+GET http://localhost:7777/products/cmakeb05k0002upeckjdt0alq/comments
+
+### 상품 댓글 등록
+POST http://localhost:7777/products/cmakeb05k0002upeckjdt0alq/comments
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDEyODQzLCJleHAiOjE3NDcwMTM3NDN9.w1vY2XWt-CWlvig57CGFm9OFE0eRfEyTqzSZppWK9N4
+
+{
+  "content": "상품에 새로 등록한 댓글입니다."
+}
+
+### 댓글 수정
+PATCH http://localhost:7777/comments/cmakecj220004upecps1ymexl
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDEyODQzLCJleHAiOjE3NDcwMTM3NDN9.w1vY2XWt-CWlvig57CGFm9OFE0eRfEyTqzSZppWK9N4
 
 {
   "content": "수정된 댓글입니다."
 }
 
-### 게시글 댓글 삭제
-DELETE http://localhost:7777/articles/cm8l6yt800000upbkxfutlqkk/comments/cm8md2gqy0003upmo0n930cve 
+### 댓글 삭제
+DELETE http://localhost:7777/comments/cmakecj220004upecps1ymexl
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDEyODQzLCJleHAiOjE3NDcwMTM3NDN9.w1vY2XWt-CWlvig57CGFm9OFE0eRfEyTqzSZppWK9N4
