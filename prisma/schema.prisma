@@ -17,7 +17,7 @@ model Article {
   updatedAt      DateTime  @updatedAt
   writedId       Int
   articleComment Comment[]
-  writer         User      @relation(fields: [writedId], references: [id])
+  writer         User      @relation(fields: [writedId], references: [id], onDelete: Cascade)
 }
 
 model Product {
@@ -32,7 +32,7 @@ model Product {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   productComment Comment[]
-  owner          User       @relation(fields: [ownerId], references: [id])
+  owner          User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   favorites      Favorite[]
 }
 
@@ -46,7 +46,7 @@ model Comment {
   writerId  Int
   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  writer    User     @relation(fields: [writerId], references: [id])
+  writer    User     @relation(fields: [writerId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -67,8 +67,8 @@ model User {
 model Favorite {
   userId    Int
   productId Int
-  user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([userId, productId])
 }

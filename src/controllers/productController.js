@@ -6,7 +6,7 @@ import productService from "../services/productService.js";
  */
 export async function getProducts(req, res, next) {
   try {
-    const products = await productService.findProducts({
+    const products = await productService.getProducts({
       offset: Number(req.query.offset),
       search: req.query.search,
     });
@@ -21,17 +21,9 @@ export async function getProducts(req, res, next) {
  */
 export async function createProduct(req, res, next) {
   try {
-    const { name, description, price, tags } = req.body;
+    const data = req.body;
     const ownerId = req.auth.userId;
-    const product = await productService.createProduct(
-      {
-        name,
-        description,
-        price,
-        tags,
-      },
-      ownerId
-    );
+    const product = await productService.createProduct(data, ownerId);
     res.status(201).json(product);
   } catch (e) {
     next(e);
@@ -45,7 +37,7 @@ export async function getProduct(req, res, next) {
   try {
     const productId = Number(req.params.productId);
     const userId = req.auth.userId;
-    const product = await productService.findProductById(productId, userId);
+    const product = await productService.getProduct(productId, userId);
     if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
 
     const { owner, ...rest } = product[1];
@@ -66,15 +58,14 @@ export async function getProduct(req, res, next) {
 export async function updateProduct(req, res, next) {
   try {
     const productId = Number(req.params.productId);
-    if (!productId) throw new NotFoundError("상품을 찾을 수 없습니다.");
-
     const { name, description, price, tags } = req.body;
-    const product = await productService.updateProductById(productId, {
+    const product = await productService.updateProduct(productId, {
       name,
       description,
       price,
       tags,
     });
+    if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
     res.json(product);
   } catch (e) {
     next(e);
@@ -87,8 +78,8 @@ export async function updateProduct(req, res, next) {
 export async function deleteProduct(req, res, next) {
   try {
     const productId = Number(req.params.productId);
-    if (!productId) throw new NotFoundError("상품을 찾을 수 없습니다.");
-    await productService.deleteProductById(productId);
+    if (isNaN(productId)) throw new Error("상품 ID는 숫자여야 합니다.");
+    await productService.deleteProduct(productId);
     res.json({ id: productId });
   } catch (e) {
     next(e);
@@ -102,9 +93,9 @@ export async function likeProduct(req, res, next) {
   try {
     const productId = +req.params.productId;
     const userId = req.auth.userId;
-    const product = await productService.likeProductById(productId, userId);
+    const product = await productService.likeProduct(productId, userId);
     if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
-    res.json({ ...product[1], isFavorite: true });
+    res.json({ ...product, isFavorite: true });
   } catch (e) {
     next(e);
   }
@@ -117,9 +108,9 @@ export async function unlikeProduct(req, res, next) {
   try {
     const productId = +req.params.productId;
     const userId = req.auth.userId;
-    const product = await productService.unlikeProductById(productId, userId);
+    const product = await productService.unlikeProduct(productId, userId);
     if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
-    res.json({ ...product[1], isFavorite: false });
+    res.json({ ...product, isFavorite: false });
   } catch (e) {
     next(e);
   }

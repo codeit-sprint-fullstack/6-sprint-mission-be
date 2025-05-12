@@ -1,6 +1,11 @@
 import userRepository from "../repositories/userRepository.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {
+  filterSensitiveUserData,
+  hashPassword,
+  verifyPassword,
+} from "../utils/authUtils.js";
+import { BadRequestError, UnauthorizedError } from "../exceptions.js";
 
 /**
  * 유저 생성 함수
@@ -9,17 +14,15 @@ async function createUser(user) {
   try {
     const existingEmail = await userRepository.findByEmail(user.email);
     if (existingEmail) {
-      const error = new Error("이미 사용중인 이메일입니다.");
-      error.code = 400;
-      error.data = { email: { message: error.message } };
-      throw error;
+      throw new BadRequestError("이미 사용중인 이메일입니다.", {
+        email: { message: "이미 사용중인 이메일입니다." },
+      });
     }
     const existingNickname = await userRepository.findByNickname(user.nickname);
     if (existingNickname) {
-      const error = new Error("이미 사용중인 닉네임입니다.");
-      error.code = 400;
-      error.data = { nickname: { message: error.message } };
-      throw error;
+      throw new BadRequestError("이미 사용중인 닉네임입니다.", {
+        nickname: { message: "이미 사용중인 닉네임입니다." },
+      });
     }
     const hashedPassword = await hashPassword(user.password);
     const createdUser = await userRepository.save(user, hashedPassword);
@@ -31,47 +34,25 @@ async function createUser(user) {
 }
 
 /**
- * 비밀번호 해싱 함수
- */
-function hashPassword(password) {
-  return bcrypt.hash(password, 10);
-}
-
-/**
- * 민감한 정보 필터링 함수
- */
-function filterSensitiveUserData(user) {
-  const { hashedPassword, refreshToken, ...rest } = user;
-  return rest;
-}
-
-/**
  * 유저 정보 가져오는 함수
  */
 async function getUser(email, password) {
   try {
     const user = await userRepository.findByEmail(email);
     if (!user) {
-      const error = new Error("존재하지 않는 이메일입니다.");
-      error.code = 401;
-      throw error;
+      throw new BadRequestError("존재하지 않는 이메일입니다.", {
+        email: { message: "존재하지 않는 이메일입니다." },
+      });
     }
-    await verifyPassword(password, user.hashedPassword);
+    const isMatch = await verifyPassword(password, user.hashedPassword);
+    if (!isMatch) {
+      throw new BadRequestError("비밀번호가 일치하지 않습니다.", {
+        password: { message: "비밀번호가 일치하지 않습니다." },
+      });
+    }
     return filterSensitiveUserData(user);
   } catch (error) {
     console.error("getUser Error");
-    throw error;
-  }
-}
-
-/**
- * 비밀번호 검증 함수
- */
-async function verifyPassword(inputPassword, hashedPassword) {
-  const isMatch = await bcrypt.compare(inputPassword, hashedPassword);
-  if (!isMatch) {
-    const error = new Error("비밀번호가 일치하지 않습니다.");
-    error.code = 401;
     throw error;
   }
 }
@@ -101,9 +82,7 @@ function createToken(user, type = "access") {
 async function refreshToken(userId, refreshToken) {
   const user = await userRepository.findById(userId);
   if (!user || user.refreshToken !== refreshToken) {
-    const error = new Error("Unauthorized");
-    error.code = 401;
-    throw error;
+    throw new UnauthorizedError();
   }
   const newAccessToken = createToken(user);
   const newRefreshToken = createToken(user, "refresh");
@@ -113,7 +92,7 @@ async function refreshToken(userId, refreshToken) {
 export default {
   createUser,
   getUser,
-  createToken,
   updateUser,
+  createToken,
   refreshToken,
 };

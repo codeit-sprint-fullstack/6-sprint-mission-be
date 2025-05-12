@@ -9,7 +9,7 @@ import {
   updateProduct,
 } from "../controllers/productController.js";
 import auth from "../middlewares/auth.js";
-import { createProductValidator, validator } from "../middlewares/validator.js";
+import { productValidator, validate } from "../middlewares/validator.js";
 import commentRouter from "./commentRouter.js";
 
 const productRouter = express.Router();
@@ -18,12 +18,18 @@ productRouter.get("/", auth.verifyAccessToken, getProducts);
 productRouter.post(
   "/",
   auth.verifyAccessToken,
-  createProductValidator,
-  validator,
+  productValidator,
+  validate,
   createProduct
 );
 productRouter.get("/:productId", auth.verifyAccessToken, getProduct);
-productRouter.patch("/:productId", auth.verifyAccessToken, updateProduct);
+productRouter.patch(
+  "/:productId",
+  auth.verifyAccessToken,
+  productValidator,
+  validate,
+  updateProduct
+);
 productRouter.delete("/:productId", auth.verifyAccessToken, deleteProduct);
 productRouter.post("/:productId/favorite", auth.verifyAccessToken, likeProduct);
 productRouter.delete(

@@ -1,6 +1,7 @@
-import prisma from "../config/prisma.js";
+import { BadRequestError } from "../exceptions.js";
+import productRepository from "../repositories/productRepository.js";
 
-async function findProducts({ offset, search }) {
+async function getProducts({ offset, search }) {
   const options = { orderBy: { createdAt: "desc" } };
   if (offset) options.skip = offset;
   if (search) {
@@ -11,93 +12,47 @@ async function findProducts({ offset, search }) {
       ],
     };
   }
-  return prisma.product.findMany(options);
+  return productRepository.findAll(options);
 }
 
 async function createProduct(data, ownerId) {
-  return prisma.product.create({
-    data: { ...data, owner: { connect: { id: ownerId } } },
-  });
+  return productRepository.save(data, ownerId);
 }
 
-async function findProductById(productId, userId) {
-  return await prisma.$transaction([
-    prisma.favorite.findUnique({
-      where: {
-        userId_productId: { userId, productId },
-      },
-    }),
-    prisma.product.findUnique({
-      where: { id: productId },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        price: true,
-        tags: true,
-        createdAt: true,
-        favoriteCount: true,
-        ownerId: true,
-        owner: {
-          select: { nickname: true },
-        },
-      },
-    }),
-  ]);
+async function getProduct(productId, userId) {
+  return productRepository.findById(productId, userId);
 }
 
-async function updateProductById(productId, data) {
-  return prisma.product.update({ where: { id: productId }, data });
+async function updateProduct(productId, data) {
+  return productRepository.update(productId, data);
 }
 
-async function deleteProductById(productId) {
-  return prisma.product.delete({
-    where: { id: productId },
-  });
+async function deleteProduct(productId) {
+  return productRepository.remove(productId);
 }
 
-async function likeProductById(productId, userId) {
-  const alreadyLike = await prisma.favorite.findUnique({
-    where: { userId_productId: { userId, productId } },
-  });
+async function likeProduct(productId, userId) {
+  const alreadyLike = await productRepository.findLike(productId, userId);
   if (alreadyLike) {
-    throw new Error("이미 찜한 상품입니다.");
+    throw new BadRequestError("이미 찜한 상품입니다.");
   }
-  return await prisma.$transaction([
-    prisma.favorite.create({
-      data: { userId, productId },
-    }),
-    prisma.product.update({
-      where: { id: productId },
-      data: { favoriteCount: { increment: 1 } },
-    }),
-  ]);
+  return productRepository.createLike(productId, userId);
 }
 
-async function unlikeProductById(productId, userId) {
-  const alreadyLike = await prisma.favorite.findUnique({
-    where: { userId_productId: { userId, productId } },
-  });
+async function unlikeProduct(productId, userId) {
+  const alreadyLike = await productRepository.findLike(productId, userId);
   if (!alreadyLike) {
-    throw new Error("찜하지 않은 상품입니다.");
+    throw new BadRequestError("찜하지 않은 상품입니다.");
   }
-  return await prisma.$transaction([
-    prisma.favorite.delete({
-      where: { userId_productId: { userId, productId } },
-    }),
-    prisma.product.update({
-      where: { id: productId },
-      data: { favoriteCount: { decrement: 1 } },
-    }),
-  ]);
+  return productRepository.deleteLike(productId, userId);
 }
 
 export default {
-  findProducts,
   createProduct,
-  findProductById,
-  updateProductById,
-  deleteProductById,
-  likeProductById,
-  unlikeProductById,
+  getProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+  likeProduct,
+  unlikeProduct,
 };
