@@ -16,7 +16,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const multer = require("multer");
-const path = require("path"); // path 모듈 추가
+const path = require("path");
 
 const app = express();
 const UPLOADS_DIR = "uploads/";
@@ -24,13 +24,13 @@ const UPLOADS_DIR = "uploads/";
 // 1. 저장 공간 설정 (multer)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, UPLOADS_DIR); // 파일을 저장할 폴더 지정
+    cb(null, UPLOADS_DIR);
   },
   filename: function (req, file, cb) {
     cb(
       null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname) // 확장자 추출
-    ); // "이름-날짜.확장자" 형식으로 저장
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
@@ -38,11 +38,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // 미들웨어
-app.use(morgan("dev")); // 개발 환경 로깅
-app.use(helmet()); // 보안 헤더 설정
-app.use(cors()); // CORS 활성화
-app.use(express.json()); // JSON 요청 body 파싱
-app.use("/" + UPLOADS_DIR, express.static(UPLOADS_DIR)); // uploads 폴더를 정적 파일로 제공
+app.use(morgan("dev"));
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use("/" + UPLOADS_DIR, express.static(UPLOADS_DIR));
 
 // 라우터
 app.use("/auth", authRouter);
