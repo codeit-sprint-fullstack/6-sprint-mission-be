@@ -1,8 +1,8 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
+import dotenv from "dotenv";
 
 import userController from "./controllers/userController.js";
 import articleController from "./controllers/articleController.js";
@@ -11,6 +11,8 @@ import commentController from "./controllers/commentController.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
 const app = express();
+
+dotenv.config();
 
 app.use(cors()); // CORS 허용 (프론트와 포트 다를 경우 필수)
 app.use(express.json());
@@ -23,7 +25,7 @@ app.use("/comment", commentController);
 
 const upload = multer({ dest: "uploads/" });
 
-app.post('/photos', upload.single('image'), (req, res) => {
+app.post("/photos", upload.single("image"), (req, res) => {
   const filename = req.file.filename;
   const path = `/profile/${filename}`;
   res.json({ path });

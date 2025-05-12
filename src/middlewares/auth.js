@@ -1,5 +1,4 @@
-import { expressjwt } from "express-jwt"; // expressjwt를 임포트해줘야 합니다.
-import jwt from "jsonwebtoken";
+import { expressjwt } from "express-jwt";
 import productRepository from "../repositories/productRepository.js";
 import commentRepository from "../repositories/commentRepository.js";
 import articleRepository from "../repositories/articleRepository.js";
