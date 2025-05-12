@@ -75,35 +75,21 @@ const upload = multer({ storage });
  *   - bearerAuth: []
  *
  * tags:
- *   name: Users
+ *   name: User
  *   description: 사용자 관련 API
  */
 
 /**
  * @swagger
- * /signIn:
- *   post:
- *     summary: 로그인
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 example: test@test.com
- *               password:
- *                 type: string
- *                 example: yourPassword123
+ * /user/me:
+ *   get:
+ *     summary: 현재 로그인한 유저 정보 조회
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: 로그인 성공 시 사용자 정보와 액세스 토큰 반환
+ *         description: 유저 정보 조회 성공
  *         content:
  *           application/json:
  *             schema:
@@ -114,39 +100,23 @@ const upload = multer({ storage });
  *                   properties:
  *                     id:
  *                       type: string
- *                       example: cmagdgpio0000upao3nnzc1mo
  *                     email:
  *                       type: string
- *                       example: test@test.com
  *                     nickname:
  *                       type: string
- *                       example: 홍길동
  *                     image:
  *                       type: string
  *                       nullable: true
- *                       example: null
  *                     createdAt:
  *                       type: string
  *                       format: date-time
- *                       example: 2025-05-09T05:45:06.864Z
  *                     updatedAt:
  *                       type: string
  *                       format: date-time
- *                       example: 2025-05-11T12:45:01.613Z
- *                 accessToken:
- *                   type: string
- *                   description: JWT 액세스 토큰
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
- *         description: 인증 실패 (존재하지 않는 이메일, 잘못된 비밀번호)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: 존재하지 않는 이메일입니다.
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         description: 서버 오류
  *         content:
@@ -154,149 +124,16 @@ const upload = multer({ storage });
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-usersRouter.post("/signIn", userController.signIn);
+usersRouter.get("/me", auth.verifyAccessToken, userController.getProfile);
 
 /**
  * @swagger
- * /signUp:
- *   post:
- *     summary: 회원가입
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *               - nickname
- *             properties:
- *               email:
- *                 type: string
- *                 example: test123@test.com
- *               password:
- *                 type: string
- *                 example: yourSecurePassword!
- *               nickname:
- *                 type: string
- *                 example: 홍길동
- *     responses:
- *       201:
- *         description: 회원가입 성공 시 생성된 유저 데이터 반환
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 signUpRefreshUpdate:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: cmajnvff10000upyoxesn9nrs
- *                     email:
- *                       type: string
- *                       example: test123@test.com
- *                     nickname:
- *                       type: string
- *                       example: 홍길동
- *                     image:
- *                       type: string
- *                       nullable: true
- *                       example: null
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       example: 2025-05-11T12:59:48.301Z
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       example: 2025-05-11T12:59:48.301Z
- *       400:
- *         description: 유효하지 않은 요청 데이터
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       422:
- *         description: 이미 존재하는 사용자
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorWithData'
- *       500:
- *         description: 서버 오류
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-usersRouter.post("/signUp", userController.signUp);
-
-/**
- * @swagger
- * /token/refresh:
- *   post:
- *     summary: 액세스 토큰 재발급
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: 토큰 재발급 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 accessToken:
- *                   type: string
- *                   description: 새로 발급된 JWT 액세스 토큰
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *                 newRefreshToken:
- *                   type: string
- *                   description: 새로 발급된 리프레시 토큰 (필요한 경우에만 발급)
- *                   nullable: true
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *       401:
- *         description: 인증 실패 (유효하지 않은 리프레시 토큰)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Unauthorized
- *       500:
- *         description: 서버 오류
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-usersRouter.post(
-  "/token/refresh",
-  auth.verifyRefreshToken,
-  userController.refreshToken
-);
-
-/**
- * @swagger
- * /users/{id}:
+ * /user/me:
  *   patch:
  *     summary: 유저 정보 수정
- *     tags: [Users]
+ *     tags: [User]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -354,9 +191,68 @@ usersRouter.post(
  *               $ref: '#/components/schemas/Error'
  */
 usersRouter.patch(
-  "/users/:id",
+  "/me",
+  auth.verifyAccessToken,
   upload.single("profile"),
   userController.updateUser
+);
+
+/**
+ * @swagger
+ * /user/me/password:
+ *   patch:
+ *     summary: 비밀번호 변경
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 description: 현재 비밀번호
+ *               newPassword:
+ *                 type: string
+ *                 description: 새 비밀번호
+ *     responses:
+ *       200:
+ *         description: 비밀번호 변경 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 비밀번호가 성공적으로 변경되었습니다.
+ *       400:
+ *         description: 잘못된 요청 데이터
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+usersRouter.patch(
+  "/me/password",
+  auth.verifyAccessToken,
+  userController.changePassword
 );
 
 /**

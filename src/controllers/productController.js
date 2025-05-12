@@ -1,5 +1,4 @@
 import { prisma } from "../db/prisma/client.prisma.js";
-import productLikeService from "../service/productLikeService.js";
 import productService from "../service/productService.js";
 
 // 전체 상품 목록 조회

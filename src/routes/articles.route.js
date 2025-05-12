@@ -7,7 +7,7 @@ const articlesRouter = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Articles
+ *   name: Article
  *   description: 게시글 관련 API
  */
 
@@ -16,7 +16,10 @@ const articlesRouter = express.Router();
  * /articles:
  *   get:
  *     summary: 게시글 목록 조회
- *     tags: [Articles]
+ *     tags: [Article]
+ *     security:
+ *       - bearerAuth: []
+ *     description: 게시글 목록을 조회합니다. 액세스 토큰은 선택 사항이며, 토큰을 제공할 경우 사용자의 좋아요 여부(isLiked)를 함께 반환합니다.
  *     parameters:
  *       - name: offset
  *         in: query
@@ -98,7 +101,10 @@ articlesRouter.get("/", auth.verifyOptionalAuth, articleController.getArticles);
  * /articles/{articleId}:
  *   get:
  *     summary: 게시글 상세 조회
- *     tags: [Articles]
+ *     tags: [Article]
+ *     security:
+ *       - bearerAuth: []
+ *     description: 특정 게시글의 상세 정보를 조회합니다. 액세스 토큰은 선택 사항이며, 토큰을 제공할 경우 사용자의 좋아요 여부(isLiked)를 함께 반환합니다.
  *     parameters:
  *       - name: articleId
  *         in: path
@@ -153,7 +159,7 @@ articlesRouter.get(
  * /articles:
  *   post:
  *     summary: 게시글 생성
- *     tags: [Articles]
+ *     tags: [Article]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -226,7 +232,7 @@ articlesRouter.post(
  * /articles/{articleId}:
  *   patch:
  *     summary: 게시글 수정
- *     tags: [Articles]
+ *     tags: [Article]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -305,7 +311,7 @@ articlesRouter.patch(
  * /articles/{articleId}:
  *   delete:
  *     summary: 게시글 삭제
- *     tags: [Articles]
+ *     tags: [Article]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -348,7 +354,7 @@ articlesRouter.delete(
  * /articles/{articleId}/like:
  *   patch:
  *     summary: 게시글 좋아요 증가
- *     tags: [Articles]
+ *     tags: [Article]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -392,7 +398,7 @@ articlesRouter.delete(
  *               $ref: '#/components/schemas/Error'
  *   post:
  *     summary: 게시글 좋아요 누르기
- *     tags: [Articles]
+ *     tags: [Article]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -427,7 +433,7 @@ articlesRouter.delete(
  *               $ref: '#/components/schemas/Error'
  *   delete:
  *     summary: 게시글 좋아요 취소
- *     tags: [Articles]
+ *     tags: [Article]
  *     security:
  *       - bearerAuth: []
  *     parameters:

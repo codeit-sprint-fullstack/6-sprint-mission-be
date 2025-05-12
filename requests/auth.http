@@ -1,7 +1,7 @@
 # 인증 API
 
 ### 로그인
-POST http://localhost:7777/signIn
+POST http://localhost:7777/auth/signIn
 Content-Type: application/json
 
 {
@@ -9,12 +9,13 @@ Content-Type: application/json
   "password": "123"
 }
 
+
 ### 회원가입
-POST http://localhost:7777/signUp
+POST http://localhost:7777/auth/signUp
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
+  "email": "test123@test.com",
   "password": "123",
   "nickname": "홍길동"
 }
@@ -24,6 +25,6 @@ Content-Type: application/json
 // 왜 유저 아이디가 다르게 전달되지?
 // 이전 쿠키값이 아직 남아 있었음 이유는 로그인시에만 쿠키가 저장되기 때문!
 // 정확히는 쿠키의 maxAge와 토큰의 expiresIn의 간극에 따른 오류였음
-POST http://localhost:7777/token/refresh
+POST http://localhost:7777/auth/token/refresh
 Content-Type: application/json
 Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2NzY5NTEwLCJleHAiOjE3NDc2MzM1MTB9.OkxAcBVJb81WFtXBUmCRiBSn1AcCdN29P0WaK00n6Q4
