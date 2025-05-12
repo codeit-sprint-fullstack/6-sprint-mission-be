@@ -27,7 +27,6 @@
     "start": "node app.js",
     "seed": "node src/db/prisma/seed.js",
     "postinstall": "prisma generate"
-
   },
   "prisma": {
     "schema": "src/db/prisma/schema.prisma"

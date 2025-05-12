@@ -21,7 +21,8 @@ app.use(cookieParser()); // ✅ 필수!
 
 // 허용할 도메인들
 const allowedOrigins = [
-  `http://localhost:${PORT}`, // 로컬 환경
+  `http://localhost:${ALLOWEPORT}`, // 프론트 로컬 환경
+  `http://localhost:${PORT}`, // 서버 로컬 환경
   "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe.vercel.app",
