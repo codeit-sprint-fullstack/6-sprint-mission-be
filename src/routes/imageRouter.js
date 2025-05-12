@@ -10,7 +10,9 @@ imageRouter.post(
   auth.verifyAccessToken,
   uploads.single("image"),
   (req, res) => {
-    const path = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+    const path = `${req.protocol}://${req.get("host")}/image/${
+      req.file.filename
+    }`;
     res.json({ url: path });
   }
 );
