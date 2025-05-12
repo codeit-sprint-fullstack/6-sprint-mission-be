@@ -1,5 +1,5 @@
 // src/services/product.service.js
-const { product } = require("../repositories/prisma/prismaClient.js");
+const { product } = require("../models/prisma/prismaClient.js");
 const productRepository = require("../repositories/product.repository.js");
 
 async function createProduct(productData, userId) {

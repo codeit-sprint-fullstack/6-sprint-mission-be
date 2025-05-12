@@ -1,5 +1,5 @@
 // src/controllers/user.controller.js
-const prismaClient = require("../repositories/prisma/prismaClient.js");
+const prismaClient = require("../models/prisma/prismaClient.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.getMe = catchAsync(async (req, res) => {

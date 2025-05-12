@@ -1,7 +1,7 @@
 // src/middlewares/auth.middleware.js
 const jwt = require("jsonwebtoken");
 const config = require("../config/config.js");
-const prisma = require("../repositories/prisma/prismaClient.js");
+const prisma = require("../models/prisma/prismaClient.js");
 const catchAsync = require("../utils/catchAsync.js");
 const ApiError = require("../utils/apiError.js");
 

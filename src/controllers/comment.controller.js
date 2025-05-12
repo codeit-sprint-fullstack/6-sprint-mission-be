@@ -1,5 +1,5 @@
 // src/controllers/comment.controller.js
-const prisma = require("../repositories/prisma/prismaClient.js");
+const prisma = require("../models/prisma/prismaClient.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.createProductComment = catchAsync(async (req, res) => {

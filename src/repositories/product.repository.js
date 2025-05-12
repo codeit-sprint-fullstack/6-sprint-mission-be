@@ -1,5 +1,5 @@
 // src/repositories/product.repository.js
-const prismaClient = require("../repositories/prisma/prismaClient.js");
+const prismaClient = require("../models/prisma/prismaClient.js");
 
 async function create(productData, userId) {
   const newProduct = await prismaClient.product.create({
