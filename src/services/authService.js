@@ -2,11 +2,16 @@
 import jwt from 'jsonwebtoken';
 import * as authRepository from '../repositories/authRepository.js';
 import { HttpError } from '../middlewares/HttpError.js';
+import bcrypt from 'bcrypt';
 
 export const signUp = async (data) => {
     const entity = await authRepository.save(data);
     if (data.password !== data.passwordConfirmation) {
         throw HttpError(401, '비밀번호가 일치하지 않습니다.');
+    }
+    const user = await authRepository.findByEmail(data.email);
+    if (user) {
+        throw new HttpError(409, '이미 가입된 이메일 입니다.');
     }
 
     const accessToken = jwt.sign({ userId: entity.id }, process.env.ACCESS_TOKEN_SECRET, {

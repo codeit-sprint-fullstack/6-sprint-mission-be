@@ -1,5 +1,25 @@
 import { prismaClient } from '../prismaClient.js';
 
+export async function getById(id) {
+    return prismaClient.comment.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            content: true,
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            writer: {
+                select: {
+                    id: true,
+                    nickname: true,
+                    image: true,
+                },
+            },
+        },
+    });
+}
+
 export async function Create(data) {
     return prismaClient.comment.create({ data });
 }

@@ -1,2 +1,29 @@
-GET http://localhost:3000/articles/1
+Post http://localhost:3000/auth/signup
+Content-Type: application/json
 
+{
+  "email": "a01072669755@gmail.com",
+  "nickname": "김숲안",
+  "password": "tnqls9755@",
+  "passwordConfirmation": "tnqls9755@"
+}
+
+
+# Post http://localhost:3000/auth/signin
+# Content-Type: application/json
+
+# {
+#   "email": "a01072669755@gmail.com",  
+#   "password": "tnqls9755@"  
+# }
+
+
+# POST http://localhost:3000/articles
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ4LCJpYXQiOjE3NDcwMTE3NzgsImV4cCI6MTc0NzAxNTM3OH0.pRUSKT-uhdmWbu5ULNe7Mxib6J0WxAjSHtpQrS5805M
+
+# {
+#   "image": "https://example.com/image.png",
+#   "content": "게시글 내용입니다.",
+#   "title": "게시글 제목입니다."
+# }
