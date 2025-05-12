@@ -3,7 +3,7 @@
 
 ### 게시글 목록 조회
 GET http://localhost:7777/articles/?offset=0&limit=4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
 
 ### 게시글 조회 (인기순)
 GET http://localhost:7777/articles/?sort=popular
