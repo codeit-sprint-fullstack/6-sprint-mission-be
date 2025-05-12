@@ -1,0 +1,49 @@
+### 상품 생성
+POST http://localhost:5050/product
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+Content-Type: application/json
+
+{
+  "name": "새로운 상품",
+  "description": "상품 설명",
+  "price": 10000,
+  "tags": ["새로운", "유니크"], 
+  "images": "image1.jpg",
+  "authorId": 1  
+}
+
+
+### 전체 상품 조회
+GET http://localhost:5050/product
+
+### 특정 상품 조회
+GET http://localhost:5050/product/1
+
+### 상품 수정
+PUT http://localhost:5050/product/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+
+{
+  "name": "수정된 상품명2",
+  "description": "수정된 설명입니다.",
+  "price": 14900,
+  "tags": ["전자제품"],
+  "images": "/photos/updated.jpg"
+}
+
+### 상품 삭제
+DELETE http://localhost:5050/product/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+
+### 상품 좋아요
+POST http://localhost:5050/product/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+
+### 좋아요 취소
+DELETE http://localhost:5050/product/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+
+### 좋아요 여부 확인
+GET http://localhost:5050/product/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU

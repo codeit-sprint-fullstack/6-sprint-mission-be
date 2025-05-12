@@ -1,0 +1,52 @@
+### 자유게시글 생성
+POST http://localhost:5050/article
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+자유 게시글 제목
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="content"
+
+자유 게시글 내용입니다.
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./test.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+### 전체 자유게시글 조회
+GET http://localhost:5050/article
+
+### 자유게시글 단건 조회
+GET http://localhost:5050/article/1
+
+### 자유게시글 수정
+PUT http://localhost:5050/article/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+Content-Type: application/json
+
+{
+  "title": "수정된 제목",
+  "content": "수정된 내용"
+}
+
+### 자유게시글 삭제
+DELETE http://localhost:5050/article/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+
+### 자유게시글 좋아요 추가
+POST http://localhost:5050/article/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+
+### 자유게시글 좋아요 취소
+DELETE http://localhost:5050/article/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+
+### 자유게시글 좋아요 여부 확인
+GET http://localhost:5050/article/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA

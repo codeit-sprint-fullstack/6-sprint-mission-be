@@ -1,0 +1,22 @@
+###  회원가입
+POST http://localhost:5050/users
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "name": "테스트유저",
+  "password": "12345678"
+}
+
+### 로그인
+POST http://localhost:5050/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "12345678"
+}
+
+### 액세스 토큰 재발급
+POST http://localhost:5050/token/refresh
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwODk1OSwiZXhwIjoxNzQ4MjE4NTU5fQ.FoBLTPPOupZK2hZNjSfBoQfup61Yr74yVeyqhsBLgac
