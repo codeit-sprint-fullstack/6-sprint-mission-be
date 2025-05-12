@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import handleError from "./middlewares/handleErrorMiddleware.js";
+import errorHandler from "./middlewares/errorHandler.js";
 import router from "./routes/indexRoutes.js";
 
 const PORT = process.env.PORT || 3000;
@@ -17,6 +17,7 @@ app.use(
       "https://been-panda.vercel.app",
       "https://been-panda.onrender.com",
       "http://localhost:3000",
+      "http://localhost:3001",
       "http://127.0.0.1:3000",
       "http://localhost:5173",
       "http://127.0.0.1:5173",
@@ -28,7 +29,7 @@ app.use(
 app.use(router);
 
 // 4. 에러 미들웨어 등록
-app.use(handleError);
+app.use(errorHandler);
 
 // 5. 서버 연결
 app.listen(PORT, () => {

@@ -1,18 +1,73 @@
 import express from "express";
-import prisma from "../db/prisma/client.prisma.js";
+import prisma from "../../prisma/client.prisma.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const userRouter = express.Router();
 
+// 비밀번호 제외
+function filterPassword(user) {
+  const { password, ...data } = user;
+
+  return data;
+}
+
+// JWT 토큰 발급
+function createToken(user, type = "accessToken") {
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: type === "accessToken" ? "30m" : "1day",
+  });
+
+  return token;
+}
+
 // 회원가입
-userRouter.post("/signup", async (req, res, next) => {
+userRouter.post("/signUp", async (req, res, next) => {
   try {
     const { email, password, nickname } = req.body;
 
-    const user = await prisma.user.create({
-      data: { email, encryptedPassword: password, nickname },
+    // 유효성 검사 실패
+    if (!email || !password || !nickname) {
+      const error = new Error("이메일, 비밀번호, 닉네임을 모두 입력해주세요.");
+      error.code = 400;
+
+      throw error;
+    }
+
+    const existedUser = await prisma.user.findUnique({
+      where: { email },
     });
 
-    res.status(201).json(user);
+    // 존재하는 이메일
+    if (existedUser) {
+      const error = new Error("이미 존재하는 이메일입니다.");
+      error.code = 400;
+
+      throw error;
+    }
+
+    const existedNickname = await prisma.user.findUnique({
+      where: { nickname },
+    });
+
+    // 존재하는 닉네임
+    if (existedNickname) {
+      const error = new Error("이미 존재하는 닉네임입니다.");
+      error.code = 400;
+
+      throw error;
+    }
+
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: { email, password: encryptedPassword, nickname },
+    });
+
+    const filterPasswordUser = filterPassword(user);
+    const accessToken = createToken(user);
+    const refreshToken = createToken(user, "refreshToken");
+
+    res.status(201).json({ ...filterPasswordUser, accessToken, refreshToken });
   } catch (e) {
     next(e);
   }
@@ -23,16 +78,33 @@ userRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    await prisma.$transaction(async (tx) => {
-      const user = await tx.user.findUnique({
-        where: { email, encryptedPassword: password },
-      });
-      if (!user) throw new Error("존재하지 않는 사용자입니다.");
-
-      const token = { accessToken: `@${user.id}@` };
-
-      res.status(200).json(token);
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
+
+    // 이메일 불일치
+    if (!user) {
+      const error = new Error("존재하지 않는 이메일입니다.");
+      error.code = 400;
+
+      throw error;
+    }
+
+    // 비밀번호 불일치
+    const verifyPassword = await bcrypt.compare(password, user.password);
+
+    if (!verifyPassword) {
+      const error = new Error("비밀번호가 일치하지 않습니다.");
+      error.code = 400;
+
+      throw error;
+    }
+
+    const filterPasswordUser = filterPassword(user);
+    const accessToken = createToken(user);
+    const refreshToken = createToken(user, "refreshToken");
+
+    res.status(200).json({ ...filterPasswordUser, accessToken, refreshToken });
   } catch (e) {
     next(e);
   }
