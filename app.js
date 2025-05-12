@@ -25,6 +25,7 @@ const allowedOrigins = [
   "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe.vercel.app",
+  "https://six-sprint-mission-be.onrender.com", // ✅ Swagger UI가 실행되는 곳 (자기 자신)
   // 배포된 환경
 ];
 
