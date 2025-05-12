@@ -14,13 +14,29 @@ export const signUp = async (data) => {
         throw new HttpError(409, '이미 가입된 이메일 입니다.');
     }
 
-    const accessToken = jwt.sign({ userId: entity.id }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h',
-    });
+    const accessToken = jwt.sign(
+        {
+            userId: user.id,
+            userEmail: user.email,
+            userNickname: user.nickname,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: '1h',
+        },
+    );
 
-    const refreshToken = jwt.sign({ userId: entity.id }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: '7d',
-    });
+    const refreshToken = jwt.sign(
+        {
+            userId: user.id,
+            userEmail: user.email,
+            userNickname: user.nickname,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: '7d',
+        },
+    );
 
     await authRepository.update(entity.id, { token: refreshToken });
 
@@ -49,13 +65,29 @@ export const signIn = async (data) => {
         throw new HttpError(401, '비밀번호가 일치하지 않습니다.');
     }
 
-    const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h',
-    });
+    const accessToken = jwt.sign(
+        {
+            userId: user.id,
+            userEmail: user.email,
+            userNickname: user.nickname,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: '1h',
+        },
+    );
 
-    const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: '7d',
-    });
+    const refreshToken = jwt.sign(
+        {
+            userId: user.id,
+            userEmail: user.email,
+            userNickname: user.nickname,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: '7d',
+        },
+    );
 
     await authRepository.update(user.id, { token: refreshToken });
 

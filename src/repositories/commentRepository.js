@@ -57,12 +57,11 @@ export async function Delete(id) {
     });
 }
 
-export async function fetchComments({ type, targetId, cursor, limit = 10 }) {
-    const key = type === 'article' ? 'articleId' : 'productId';
-
+export async function fetchComments({ type, tableId, cursor, limit = 10 }) {
     const comments = await prismaClient.comment.findMany({
         where: {
-            [key]: targetId,
+            type,
+            tableId,
         },
         orderBy: { id: 'asc' },
         take: limit + 1,
@@ -83,11 +82,5 @@ export async function fetchComments({ type, targetId, cursor, limit = 10 }) {
         },
     });
 
-    const hasNext = comments.length > limit;
-    const resultList = hasNext ? comments.slice(0, limit) : comments;
-
-    return {
-        nextCursor: hasNext ? comments[comments.length - 1].id : null,
-        list: resultList,
-    };
+    return comments;
 }

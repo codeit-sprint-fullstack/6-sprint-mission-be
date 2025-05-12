@@ -3,10 +3,11 @@ import * as productRepository from '../repositories/productRepository.js';
 import * as commentRepository from '../repositories/commentRepository.js';
 
 export const getProducts = async ({ cursor, take, orderBy, word }) => {
-    const entities = await productRepository.FindMany({ cursor, take, orderBy, word });
-    const hasNext = entities.length === take + 1;
+    const { list, totalCount } = await productRepository.FindMany({ cursor, take, orderBy, word });
+    const hasNext = list.length === take + 1;
+
     return {
-        data: entities.slice(0, take).map((a) => ({
+        data: list.slice(0, take).map((a) => ({
             id: a.id,
             name: a.name,
             description: a.description,
@@ -19,11 +20,13 @@ export const getProducts = async ({ cursor, take, orderBy, word }) => {
             createdAt: a.createdAt,
         })),
         hasNext,
-        nextCursor: hasNext ? entities[entities.length - 1].id : null,
+        nextCursor: hasNext ? list[take].id : null,
+        totalCount,
     };
 };
+
 export const getProduct = async (id) => {
-    const entity = await articleRepository.FindById(id);
+    const entity = await productRepository.FindById(id);
     if (!entity) throw new HttpError(404, '상품이 존재하지 않습니다');
 
     return {

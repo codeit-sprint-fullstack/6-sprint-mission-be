@@ -10,6 +10,8 @@ export async function createArticleComment(userId, articleId, content) {
         content,
         userId,
         articleId,
+        tableId: articleId,
+        type: 'article',
     });
 }
 
@@ -22,25 +24,27 @@ export async function createProductComment(userId, productId, content) {
         content,
         userId,
         productId,
+        tableId: productId,
+        type: 'product',
     });
 }
 
 // 게시글 댓글 수정
 export async function updateArticleComment(commentId, userId, content) {
-    const existing = await commentRepository.Update(commentId, { content });
-    if (existing.writer.id !== userId) {
+    const existing = await commentRepository.getById(commentId); // ✅ 수정
+    if (existing.userId !== userId) {
         throw new HttpError(403, '댓글 수정 권한이 없습니다');
     }
-    return existing;
+    return await commentRepository.Update(commentId, { content });
 }
 
 // 상품 댓글 수정
 export async function updateProductComment(commentId, userId, content) {
-    const existing = await commentRepository.Update(commentId, { content });
-    if (existing.writer.id !== userId) {
+    const existing = await commentRepository.getById(commentId); // ✅ 수정
+    if (existing.userId !== userId) {
         throw new HttpError(403, '댓글 수정 권한이 없습니다');
     }
-    return existing;
+    return await commentRepository.Update(commentId, { content });
 }
 
 // 게시글 댓글 삭제
@@ -54,14 +58,29 @@ export async function deleteArticleComment(commentId, userId) {
 
 // 상품 댓글 삭제
 export async function deleteProductComment(commentId, userId) {
-    const existing = await commentRepository.Delete(commentId);
+    const existing = await commentRepository.getById(commentId); // ✅ 여기 반드시 수정 필요
     if (existing.userId !== userId) {
         throw new HttpError(403, '댓글 삭제 권한이 없습니다');
     }
-    return existing;
+    await commentRepository.Delete(commentId);
 }
 
-// 공통: 댓글 목록 조회
-export async function getComments(type, targetId, { cursor, limit }) {
-    return await commentRepository.fetchComments({ type, targetId, cursor, limit });
+// 게시글 댓글 목록 조회
+export async function getArticleComments(tableId, { cursor, limit }) {
+    return await commentRepository.fetchComments({
+        type: 'article',
+        tableId,
+        cursor,
+        limit,
+    });
+}
+
+// 상품 댓글 목록 조회
+export async function getProductComments(tableId, { cursor, limit }) {
+    return await commentRepository.fetchComments({
+        type: 'product',
+        tableId,
+        cursor,
+        limit,
+    });
 }

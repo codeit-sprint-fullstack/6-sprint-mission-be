@@ -2,13 +2,25 @@ import { HttpError } from '../middlewares/HttpError.js';
 import * as articleRepository from '../repositories/articleRepository.js';
 import * as commentRepository from '../repositories/commentRepository.js';
 
-export const createArticle = async (data) => {
-    const entity = await articleRepository.Create(data);
+export const createArticle = async (data, userId) => {
+    console.log('서비스에서 유저아이디:', userId);
+    const entity = await articleRepository.Create({
+        ...data,
+        authorId: userId,
+    });
+    console.log('생성한 entity 데이터:', entity);
     return {
         id: entity.id,
         title: entity.title,
         content: entity.content,
+        image: entity.image,
+        likeCount: entity.likeCount,
         createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
+        writer: {
+            id: entity.author.id,
+            nickname: entity.author.nickname,
+        },
     };
 };
 
@@ -27,10 +39,19 @@ export const getArticle = async (id) => {
 };
 
 export const getArticles = async ({ cursor, take, orderBy, word }) => {
-    const entities = await articleRepository.FindMany({ cursor, take, orderBy, word });
-    const hasNext = entities.length === take + 1;
+    const safeTake = Number(take ?? 10); // 기본값 10 지정 + 숫자 변환
+
+    const entities = await articleRepository.FindMany({
+        cursor,
+        take: safeTake,
+        orderBy,
+        word,
+    });
+
+    const hasNext = entities.length === safeTake + 1;
+
     return {
-        data: entities.slice(0, take).map((a) => ({
+        data: entities.slice(0, safeTake).map((a) => ({
             id: a.id,
             title: a.title,
             content: a.content,

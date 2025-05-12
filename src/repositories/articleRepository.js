@@ -1,7 +1,17 @@
 import { prismaClient } from '../prismaClient.js';
 
 export const Create = async (data) => {
-    return prismaClient.article.create({ data });
+    return prismaClient.article.create({
+        data,
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    nickname: true,
+                },
+            },
+        },
+    });
 };
 
 export const FindById = async (id) => {
@@ -17,7 +27,6 @@ export const FindById = async (id) => {
         },
     });
 };
-
 
 export const Update = async (id, data) => {
     return prismaClient.$transaction(async (tx) => {

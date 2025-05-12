@@ -11,6 +11,9 @@
         "compose": "docker-compose down && docker-compose up",
         "seed": "node ./prisma/seed"
     },
+    "prisma": {
+        "seed": "node prisma/seed.js"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/MyAeroCode/codeit-panda-market.git"

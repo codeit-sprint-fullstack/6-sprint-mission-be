@@ -2,9 +2,9 @@ import superstruct from 'superstruct';
 import { Prisma } from '@prisma/client';
 
 export function errorHandler(handler) {
-    return async function (req, res) {
+    return async function (req, res, next) {
         try {
-            await handler(req, res);
+            await handler(req, res, next);
         } catch (e) {
             handleException(e, res);
         }

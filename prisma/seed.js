@@ -101,6 +101,8 @@ async function main() {
             data: {
                 content: comment.content,
                 userId: mappedWriter.id,
+                type: comment.type, // ✅ type 필드 추가
+                tableId: comment.tableId, // ✅ tableId 필드 추가
                 ...connectData,
             },
         });

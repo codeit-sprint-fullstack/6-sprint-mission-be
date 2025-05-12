@@ -2,7 +2,9 @@ import * as articleService from '../services/articleService.js';
 
 export const createArticle = async (req, res) => {
     const { title, content } = req.body;
-    const article = await articleService.createArticle({ title, content });
+    const userId = req.userId; // 로그인된 유저 ID
+    console.log('컨트롤러에서 유저아이디:', req.user);
+    const article = await articleService.createArticle({ title, content }, userId);
     res.status(201).json(article);
 };
 
@@ -13,7 +15,10 @@ export const getArticle = async (req, res) => {
 
 export const updateArticle = async (req, res) => {
     const { title, content } = req.body;
-    const article = await articleService.updateArticle(Number(req.params.articleId), { title, content });
+    const article = await articleService.updateArticle(Number(req.params.articleId), {
+        title,
+        content,
+    });
     res.json(article);
 };
 

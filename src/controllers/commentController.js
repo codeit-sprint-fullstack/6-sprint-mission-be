@@ -99,17 +99,28 @@ export const deleteProductComment = async (req, res, next) => {
     }
 };
 
-// 댓글 목록 조회 (게시글/상품 공통)
-export const listComments = async (req, res, next) => {
+// 댓글 목록 조회 (게시글)
+export const getArticleComments = async (req, res, next) => {
     try {
-        const { type, id } = req.params; // type: 'article' or 'product'
+        const { id } = req.params;
         const { cursor, limit } = req.query;
+        const comments = await commentService.getArticleComments(Number(id), {
+            cursor: cursor ? Number(cursor) : undefined,
+            limit: Number(limit) || 10,
+        });
 
-        if (!['article', 'product'].includes(type)) {
-            throw new HttpError(400, 'type은 article 또는 product 여야 합니다');
-        }
+        res.status(200).json(comments);
+    } catch (err) {
+        next(err);
+    }
+};
 
-        const comments = await commentService.getComments(type, Number(id), {
+// 댓글 목록 조회 (상품)
+export const getProductComments = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { cursor, limit } = req.query;
+        const comments = await commentService.getProductComments(Number(id), {
             cursor: cursor ? Number(cursor) : undefined,
             limit: Number(limit) || 10,
         });

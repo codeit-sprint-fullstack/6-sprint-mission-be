@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 
-import { errorHandler } from './middlewares/errorHandler.js';
 import { authMiddleware } from './middlewares/authMiddleware.js';
 
 import authRouter from './routes/authRouter.js';
@@ -24,7 +23,11 @@ app.use('/articles', articleRouter); // 게시글 등록/수정/조회 등
 app.use('/comments', commentRouter); // 댓글 처리
 
 // 에러 핸들러 등록
-app.use(errorHandler);
+
+app.get('/', (req, res) => {
+    console.log('✅ 루트 요청 도착!');
+    res.send('✅ 서버가 정상적으로 실행 중입니다!');
+});
 
 const port = process.env.PORT ?? 3000;
 app.listen(port, () => {

@@ -13,7 +13,7 @@ router.post(
 );
 
 // ✅ 게시글 댓글 목록 조회 (비인증)
-router.get('/articles/:id/comments', errorHandler(commentController.listComments));
+router.get('/articles/:id/comments', errorHandler(commentController.getArticleComments));
 
 // ✅ 게시글 댓글 수정 (인증 필요)
 router.patch(
@@ -37,7 +37,7 @@ router.post(
 );
 
 // ✅ 상품 댓글 목록 조회 (비인증)
-router.get('/products/:id/comments', errorHandler(commentController.listComments));
+router.get('/products/:id/comments', errorHandler(commentController.getProductComments));
 
 // ✅ 상품 댓글 수정 (인증 필요)
 router.patch(
