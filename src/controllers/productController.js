@@ -3,6 +3,7 @@ import productService from "../services/productService.js";
 import varify from "../middlewares/varify.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/images.js";
+import utils from "../middlewares/utils.js";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -38,10 +39,6 @@ productController
     auth.varifyAccessToken,
     upload.single("image"),
     async (req, res, next) => {
-      //디버깅
-      console.log("req.body", req.body);
-      console.log("req.file", req.file);
-
       try {
         const parsedTags = (() => {
           try {
@@ -109,10 +106,12 @@ productController
   });
 
 //상품 상세 조회
-productController.get("/:id", async (req, res, next) => {
+productController.get("/:id", utils.authenticate, async (req, res, next) => {
   const id = Number(req.params.id);
+  const userId = req.user?.id;
+
   try {
-    const product = await productService.getById(id);
+    const product = await productService.getById(id, userId);
 
     if (!product) varify.throwNotFoundError();
 

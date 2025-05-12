@@ -11,11 +11,17 @@ async function save(article) {
   return createArticle;
 }
 
-async function getById(id) {
+async function getById(articleId, userId) {
   const article = await prisma.article.findUnique({
-    where: { id },
+    where: { id: articleId },
+    include: {
+      favorites: {
+        where: { userId },
+        select: { id: true },
+      },
+    },
   });
-  return article;
+  return { ...article, isLiked: article.favorites.length > 0 };
 }
 
 async function getAll() {

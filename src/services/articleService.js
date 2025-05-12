@@ -4,8 +4,8 @@ async function create(article) {
   return articleRepository.save(article);
 }
 
-async function getById(id) {
-  return articleRepository.getById(id);
+async function getById(articleId, userId) {
+  return articleRepository.getById(articleId, userId);
 }
 
 async function getAll() {

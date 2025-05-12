@@ -38,14 +38,18 @@ async function save(product) {
 //   })
 // }
 
-async function getById(id) {
+async function getById(productId, userId) {
   const product = await prisma.product.findUnique({
-    where: { id },
-    // select: {
-    //   imageUrl: true,
-    // }
+    where: { id: productId },
+    include: {
+      favorites: {
+        where: { userId },
+        select: { id: true },
+      },
+    },
   });
-  return product;
+
+  return { ...product, isLiked: product.favorites.length > 0 };
 }
 
 async function getAll(options) {

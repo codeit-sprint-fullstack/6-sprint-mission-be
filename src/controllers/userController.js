@@ -1,17 +1,13 @@
 import express from "express";
 import userService from "../services/userService.js";
-import generateAccessToken from "../middlewares/utils.jwt.js";
 import auth from "../middlewares/auth.js";
+import { generateAccessToken } from "../middlewares/utils.js";
 
 const userController = express.Router();
 
 //사용자 정보 가져오기
 userController.get("/", auth.varifyAccessToken, async (req, res, next) => {
   const userId = req.auth.userId;
-
-  //디버깅
-  console.log("userId", userId);
-  console.log("userId", typeof userId);
 
   try {
     const user = await userService.getById(userId);

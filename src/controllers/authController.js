@@ -1,7 +1,7 @@
 import express from "express";
 import varify from "../middlewares/varify.js";
 import authService from "../services/authService.js";
-import generateAccessToken from "../middlewares/utils.jwt.js";
+import generateAccessToken from "../middlewares/utils.js";
 
 const authController = express.Router();
 

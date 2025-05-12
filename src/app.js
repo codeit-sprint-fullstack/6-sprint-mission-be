@@ -7,6 +7,7 @@ import productController from "./controllers/productController.js";
 import errorHandler from "./middlewares/erroHandler.js";
 import cors from "cors";
 import dotenv from "dotenv";
+import favoriteController from "./controllers/favoriteController.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use("/auth", authController); //회원가입, 로그인 컨트롤러
 app.use("/products", productController); //상품+댓글 컨토롤러
 app.use("/articles", articleController); //게시글+댓글 컨트롤러
 app.use("/comments", commentController); //댓글 컨트롤러
+app.use("/favorites", favoriteController); //좋아요 컨트롤러
 
 app.use(errorHandler);
 

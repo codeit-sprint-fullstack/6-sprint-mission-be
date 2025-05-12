@@ -1,6 +1,8 @@
 import express from "express";
 import auth from "../middlewares/auth.js";
 import articleService from "../services/articleService.js";
+import utils from "../middlewares/utils.js";
+import varify from "../middlewares/varify.js";
 
 const articleController = express.Router();
 const articleCommentController = express.Router();
@@ -30,11 +32,20 @@ articleController
 
 articleController
   .route("/:id")
-  .get(async (req, res, next) => {
-    const id = Number(req.params.id);
+  .get(utils.authenticate, async (req, res, next) => {
+    const userId = Number(req.user?.id);
+    const articleId = Number(req.params.id);
+
     try {
-      const article = await articleService.getById(id);
-      return res.json(article);
+      const article = await articleService.getById(articleId, userId);
+
+      if (!article) varify.throwNotFoundError();
+
+      const articleComments = await articleService.getAllArticleComment(
+        articleId
+      );
+
+      return res.json({ article, articleComments });
     } catch (error) {
       next(error);
     }

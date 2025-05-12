@@ -6,9 +6,6 @@ async function create(user) {
 }
 
 function createToken(user) {
-  //디버깅
-  console.log("JWT_SECRET_KEY:", process.env.JWT_SECRET_KEY);
-
   const secretKey = `${process.env.JWT_SECRET_KEY}`;
 
   const payload = { userId: user.id };
