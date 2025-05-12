@@ -30,4 +30,6 @@ service 레이어는 컨트롤러에서 넘어온 data를 활용할 수 있고,
 * service Layer: controller Layer의 호출을 받고, model Layer를 호출시킴.
 * model Layer: 프리즈마 클라이언트가 존재하는 레이어로, DB에 직접 요청을 보내고 반환하는 것에만 관심이 있음.
 
-MVC 패턴 분리적용 목록: user product article auth comment
+- 250512
+
+http 파일들 작성해보고, 필요한 만큼(product) 작성한 후에 테스트해보고 MVC 분리 ㄱㄱ
