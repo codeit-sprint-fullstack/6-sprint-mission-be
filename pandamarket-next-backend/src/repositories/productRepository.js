@@ -6,8 +6,9 @@ async function getByOptions(options) {
 
 async function getById(id) {
   return await prisma.item.findUnique({
-    where: {
-      id,
+    where: { id },
+    include: {
+      comments: true,
     },
   });
 }
@@ -17,8 +18,14 @@ async function save(product) {
     data: {
       name: product.name,
       description: product.description,
-      price: parseInt(product.price, 10),
+      price: product.price,
       tags: product.tags,
+      image: product.image,
+      user: {
+        connect: {
+          id: product.userId,
+        },
+      },
     },
   });
 }
@@ -29,8 +36,9 @@ async function edit(id, product) {
     data: {
       name: product.name,
       description: product.description,
-      price: parseInt(product.price, 10),
+      price: product.price,
       tags: product.tags,
+      image: product.image,
     },
   });
 }

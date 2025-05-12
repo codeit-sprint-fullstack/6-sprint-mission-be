@@ -1183,12 +1183,12 @@ export namespace Prisma {
 
   export type ItemCountOutputType = {
     favoriteUser: number
-    comment: number
+    comments: number
   }
 
   export type ItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favoriteUser?: boolean | ItemCountOutputTypeCountFavoriteUserArgs
-    comment?: boolean | ItemCountOutputTypeCountCommentArgs
+    comments?: boolean | ItemCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -1212,7 +1212,7 @@ export namespace Prisma {
   /**
    * ItemCountOutputType without action
    */
-  export type ItemCountOutputTypeCountCommentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ItemCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CommentWhereInput
   }
 
@@ -1224,15 +1224,17 @@ export namespace Prisma {
   export type UserCountOutputType = {
     favoriteItem: number
     favoriteArticle: number
-    Article: number
-    Item: number
+    articles: number
+    items: number
+    comments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favoriteItem?: boolean | UserCountOutputTypeCountFavoriteItemArgs
     favoriteArticle?: boolean | UserCountOutputTypeCountFavoriteArticleArgs
-    Article?: boolean | UserCountOutputTypeCountArticleArgs
-    Item?: boolean | UserCountOutputTypeCountItemArgs
+    articles?: boolean | UserCountOutputTypeCountArticlesArgs
+    items?: boolean | UserCountOutputTypeCountItemsArgs
+    comments?: boolean | UserCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -1263,15 +1265,22 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountArticleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeCountArticlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ArticleWhereInput
   }
 
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ItemWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommentWhereInput
   }
 
 
@@ -1463,7 +1472,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     favoriteCount: number
-    userId: string | null
+    userId: string
     _count: ArticleCountAggregateOutputType | null
     _avg: ArticleAvgAggregateOutputType | null
     _sum: ArticleSumAggregateOutputType | null
@@ -1493,7 +1502,7 @@ export namespace Prisma {
     updatedAt?: boolean
     favoriteCount?: boolean
     userId?: boolean
-    user?: boolean | Article$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     favoriteUser?: boolean | Article$favoriteUserArgs<ExtArgs>
     comments?: boolean | Article$commentsArgs<ExtArgs>
     _count?: boolean | ArticleCountOutputTypeDefaultArgs<ExtArgs>
@@ -1507,7 +1516,7 @@ export namespace Prisma {
     updatedAt?: boolean
     favoriteCount?: boolean
     userId?: boolean
-    user?: boolean | Article$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["article"]>
 
   export type ArticleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1518,7 +1527,7 @@ export namespace Prisma {
     updatedAt?: boolean
     favoriteCount?: boolean
     userId?: boolean
-    user?: boolean | Article$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["article"]>
 
   export type ArticleSelectScalar = {
@@ -1533,22 +1542,22 @@ export namespace Prisma {
 
   export type ArticleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "createdAt" | "updatedAt" | "favoriteCount" | "userId", ExtArgs["result"]["article"]>
   export type ArticleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Article$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     favoriteUser?: boolean | Article$favoriteUserArgs<ExtArgs>
     comments?: boolean | Article$commentsArgs<ExtArgs>
     _count?: boolean | ArticleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ArticleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Article$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ArticleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Article$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ArticlePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Article"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
       favoriteUser: Prisma.$UserPayload<ExtArgs>[]
       comments: Prisma.$CommentPayload<ExtArgs>[]
     }
@@ -1559,7 +1568,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       favoriteCount: number
-      userId: string | null
+      userId: string
     }, ExtArgs["result"]["article"]>
     composites: {}
   }
@@ -1954,7 +1963,7 @@ export namespace Prisma {
    */
   export interface Prisma__ArticleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends Article$userArgs<ExtArgs> = {}>(args?: Subset<T, Article$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     favoriteUser<T extends Article$favoriteUserArgs<ExtArgs> = {}>(args?: Subset<T, Article$favoriteUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Article$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Article$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2389,25 +2398,6 @@ export namespace Prisma {
   }
 
   /**
-   * Article.user
-   */
-  export type Article$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
    * Article.favoriteUser
    */
   export type Article$favoriteUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2488,6 +2478,7 @@ export namespace Prisma {
     id: string | null
     content: string | null
     createdAt: Date | null
+    userId: string | null
     articleId: string | null
     itemId: string | null
   }
@@ -2496,6 +2487,7 @@ export namespace Prisma {
     id: string | null
     content: string | null
     createdAt: Date | null
+    userId: string | null
     articleId: string | null
     itemId: string | null
   }
@@ -2504,6 +2496,7 @@ export namespace Prisma {
     id: number
     content: number
     createdAt: number
+    userId: number
     articleId: number
     itemId: number
     _all: number
@@ -2514,6 +2507,7 @@ export namespace Prisma {
     id?: true
     content?: true
     createdAt?: true
+    userId?: true
     articleId?: true
     itemId?: true
   }
@@ -2522,6 +2516,7 @@ export namespace Prisma {
     id?: true
     content?: true
     createdAt?: true
+    userId?: true
     articleId?: true
     itemId?: true
   }
@@ -2530,6 +2525,7 @@ export namespace Prisma {
     id?: true
     content?: true
     createdAt?: true
+    userId?: true
     articleId?: true
     itemId?: true
     _all?: true
@@ -2611,6 +2607,7 @@ export namespace Prisma {
     id: string
     content: string
     createdAt: Date
+    userId: string
     articleId: string | null
     itemId: string | null
     _count: CommentCountAggregateOutputType | null
@@ -2636,8 +2633,10 @@ export namespace Prisma {
     id?: boolean
     content?: boolean
     createdAt?: boolean
+    userId?: boolean
     articleId?: boolean
     itemId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     article?: boolean | Comment$articleArgs<ExtArgs>
     Item?: boolean | Comment$ItemArgs<ExtArgs>
   }, ExtArgs["result"]["comment"]>
@@ -2646,8 +2645,10 @@ export namespace Prisma {
     id?: boolean
     content?: boolean
     createdAt?: boolean
+    userId?: boolean
     articleId?: boolean
     itemId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     article?: boolean | Comment$articleArgs<ExtArgs>
     Item?: boolean | Comment$ItemArgs<ExtArgs>
   }, ExtArgs["result"]["comment"]>
@@ -2656,8 +2657,10 @@ export namespace Prisma {
     id?: boolean
     content?: boolean
     createdAt?: boolean
+    userId?: boolean
     articleId?: boolean
     itemId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     article?: boolean | Comment$articleArgs<ExtArgs>
     Item?: boolean | Comment$ItemArgs<ExtArgs>
   }, ExtArgs["result"]["comment"]>
@@ -2666,20 +2669,24 @@ export namespace Prisma {
     id?: boolean
     content?: boolean
     createdAt?: boolean
+    userId?: boolean
     articleId?: boolean
     itemId?: boolean
   }
 
-  export type CommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "createdAt" | "articleId" | "itemId", ExtArgs["result"]["comment"]>
+  export type CommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "createdAt" | "userId" | "articleId" | "itemId", ExtArgs["result"]["comment"]>
   export type CommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     article?: boolean | Comment$articleArgs<ExtArgs>
     Item?: boolean | Comment$ItemArgs<ExtArgs>
   }
   export type CommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     article?: boolean | Comment$articleArgs<ExtArgs>
     Item?: boolean | Comment$ItemArgs<ExtArgs>
   }
   export type CommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     article?: boolean | Comment$articleArgs<ExtArgs>
     Item?: boolean | Comment$ItemArgs<ExtArgs>
   }
@@ -2687,6 +2694,7 @@ export namespace Prisma {
   export type $CommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Comment"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs>
       article: Prisma.$ArticlePayload<ExtArgs> | null
       Item: Prisma.$ItemPayload<ExtArgs> | null
     }
@@ -2694,6 +2702,7 @@ export namespace Prisma {
       id: string
       content: string
       createdAt: Date
+      userId: string
       articleId: string | null
       itemId: string | null
     }, ExtArgs["result"]["comment"]>
@@ -3090,6 +3099,7 @@ export namespace Prisma {
    */
   export interface Prisma__CommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     article<T extends Comment$articleArgs<ExtArgs> = {}>(args?: Subset<T, Comment$articleArgs<ExtArgs>>): Prisma__ArticleClient<$Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Item<T extends Comment$ItemArgs<ExtArgs> = {}>(args?: Subset<T, Comment$ItemArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -3124,6 +3134,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Comment", 'String'>
     readonly content: FieldRef<"Comment", 'String'>
     readonly createdAt: FieldRef<"Comment", 'DateTime'>
+    readonly userId: FieldRef<"Comment", 'String'>
     readonly articleId: FieldRef<"Comment", 'String'>
     readonly itemId: FieldRef<"Comment", 'String'>
   }
@@ -3783,7 +3794,7 @@ export namespace Prisma {
     updatedAt: Date
     tags: string[]
     favoriteCount: number
-    userId: string | null
+    userId: string
     _count: ItemCountAggregateOutputType | null
     _avg: ItemAvgAggregateOutputType | null
     _sum: ItemSumAggregateOutputType | null
@@ -3817,8 +3828,8 @@ export namespace Prisma {
     favoriteCount?: boolean
     userId?: boolean
     favoriteUser?: boolean | Item$favoriteUserArgs<ExtArgs>
-    user?: boolean | Item$userArgs<ExtArgs>
-    comment?: boolean | Item$commentArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    comments?: boolean | Item$commentsArgs<ExtArgs>
     _count?: boolean | ItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item"]>
 
@@ -3833,7 +3844,7 @@ export namespace Prisma {
     tags?: boolean
     favoriteCount?: boolean
     userId?: boolean
-    user?: boolean | Item$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item"]>
 
   export type ItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3847,7 +3858,7 @@ export namespace Prisma {
     tags?: boolean
     favoriteCount?: boolean
     userId?: boolean
-    user?: boolean | Item$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item"]>
 
   export type ItemSelectScalar = {
@@ -3866,23 +3877,23 @@ export namespace Prisma {
   export type ItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "image" | "createdAt" | "updatedAt" | "tags" | "favoriteCount" | "userId", ExtArgs["result"]["item"]>
   export type ItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favoriteUser?: boolean | Item$favoriteUserArgs<ExtArgs>
-    user?: boolean | Item$userArgs<ExtArgs>
-    comment?: boolean | Item$commentArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    comments?: boolean | Item$commentsArgs<ExtArgs>
     _count?: boolean | ItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Item$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Item$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Item"
     objects: {
       favoriteUser: Prisma.$UserPayload<ExtArgs>[]
-      user: Prisma.$UserPayload<ExtArgs> | null
-      comment: Prisma.$CommentPayload<ExtArgs>[]
+      user: Prisma.$UserPayload<ExtArgs>
+      comments: Prisma.$CommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3894,7 +3905,7 @@ export namespace Prisma {
       updatedAt: Date
       tags: string[]
       favoriteCount: number
-      userId: string | null
+      userId: string
     }, ExtArgs["result"]["item"]>
     composites: {}
   }
@@ -4290,8 +4301,8 @@ export namespace Prisma {
   export interface Prisma__ItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     favoriteUser<T extends Item$favoriteUserArgs<ExtArgs> = {}>(args?: Subset<T, Item$favoriteUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    user<T extends Item$userArgs<ExtArgs> = {}>(args?: Subset<T, Item$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    comment<T extends Item$commentArgs<ExtArgs> = {}>(args?: Subset<T, Item$commentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    comments<T extends Item$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Item$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4751,28 +4762,9 @@ export namespace Prisma {
   }
 
   /**
-   * Item.user
+   * Item.comments
    */
-  export type Item$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * Item.comment
-   */
-  export type Item$commentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Item$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Comment
      */
@@ -4829,6 +4821,7 @@ export namespace Prisma {
     email: string | null
     encryptedPassword: string | null
     image: string | null
+    refreshToken: string | null
     updatedAt: Date | null
   }
 
@@ -4839,6 +4832,7 @@ export namespace Prisma {
     email: string | null
     encryptedPassword: string | null
     image: string | null
+    refreshToken: string | null
     updatedAt: Date | null
   }
 
@@ -4849,6 +4843,7 @@ export namespace Prisma {
     email: number
     encryptedPassword: number
     image: number
+    refreshToken: number
     updatedAt: number
     _all: number
   }
@@ -4861,6 +4856,7 @@ export namespace Prisma {
     email?: true
     encryptedPassword?: true
     image?: true
+    refreshToken?: true
     updatedAt?: true
   }
 
@@ -4871,6 +4867,7 @@ export namespace Prisma {
     email?: true
     encryptedPassword?: true
     image?: true
+    refreshToken?: true
     updatedAt?: true
   }
 
@@ -4881,6 +4878,7 @@ export namespace Prisma {
     email?: true
     encryptedPassword?: true
     image?: true
+    refreshToken?: true
     updatedAt?: true
     _all?: true
   }
@@ -4964,6 +4962,7 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken: string | null
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -4991,11 +4990,13 @@ export namespace Prisma {
     email?: boolean
     encryptedPassword?: boolean
     image?: boolean
+    refreshToken?: boolean
     updatedAt?: boolean
     favoriteItem?: boolean | User$favoriteItemArgs<ExtArgs>
     favoriteArticle?: boolean | User$favoriteArticleArgs<ExtArgs>
-    Article?: boolean | User$ArticleArgs<ExtArgs>
-    Item?: boolean | User$ItemArgs<ExtArgs>
+    articles?: boolean | User$articlesArgs<ExtArgs>
+    items?: boolean | User$itemsArgs<ExtArgs>
+    comments?: boolean | User$commentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5006,6 +5007,7 @@ export namespace Prisma {
     email?: boolean
     encryptedPassword?: boolean
     image?: boolean
+    refreshToken?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -5016,6 +5018,7 @@ export namespace Prisma {
     email?: boolean
     encryptedPassword?: boolean
     image?: boolean
+    refreshToken?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -5026,15 +5029,17 @@ export namespace Prisma {
     email?: boolean
     encryptedPassword?: boolean
     image?: boolean
+    refreshToken?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nickname" | "createdAt" | "email" | "encryptedPassword" | "image" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nickname" | "createdAt" | "email" | "encryptedPassword" | "image" | "refreshToken" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favoriteItem?: boolean | User$favoriteItemArgs<ExtArgs>
     favoriteArticle?: boolean | User$favoriteArticleArgs<ExtArgs>
-    Article?: boolean | User$ArticleArgs<ExtArgs>
-    Item?: boolean | User$ItemArgs<ExtArgs>
+    articles?: boolean | User$articlesArgs<ExtArgs>
+    items?: boolean | User$itemsArgs<ExtArgs>
+    comments?: boolean | User$commentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5045,8 +5050,9 @@ export namespace Prisma {
     objects: {
       favoriteItem: Prisma.$ItemPayload<ExtArgs>[]
       favoriteArticle: Prisma.$ArticlePayload<ExtArgs>[]
-      Article: Prisma.$ArticlePayload<ExtArgs>[]
-      Item: Prisma.$ItemPayload<ExtArgs>[]
+      articles: Prisma.$ArticlePayload<ExtArgs>[]
+      items: Prisma.$ItemPayload<ExtArgs>[]
+      comments: Prisma.$CommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5055,6 +5061,7 @@ export namespace Prisma {
       email: string
       encryptedPassword: string
       image: string
+      refreshToken: string | null
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -5452,8 +5459,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     favoriteItem<T extends User$favoriteItemArgs<ExtArgs> = {}>(args?: Subset<T, User$favoriteItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     favoriteArticle<T extends User$favoriteArticleArgs<ExtArgs> = {}>(args?: Subset<T, User$favoriteArticleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Article<T extends User$ArticleArgs<ExtArgs> = {}>(args?: Subset<T, User$ArticleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Item<T extends User$ItemArgs<ExtArgs> = {}>(args?: Subset<T, User$ItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    articles<T extends User$articlesArgs<ExtArgs> = {}>(args?: Subset<T, User$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends User$itemsArgs<ExtArgs> = {}>(args?: Subset<T, User$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5489,6 +5497,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly encryptedPassword: FieldRef<"User", 'String'>
     readonly image: FieldRef<"User", 'String'>
+    readonly refreshToken: FieldRef<"User", 'String'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
@@ -5926,9 +5935,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.Article
+   * User.articles
    */
-  export type User$ArticleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$articlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Article
      */
@@ -5950,9 +5959,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.Item
+   * User.items
    */
-  export type User$ItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Item
      */
@@ -5971,6 +5980,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ItemScalarFieldEnum | ItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.comments
+   */
+  export type User$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comment
+     */
+    select?: CommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comment
+     */
+    omit?: CommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentInclude<ExtArgs> | null
+    where?: CommentWhereInput
+    orderBy?: CommentOrderByWithRelationInput | CommentOrderByWithRelationInput[]
+    cursor?: CommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommentScalarFieldEnum | CommentScalarFieldEnum[]
   }
 
   /**
@@ -6023,6 +6056,7 @@ export namespace Prisma {
     id: 'id',
     content: 'content',
     createdAt: 'createdAt',
+    userId: 'userId',
     articleId: 'articleId',
     itemId: 'itemId'
   };
@@ -6053,6 +6087,7 @@ export namespace Prisma {
     email: 'email',
     encryptedPassword: 'encryptedPassword',
     image: 'image',
+    refreshToken: 'refreshToken',
     updatedAt: 'updatedAt'
   };
 
@@ -6157,8 +6192,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Article"> | Date | string
     updatedAt?: DateTimeFilter<"Article"> | Date | string
     favoriteCount?: IntFilter<"Article"> | number
-    userId?: StringNullableFilter<"Article"> | string | null
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    userId?: StringFilter<"Article"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     favoriteUser?: UserListRelationFilter
     comments?: CommentListRelationFilter
   }
@@ -6170,7 +6205,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     favoriteCount?: SortOrder
-    userId?: SortOrderInput | SortOrder
+    userId?: SortOrder
     user?: UserOrderByWithRelationInput
     favoriteUser?: UserOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
@@ -6186,8 +6221,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Article"> | Date | string
     updatedAt?: DateTimeFilter<"Article"> | Date | string
     favoriteCount?: IntFilter<"Article"> | number
-    userId?: StringNullableFilter<"Article"> | string | null
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    userId?: StringFilter<"Article"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     favoriteUser?: UserListRelationFilter
     comments?: CommentListRelationFilter
   }, "id">
@@ -6199,7 +6234,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     favoriteCount?: SortOrder
-    userId?: SortOrderInput | SortOrder
+    userId?: SortOrder
     _count?: ArticleCountOrderByAggregateInput
     _avg?: ArticleAvgOrderByAggregateInput
     _max?: ArticleMaxOrderByAggregateInput
@@ -6217,7 +6252,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Article"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Article"> | Date | string
     favoriteCount?: IntWithAggregatesFilter<"Article"> | number
-    userId?: StringNullableWithAggregatesFilter<"Article"> | string | null
+    userId?: StringWithAggregatesFilter<"Article"> | string
   }
 
   export type CommentWhereInput = {
@@ -6227,8 +6262,10 @@ export namespace Prisma {
     id?: StringFilter<"Comment"> | string
     content?: StringFilter<"Comment"> | string
     createdAt?: DateTimeFilter<"Comment"> | Date | string
+    userId?: StringFilter<"Comment"> | string
     articleId?: StringNullableFilter<"Comment"> | string | null
     itemId?: StringNullableFilter<"Comment"> | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     article?: XOR<ArticleNullableScalarRelationFilter, ArticleWhereInput> | null
     Item?: XOR<ItemNullableScalarRelationFilter, ItemWhereInput> | null
   }
@@ -6237,8 +6274,10 @@ export namespace Prisma {
     id?: SortOrder
     content?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     articleId?: SortOrderInput | SortOrder
     itemId?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
     article?: ArticleOrderByWithRelationInput
     Item?: ItemOrderByWithRelationInput
   }
@@ -6250,8 +6289,10 @@ export namespace Prisma {
     NOT?: CommentWhereInput | CommentWhereInput[]
     content?: StringFilter<"Comment"> | string
     createdAt?: DateTimeFilter<"Comment"> | Date | string
+    userId?: StringFilter<"Comment"> | string
     articleId?: StringNullableFilter<"Comment"> | string | null
     itemId?: StringNullableFilter<"Comment"> | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     article?: XOR<ArticleNullableScalarRelationFilter, ArticleWhereInput> | null
     Item?: XOR<ItemNullableScalarRelationFilter, ItemWhereInput> | null
   }, "id">
@@ -6260,6 +6301,7 @@ export namespace Prisma {
     id?: SortOrder
     content?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
     articleId?: SortOrderInput | SortOrder
     itemId?: SortOrderInput | SortOrder
     _count?: CommentCountOrderByAggregateInput
@@ -6274,6 +6316,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Comment"> | string
     content?: StringWithAggregatesFilter<"Comment"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Comment"> | Date | string
+    userId?: StringWithAggregatesFilter<"Comment"> | string
     articleId?: StringNullableWithAggregatesFilter<"Comment"> | string | null
     itemId?: StringNullableWithAggregatesFilter<"Comment"> | string | null
   }
@@ -6291,10 +6334,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Item"> | Date | string
     tags?: StringNullableListFilter<"Item">
     favoriteCount?: IntFilter<"Item"> | number
-    userId?: StringNullableFilter<"Item"> | string | null
+    userId?: StringFilter<"Item"> | string
     favoriteUser?: UserListRelationFilter
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    comment?: CommentListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    comments?: CommentListRelationFilter
   }
 
   export type ItemOrderByWithRelationInput = {
@@ -6307,10 +6350,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
     tags?: SortOrder
     favoriteCount?: SortOrder
-    userId?: SortOrderInput | SortOrder
+    userId?: SortOrder
     favoriteUser?: UserOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
-    comment?: CommentOrderByRelationAggregateInput
+    comments?: CommentOrderByRelationAggregateInput
   }
 
   export type ItemWhereUniqueInput = Prisma.AtLeast<{
@@ -6326,10 +6369,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Item"> | Date | string
     tags?: StringNullableListFilter<"Item">
     favoriteCount?: IntFilter<"Item"> | number
-    userId?: StringNullableFilter<"Item"> | string | null
+    userId?: StringFilter<"Item"> | string
     favoriteUser?: UserListRelationFilter
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    comment?: CommentListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    comments?: CommentListRelationFilter
   }, "id">
 
   export type ItemOrderByWithAggregationInput = {
@@ -6342,7 +6385,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     tags?: SortOrder
     favoriteCount?: SortOrder
-    userId?: SortOrderInput | SortOrder
+    userId?: SortOrder
     _count?: ItemCountOrderByAggregateInput
     _avg?: ItemAvgOrderByAggregateInput
     _max?: ItemMaxOrderByAggregateInput
@@ -6363,7 +6406,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Item"> | Date | string
     tags?: StringNullableListFilter<"Item">
     favoriteCount?: IntWithAggregatesFilter<"Item"> | number
-    userId?: StringNullableWithAggregatesFilter<"Item"> | string | null
+    userId?: StringWithAggregatesFilter<"Item"> | string
   }
 
   export type UserWhereInput = {
@@ -6376,11 +6419,13 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     encryptedPassword?: StringFilter<"User"> | string
     image?: StringFilter<"User"> | string
+    refreshToken?: StringNullableFilter<"User"> | string | null
     updatedAt?: DateTimeFilter<"User"> | Date | string
     favoriteItem?: ItemListRelationFilter
     favoriteArticle?: ArticleListRelationFilter
-    Article?: ArticleListRelationFilter
-    Item?: ItemListRelationFilter
+    articles?: ArticleListRelationFilter
+    items?: ItemListRelationFilter
+    comments?: CommentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -6390,11 +6435,13 @@ export namespace Prisma {
     email?: SortOrder
     encryptedPassword?: SortOrder
     image?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     favoriteItem?: ItemOrderByRelationAggregateInput
     favoriteArticle?: ArticleOrderByRelationAggregateInput
-    Article?: ArticleOrderByRelationAggregateInput
-    Item?: ItemOrderByRelationAggregateInput
+    articles?: ArticleOrderByRelationAggregateInput
+    items?: ItemOrderByRelationAggregateInput
+    comments?: CommentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -6407,11 +6454,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     encryptedPassword?: StringFilter<"User"> | string
     image?: StringFilter<"User"> | string
+    refreshToken?: StringNullableFilter<"User"> | string | null
     updatedAt?: DateTimeFilter<"User"> | Date | string
     favoriteItem?: ItemListRelationFilter
     favoriteArticle?: ArticleListRelationFilter
-    Article?: ArticleListRelationFilter
-    Item?: ItemListRelationFilter
+    articles?: ArticleListRelationFilter
+    items?: ItemListRelationFilter
+    comments?: CommentListRelationFilter
   }, "id" | "nickname" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -6421,6 +6470,7 @@ export namespace Prisma {
     email?: SortOrder
     encryptedPassword?: SortOrder
     image?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -6437,6 +6487,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     encryptedPassword?: StringWithAggregatesFilter<"User"> | string
     image?: StringWithAggregatesFilter<"User"> | string
+    refreshToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -6447,7 +6498,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    user?: UserCreateNestedOneWithoutArticleInput
+    user: UserCreateNestedOneWithoutArticlesInput
     favoriteUser?: UserCreateNestedManyWithoutFavoriteArticleInput
     comments?: CommentCreateNestedManyWithoutArticleInput
   }
@@ -6459,7 +6510,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    userId?: string | null
+    userId: string
     favoriteUser?: UserUncheckedCreateNestedManyWithoutFavoriteArticleInput
     comments?: CommentUncheckedCreateNestedManyWithoutArticleInput
   }
@@ -6471,7 +6522,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    user?: UserUpdateOneWithoutArticleNestedInput
+    user?: UserUpdateOneRequiredWithoutArticlesNestedInput
     favoriteUser?: UserUpdateManyWithoutFavoriteArticleNestedInput
     comments?: CommentUpdateManyWithoutArticleNestedInput
   }
@@ -6483,7 +6534,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     favoriteUser?: UserUncheckedUpdateManyWithoutFavoriteArticleNestedInput
     comments?: CommentUncheckedUpdateManyWithoutArticleNestedInput
   }
@@ -6495,7 +6546,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    userId?: string | null
+    userId: string
   }
 
   export type ArticleUpdateManyMutationInput = {
@@ -6514,21 +6565,23 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type CommentCreateInput = {
     id?: string
     content: string
     createdAt?: Date | string
+    user: UserCreateNestedOneWithoutCommentsInput
     article?: ArticleCreateNestedOneWithoutCommentsInput
-    Item?: ItemCreateNestedOneWithoutCommentInput
+    Item?: ItemCreateNestedOneWithoutCommentsInput
   }
 
   export type CommentUncheckedCreateInput = {
     id?: string
     content: string
     createdAt?: Date | string
+    userId: string
     articleId?: string | null
     itemId?: string | null
   }
@@ -6537,14 +6590,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
     article?: ArticleUpdateOneWithoutCommentsNestedInput
-    Item?: ItemUpdateOneWithoutCommentNestedInput
+    Item?: ItemUpdateOneWithoutCommentsNestedInput
   }
 
   export type CommentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     articleId?: NullableStringFieldUpdateOperationsInput | string | null
     itemId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -6553,6 +6608,7 @@ export namespace Prisma {
     id?: string
     content: string
     createdAt?: Date | string
+    userId: string
     articleId?: string | null
     itemId?: string | null
   }
@@ -6567,6 +6623,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     articleId?: NullableStringFieldUpdateOperationsInput | string | null
     itemId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -6582,8 +6639,8 @@ export namespace Prisma {
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
     favoriteUser?: UserCreateNestedManyWithoutFavoriteItemInput
-    user?: UserCreateNestedOneWithoutItemInput
-    comment?: CommentCreateNestedManyWithoutItemInput
+    user: UserCreateNestedOneWithoutItemsInput
+    comments?: CommentCreateNestedManyWithoutItemInput
   }
 
   export type ItemUncheckedCreateInput = {
@@ -6596,9 +6653,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
-    userId?: string | null
+    userId: string
     favoriteUser?: UserUncheckedCreateNestedManyWithoutFavoriteItemInput
-    comment?: CommentUncheckedCreateNestedManyWithoutItemInput
+    comments?: CommentUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type ItemUpdateInput = {
@@ -6612,8 +6669,8 @@ export namespace Prisma {
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
     favoriteUser?: UserUpdateManyWithoutFavoriteItemNestedInput
-    user?: UserUpdateOneWithoutItemNestedInput
-    comment?: CommentUpdateManyWithoutItemNestedInput
+    user?: UserUpdateOneRequiredWithoutItemsNestedInput
+    comments?: CommentUpdateManyWithoutItemNestedInput
   }
 
   export type ItemUncheckedUpdateInput = {
@@ -6626,9 +6683,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     favoriteUser?: UserUncheckedUpdateManyWithoutFavoriteItemNestedInput
-    comment?: CommentUncheckedUpdateManyWithoutItemNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type ItemCreateManyInput = {
@@ -6641,7 +6698,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
-    userId?: string | null
+    userId: string
   }
 
   export type ItemUpdateManyMutationInput = {
@@ -6666,7 +6723,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateInput = {
@@ -6676,11 +6733,13 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemCreateNestedManyWithoutFavoriteUserInput
     favoriteArticle?: ArticleCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleCreateNestedManyWithoutUserInput
-    Item?: ItemCreateNestedManyWithoutUserInput
+    articles?: ArticleCreateNestedManyWithoutUserInput
+    items?: ItemCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -6690,11 +6749,13 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemUncheckedCreateNestedManyWithoutFavoriteUserInput
     favoriteArticle?: ArticleUncheckedCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleUncheckedCreateNestedManyWithoutUserInput
-    Item?: ItemUncheckedCreateNestedManyWithoutUserInput
+    articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    items?: ItemUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -6704,11 +6765,13 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUpdateManyWithoutFavoriteUserNestedInput
     favoriteArticle?: ArticleUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUpdateManyWithoutUserNestedInput
-    Item?: ItemUpdateManyWithoutUserNestedInput
+    articles?: ArticleUpdateManyWithoutUserNestedInput
+    items?: ItemUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -6718,11 +6781,13 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUncheckedUpdateManyWithoutFavoriteUserNestedInput
     favoriteArticle?: ArticleUncheckedUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUncheckedUpdateManyWithoutUserNestedInput
-    Item?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    items?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -6732,6 +6797,7 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
   }
 
@@ -6742,6 +6808,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6752,6 +6819,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6792,24 +6860,9 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type UserListRelationFilter = {
@@ -6822,11 +6875,6 @@ export namespace Prisma {
     every?: CommentWhereInput
     some?: CommentWhereInput
     none?: CommentWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type UserOrderByRelationAggregateInput = {
@@ -6923,6 +6971,63 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type ArticleNullableScalarRelationFilter = {
+    is?: ArticleWhereInput | null
+    isNot?: ArticleWhereInput | null
+  }
+
+  export type ItemNullableScalarRelationFilter = {
+    is?: ItemWhereInput | null
+    isNot?: ItemWhereInput | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type CommentCountOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    articleId?: SortOrder
+    itemId?: SortOrder
+  }
+
+  export type CommentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    articleId?: SortOrder
+    itemId?: SortOrder
+  }
+
+  export type CommentMinOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    articleId?: SortOrder
+    itemId?: SortOrder
+  }
+
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -6939,40 +7044,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type ArticleNullableScalarRelationFilter = {
-    is?: ArticleWhereInput | null
-    isNot?: ArticleWhereInput | null
-  }
-
-  export type ItemNullableScalarRelationFilter = {
-    is?: ItemWhereInput | null
-    isNot?: ItemWhereInput | null
-  }
-
-  export type CommentCountOrderByAggregateInput = {
-    id?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    articleId?: SortOrder
-    itemId?: SortOrder
-  }
-
-  export type CommentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    articleId?: SortOrder
-    itemId?: SortOrder
-  }
-
-  export type CommentMinOrderByAggregateInput = {
-    id?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    articleId?: SortOrder
-    itemId?: SortOrder
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -7057,6 +7128,7 @@ export namespace Prisma {
     email?: SortOrder
     encryptedPassword?: SortOrder
     image?: SortOrder
+    refreshToken?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -7067,6 +7139,7 @@ export namespace Prisma {
     email?: SortOrder
     encryptedPassword?: SortOrder
     image?: SortOrder
+    refreshToken?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -7077,12 +7150,13 @@ export namespace Prisma {
     email?: SortOrder
     encryptedPassword?: SortOrder
     image?: SortOrder
+    refreshToken?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type UserCreateNestedOneWithoutArticleInput = {
-    create?: XOR<UserCreateWithoutArticleInput, UserUncheckedCreateWithoutArticleInput>
-    connectOrCreate?: UserCreateOrConnectWithoutArticleInput
+  export type UserCreateNestedOneWithoutArticlesInput = {
+    create?: XOR<UserCreateWithoutArticlesInput, UserUncheckedCreateWithoutArticlesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutArticlesInput
     connect?: UserWhereUniqueInput
   }
 
@@ -7128,14 +7202,12 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserUpdateOneWithoutArticleNestedInput = {
-    create?: XOR<UserCreateWithoutArticleInput, UserUncheckedCreateWithoutArticleInput>
-    connectOrCreate?: UserCreateOrConnectWithoutArticleInput
-    upsert?: UserUpsertWithoutArticleInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
+  export type UserUpdateOneRequiredWithoutArticlesNestedInput = {
+    create?: XOR<UserCreateWithoutArticlesInput, UserUncheckedCreateWithoutArticlesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutArticlesInput
+    upsert?: UserUpsertWithoutArticlesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutArticleInput, UserUpdateWithoutArticleInput>, UserUncheckedUpdateWithoutArticleInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutArticlesInput, UserUpdateWithoutArticlesInput>, UserUncheckedUpdateWithoutArticlesInput>
   }
 
   export type UserUpdateManyWithoutFavoriteArticleNestedInput = {
@@ -7165,10 +7237,6 @@ export namespace Prisma {
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type UserUncheckedUpdateManyWithoutFavoriteArticleNestedInput = {
     create?: XOR<UserCreateWithoutFavoriteArticleInput, UserUncheckedCreateWithoutFavoriteArticleInput> | UserCreateWithoutFavoriteArticleInput[] | UserUncheckedCreateWithoutFavoriteArticleInput[]
     connectOrCreate?: UserCreateOrConnectWithoutFavoriteArticleInput | UserCreateOrConnectWithoutFavoriteArticleInput[]
@@ -7196,16 +7264,30 @@ export namespace Prisma {
     deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommentsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type ArticleCreateNestedOneWithoutCommentsInput = {
     create?: XOR<ArticleCreateWithoutCommentsInput, ArticleUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: ArticleCreateOrConnectWithoutCommentsInput
     connect?: ArticleWhereUniqueInput
   }
 
-  export type ItemCreateNestedOneWithoutCommentInput = {
-    create?: XOR<ItemCreateWithoutCommentInput, ItemUncheckedCreateWithoutCommentInput>
-    connectOrCreate?: ItemCreateOrConnectWithoutCommentInput
+  export type ItemCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<ItemCreateWithoutCommentsInput, ItemUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: ItemCreateOrConnectWithoutCommentsInput
     connect?: ItemWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommentsInput
+    upsert?: UserUpsertWithoutCommentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommentsInput, UserUpdateWithoutCommentsInput>, UserUncheckedUpdateWithoutCommentsInput>
   }
 
   export type ArticleUpdateOneWithoutCommentsNestedInput = {
@@ -7218,14 +7300,18 @@ export namespace Prisma {
     update?: XOR<XOR<ArticleUpdateToOneWithWhereWithoutCommentsInput, ArticleUpdateWithoutCommentsInput>, ArticleUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type ItemUpdateOneWithoutCommentNestedInput = {
-    create?: XOR<ItemCreateWithoutCommentInput, ItemUncheckedCreateWithoutCommentInput>
-    connectOrCreate?: ItemCreateOrConnectWithoutCommentInput
-    upsert?: ItemUpsertWithoutCommentInput
+  export type ItemUpdateOneWithoutCommentsNestedInput = {
+    create?: XOR<ItemCreateWithoutCommentsInput, ItemUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: ItemCreateOrConnectWithoutCommentsInput
+    upsert?: ItemUpsertWithoutCommentsInput
     disconnect?: ItemWhereInput | boolean
     delete?: ItemWhereInput | boolean
     connect?: ItemWhereUniqueInput
-    update?: XOR<XOR<ItemUpdateToOneWithWhereWithoutCommentInput, ItemUpdateWithoutCommentInput>, ItemUncheckedUpdateWithoutCommentInput>
+    update?: XOR<XOR<ItemUpdateToOneWithWhereWithoutCommentsInput, ItemUpdateWithoutCommentsInput>, ItemUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type ItemCreatetagsInput = {
@@ -7238,9 +7324,9 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-  export type UserCreateNestedOneWithoutItemInput = {
-    create?: XOR<UserCreateWithoutItemInput, UserUncheckedCreateWithoutItemInput>
-    connectOrCreate?: UserCreateOrConnectWithoutItemInput
+  export type UserCreateNestedOneWithoutItemsInput = {
+    create?: XOR<UserCreateWithoutItemsInput, UserUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutItemsInput
     connect?: UserWhereUniqueInput
   }
 
@@ -7282,14 +7368,12 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
-  export type UserUpdateOneWithoutItemNestedInput = {
-    create?: XOR<UserCreateWithoutItemInput, UserUncheckedCreateWithoutItemInput>
-    connectOrCreate?: UserCreateOrConnectWithoutItemInput
-    upsert?: UserUpsertWithoutItemInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
+  export type UserUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<UserCreateWithoutItemsInput, UserUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutItemsInput
+    upsert?: UserUpsertWithoutItemsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutItemInput, UserUpdateWithoutItemInput>, UserUncheckedUpdateWithoutItemInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutItemsInput, UserUpdateWithoutItemsInput>, UserUncheckedUpdateWithoutItemsInput>
   }
 
   export type CommentUpdateManyWithoutItemNestedInput = {
@@ -7359,6 +7443,13 @@ export namespace Prisma {
     connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
   }
 
+  export type CommentCreateNestedManyWithoutUserInput = {
+    create?: XOR<CommentCreateWithoutUserInput, CommentUncheckedCreateWithoutUserInput> | CommentCreateWithoutUserInput[] | CommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentCreateOrConnectWithoutUserInput | CommentCreateOrConnectWithoutUserInput[]
+    createMany?: CommentCreateManyUserInputEnvelope
+    connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+  }
+
   export type ItemUncheckedCreateNestedManyWithoutFavoriteUserInput = {
     create?: XOR<ItemCreateWithoutFavoriteUserInput, ItemUncheckedCreateWithoutFavoriteUserInput> | ItemCreateWithoutFavoriteUserInput[] | ItemUncheckedCreateWithoutFavoriteUserInput[]
     connectOrCreate?: ItemCreateOrConnectWithoutFavoriteUserInput | ItemCreateOrConnectWithoutFavoriteUserInput[]
@@ -7383,6 +7474,13 @@ export namespace Prisma {
     connectOrCreate?: ItemCreateOrConnectWithoutUserInput | ItemCreateOrConnectWithoutUserInput[]
     createMany?: ItemCreateManyUserInputEnvelope
     connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
+  }
+
+  export type CommentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CommentCreateWithoutUserInput, CommentUncheckedCreateWithoutUserInput> | CommentCreateWithoutUserInput[] | CommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentCreateOrConnectWithoutUserInput | CommentCreateOrConnectWithoutUserInput[]
+    createMany?: CommentCreateManyUserInputEnvelope
+    connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
   }
 
   export type ItemUpdateManyWithoutFavoriteUserNestedInput = {
@@ -7439,6 +7537,20 @@ export namespace Prisma {
     deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
   }
 
+  export type CommentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CommentCreateWithoutUserInput, CommentUncheckedCreateWithoutUserInput> | CommentCreateWithoutUserInput[] | CommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentCreateOrConnectWithoutUserInput | CommentCreateOrConnectWithoutUserInput[]
+    upsert?: CommentUpsertWithWhereUniqueWithoutUserInput | CommentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CommentCreateManyUserInputEnvelope
+    set?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    disconnect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    delete?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    update?: CommentUpdateWithWhereUniqueWithoutUserInput | CommentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CommentUpdateManyWithWhereWithoutUserInput | CommentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
+  }
+
   export type ItemUncheckedUpdateManyWithoutFavoriteUserNestedInput = {
     create?: XOR<ItemCreateWithoutFavoriteUserInput, ItemUncheckedCreateWithoutFavoriteUserInput> | ItemCreateWithoutFavoriteUserInput[] | ItemUncheckedCreateWithoutFavoriteUserInput[]
     connectOrCreate?: ItemCreateOrConnectWithoutFavoriteUserInput | ItemCreateOrConnectWithoutFavoriteUserInput[]
@@ -7493,6 +7605,20 @@ export namespace Prisma {
     deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
   }
 
+  export type CommentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CommentCreateWithoutUserInput, CommentUncheckedCreateWithoutUserInput> | CommentCreateWithoutUserInput[] | CommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentCreateOrConnectWithoutUserInput | CommentCreateOrConnectWithoutUserInput[]
+    upsert?: CommentUpsertWithWhereUniqueWithoutUserInput | CommentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CommentCreateManyUserInputEnvelope
+    set?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    disconnect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    delete?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    connect?: CommentWhereUniqueInput | CommentWhereUniqueInput[]
+    update?: CommentUpdateWithWhereUniqueWithoutUserInput | CommentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CommentUpdateManyWithWhereWithoutUserInput | CommentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CommentScalarWhereInput | CommentScalarWhereInput[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -7527,20 +7653,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -7601,6 +7713,20 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -7629,35 +7755,39 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type UserCreateWithoutArticleInput = {
+  export type UserCreateWithoutArticlesInput = {
     id?: string
     nickname: string
     createdAt?: Date | string
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemCreateNestedManyWithoutFavoriteUserInput
     favoriteArticle?: ArticleCreateNestedManyWithoutFavoriteUserInput
-    Item?: ItemCreateNestedManyWithoutUserInput
+    items?: ItemCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutArticleInput = {
+  export type UserUncheckedCreateWithoutArticlesInput = {
     id?: string
     nickname: string
     createdAt?: Date | string
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemUncheckedCreateNestedManyWithoutFavoriteUserInput
     favoriteArticle?: ArticleUncheckedCreateNestedManyWithoutFavoriteUserInput
-    Item?: ItemUncheckedCreateNestedManyWithoutUserInput
+    items?: ItemUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutArticleInput = {
+  export type UserCreateOrConnectWithoutArticlesInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutArticleInput, UserUncheckedCreateWithoutArticleInput>
+    create: XOR<UserCreateWithoutArticlesInput, UserUncheckedCreateWithoutArticlesInput>
   }
 
   export type UserCreateWithoutFavoriteArticleInput = {
@@ -7667,10 +7797,12 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleCreateNestedManyWithoutUserInput
-    Item?: ItemCreateNestedManyWithoutUserInput
+    articles?: ArticleCreateNestedManyWithoutUserInput
+    items?: ItemCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFavoriteArticleInput = {
@@ -7680,10 +7812,12 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemUncheckedCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleUncheckedCreateNestedManyWithoutUserInput
-    Item?: ItemUncheckedCreateNestedManyWithoutUserInput
+    articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    items?: ItemUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFavoriteArticleInput = {
@@ -7695,13 +7829,15 @@ export namespace Prisma {
     id?: string
     content: string
     createdAt?: Date | string
-    Item?: ItemCreateNestedOneWithoutCommentInput
+    user: UserCreateNestedOneWithoutCommentsInput
+    Item?: ItemCreateNestedOneWithoutCommentsInput
   }
 
   export type CommentUncheckedCreateWithoutArticleInput = {
     id?: string
     content: string
     createdAt?: Date | string
+    userId: string
     itemId?: string | null
   }
 
@@ -7715,41 +7851,45 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutArticleInput = {
-    update: XOR<UserUpdateWithoutArticleInput, UserUncheckedUpdateWithoutArticleInput>
-    create: XOR<UserCreateWithoutArticleInput, UserUncheckedCreateWithoutArticleInput>
+  export type UserUpsertWithoutArticlesInput = {
+    update: XOR<UserUpdateWithoutArticlesInput, UserUncheckedUpdateWithoutArticlesInput>
+    create: XOR<UserCreateWithoutArticlesInput, UserUncheckedCreateWithoutArticlesInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutArticleInput = {
+  export type UserUpdateToOneWithWhereWithoutArticlesInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutArticleInput, UserUncheckedUpdateWithoutArticleInput>
+    data: XOR<UserUpdateWithoutArticlesInput, UserUncheckedUpdateWithoutArticlesInput>
   }
 
-  export type UserUpdateWithoutArticleInput = {
+  export type UserUpdateWithoutArticlesInput = {
     id?: StringFieldUpdateOperationsInput | string
     nickname?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUpdateManyWithoutFavoriteUserNestedInput
     favoriteArticle?: ArticleUpdateManyWithoutFavoriteUserNestedInput
-    Item?: ItemUpdateManyWithoutUserNestedInput
+    items?: ItemUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutArticleInput = {
+  export type UserUncheckedUpdateWithoutArticlesInput = {
     id?: StringFieldUpdateOperationsInput | string
     nickname?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUncheckedUpdateManyWithoutFavoriteUserNestedInput
     favoriteArticle?: ArticleUncheckedUpdateManyWithoutFavoriteUserNestedInput
-    Item?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    items?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutFavoriteArticleInput = {
@@ -7778,6 +7918,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     encryptedPassword?: StringFilter<"User"> | string
     image?: StringFilter<"User"> | string
+    refreshToken?: StringNullableFilter<"User"> | string | null
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
@@ -7804,8 +7945,44 @@ export namespace Prisma {
     id?: StringFilter<"Comment"> | string
     content?: StringFilter<"Comment"> | string
     createdAt?: DateTimeFilter<"Comment"> | Date | string
+    userId?: StringFilter<"Comment"> | string
     articleId?: StringNullableFilter<"Comment"> | string | null
     itemId?: StringNullableFilter<"Comment"> | string | null
+  }
+
+  export type UserCreateWithoutCommentsInput = {
+    id?: string
+    nickname: string
+    createdAt?: Date | string
+    email: string
+    encryptedPassword: string
+    image: string
+    refreshToken?: string | null
+    updatedAt?: Date | string
+    favoriteItem?: ItemCreateNestedManyWithoutFavoriteUserInput
+    favoriteArticle?: ArticleCreateNestedManyWithoutFavoriteUserInput
+    articles?: ArticleCreateNestedManyWithoutUserInput
+    items?: ItemCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCommentsInput = {
+    id?: string
+    nickname: string
+    createdAt?: Date | string
+    email: string
+    encryptedPassword: string
+    image: string
+    refreshToken?: string | null
+    updatedAt?: Date | string
+    favoriteItem?: ItemUncheckedCreateNestedManyWithoutFavoriteUserInput
+    favoriteArticle?: ArticleUncheckedCreateNestedManyWithoutFavoriteUserInput
+    articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    items?: ItemUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCommentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
   }
 
   export type ArticleCreateWithoutCommentsInput = {
@@ -7815,7 +7992,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    user?: UserCreateNestedOneWithoutArticleInput
+    user: UserCreateNestedOneWithoutArticlesInput
     favoriteUser?: UserCreateNestedManyWithoutFavoriteArticleInput
   }
 
@@ -7826,7 +8003,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    userId?: string | null
+    userId: string
     favoriteUser?: UserUncheckedCreateNestedManyWithoutFavoriteArticleInput
   }
 
@@ -7835,7 +8012,7 @@ export namespace Prisma {
     create: XOR<ArticleCreateWithoutCommentsInput, ArticleUncheckedCreateWithoutCommentsInput>
   }
 
-  export type ItemCreateWithoutCommentInput = {
+  export type ItemCreateWithoutCommentsInput = {
     id?: string
     name: string
     description: string
@@ -7846,10 +8023,10 @@ export namespace Prisma {
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
     favoriteUser?: UserCreateNestedManyWithoutFavoriteItemInput
-    user?: UserCreateNestedOneWithoutItemInput
+    user: UserCreateNestedOneWithoutItemsInput
   }
 
-  export type ItemUncheckedCreateWithoutCommentInput = {
+  export type ItemUncheckedCreateWithoutCommentsInput = {
     id?: string
     name: string
     description: string
@@ -7859,13 +8036,54 @@ export namespace Prisma {
     updatedAt?: Date | string
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
-    userId?: string | null
+    userId: string
     favoriteUser?: UserUncheckedCreateNestedManyWithoutFavoriteItemInput
   }
 
-  export type ItemCreateOrConnectWithoutCommentInput = {
+  export type ItemCreateOrConnectWithoutCommentsInput = {
     where: ItemWhereUniqueInput
-    create: XOR<ItemCreateWithoutCommentInput, ItemUncheckedCreateWithoutCommentInput>
+    create: XOR<ItemCreateWithoutCommentsInput, ItemUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type UserUpsertWithoutCommentsInput = {
+    update: XOR<UserUpdateWithoutCommentsInput, UserUncheckedUpdateWithoutCommentsInput>
+    create: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCommentsInput, UserUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type UserUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    encryptedPassword?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    favoriteItem?: ItemUpdateManyWithoutFavoriteUserNestedInput
+    favoriteArticle?: ArticleUpdateManyWithoutFavoriteUserNestedInput
+    articles?: ArticleUpdateManyWithoutUserNestedInput
+    items?: ItemUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    encryptedPassword?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    favoriteItem?: ItemUncheckedUpdateManyWithoutFavoriteUserNestedInput
+    favoriteArticle?: ArticleUncheckedUpdateManyWithoutFavoriteUserNestedInput
+    articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    items?: ItemUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ArticleUpsertWithoutCommentsInput = {
@@ -7886,7 +8104,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    user?: UserUpdateOneWithoutArticleNestedInput
+    user?: UserUpdateOneRequiredWithoutArticlesNestedInput
     favoriteUser?: UserUpdateManyWithoutFavoriteArticleNestedInput
   }
 
@@ -7897,22 +8115,22 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     favoriteUser?: UserUncheckedUpdateManyWithoutFavoriteArticleNestedInput
   }
 
-  export type ItemUpsertWithoutCommentInput = {
-    update: XOR<ItemUpdateWithoutCommentInput, ItemUncheckedUpdateWithoutCommentInput>
-    create: XOR<ItemCreateWithoutCommentInput, ItemUncheckedCreateWithoutCommentInput>
+  export type ItemUpsertWithoutCommentsInput = {
+    update: XOR<ItemUpdateWithoutCommentsInput, ItemUncheckedUpdateWithoutCommentsInput>
+    create: XOR<ItemCreateWithoutCommentsInput, ItemUncheckedCreateWithoutCommentsInput>
     where?: ItemWhereInput
   }
 
-  export type ItemUpdateToOneWithWhereWithoutCommentInput = {
+  export type ItemUpdateToOneWithWhereWithoutCommentsInput = {
     where?: ItemWhereInput
-    data: XOR<ItemUpdateWithoutCommentInput, ItemUncheckedUpdateWithoutCommentInput>
+    data: XOR<ItemUpdateWithoutCommentsInput, ItemUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type ItemUpdateWithoutCommentInput = {
+  export type ItemUpdateWithoutCommentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -7923,10 +8141,10 @@ export namespace Prisma {
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
     favoriteUser?: UserUpdateManyWithoutFavoriteItemNestedInput
-    user?: UserUpdateOneWithoutItemNestedInput
+    user?: UserUpdateOneRequiredWithoutItemsNestedInput
   }
 
-  export type ItemUncheckedUpdateWithoutCommentInput = {
+  export type ItemUncheckedUpdateWithoutCommentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -7936,7 +8154,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     favoriteUser?: UserUncheckedUpdateManyWithoutFavoriteItemNestedInput
   }
 
@@ -7947,10 +8165,12 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteArticle?: ArticleCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleCreateNestedManyWithoutUserInput
-    Item?: ItemCreateNestedManyWithoutUserInput
+    articles?: ArticleCreateNestedManyWithoutUserInput
+    items?: ItemCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFavoriteItemInput = {
@@ -7960,10 +8180,12 @@ export namespace Prisma {
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteArticle?: ArticleUncheckedCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleUncheckedCreateNestedManyWithoutUserInput
-    Item?: ItemUncheckedCreateNestedManyWithoutUserInput
+    articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    items?: ItemUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFavoriteItemInput = {
@@ -7971,41 +8193,46 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutFavoriteItemInput, UserUncheckedCreateWithoutFavoriteItemInput>
   }
 
-  export type UserCreateWithoutItemInput = {
+  export type UserCreateWithoutItemsInput = {
     id?: string
     nickname: string
     createdAt?: Date | string
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemCreateNestedManyWithoutFavoriteUserInput
     favoriteArticle?: ArticleCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleCreateNestedManyWithoutUserInput
+    articles?: ArticleCreateNestedManyWithoutUserInput
+    comments?: CommentCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutItemInput = {
+  export type UserUncheckedCreateWithoutItemsInput = {
     id?: string
     nickname: string
     createdAt?: Date | string
     email: string
     encryptedPassword: string
     image: string
+    refreshToken?: string | null
     updatedAt?: Date | string
     favoriteItem?: ItemUncheckedCreateNestedManyWithoutFavoriteUserInput
     favoriteArticle?: ArticleUncheckedCreateNestedManyWithoutFavoriteUserInput
-    Article?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    articles?: ArticleUncheckedCreateNestedManyWithoutUserInput
+    comments?: CommentUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutItemInput = {
+  export type UserCreateOrConnectWithoutItemsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutItemInput, UserUncheckedCreateWithoutItemInput>
+    create: XOR<UserCreateWithoutItemsInput, UserUncheckedCreateWithoutItemsInput>
   }
 
   export type CommentCreateWithoutItemInput = {
     id?: string
     content: string
     createdAt?: Date | string
+    user: UserCreateNestedOneWithoutCommentsInput
     article?: ArticleCreateNestedOneWithoutCommentsInput
   }
 
@@ -8013,6 +8240,7 @@ export namespace Prisma {
     id?: string
     content: string
     createdAt?: Date | string
+    userId: string
     articleId?: string | null
   }
 
@@ -8042,41 +8270,45 @@ export namespace Prisma {
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutFavoriteItemInput>
   }
 
-  export type UserUpsertWithoutItemInput = {
-    update: XOR<UserUpdateWithoutItemInput, UserUncheckedUpdateWithoutItemInput>
-    create: XOR<UserCreateWithoutItemInput, UserUncheckedCreateWithoutItemInput>
+  export type UserUpsertWithoutItemsInput = {
+    update: XOR<UserUpdateWithoutItemsInput, UserUncheckedUpdateWithoutItemsInput>
+    create: XOR<UserCreateWithoutItemsInput, UserUncheckedCreateWithoutItemsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutItemInput = {
+  export type UserUpdateToOneWithWhereWithoutItemsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutItemInput, UserUncheckedUpdateWithoutItemInput>
+    data: XOR<UserUpdateWithoutItemsInput, UserUncheckedUpdateWithoutItemsInput>
   }
 
-  export type UserUpdateWithoutItemInput = {
+  export type UserUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     nickname?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUpdateManyWithoutFavoriteUserNestedInput
     favoriteArticle?: ArticleUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUpdateManyWithoutUserNestedInput
+    articles?: ArticleUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutItemInput = {
+  export type UserUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     nickname?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUncheckedUpdateManyWithoutFavoriteUserNestedInput
     favoriteArticle?: ArticleUncheckedUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CommentUpsertWithWhereUniqueWithoutItemInput = {
@@ -8105,8 +8337,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
-    user?: UserCreateNestedOneWithoutItemInput
-    comment?: CommentCreateNestedManyWithoutItemInput
+    user: UserCreateNestedOneWithoutItemsInput
+    comments?: CommentCreateNestedManyWithoutItemInput
   }
 
   export type ItemUncheckedCreateWithoutFavoriteUserInput = {
@@ -8119,8 +8351,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
-    userId?: string | null
-    comment?: CommentUncheckedCreateNestedManyWithoutItemInput
+    userId: string
+    comments?: CommentUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type ItemCreateOrConnectWithoutFavoriteUserInput = {
@@ -8135,7 +8367,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    user?: UserCreateNestedOneWithoutArticleInput
+    user: UserCreateNestedOneWithoutArticlesInput
     comments?: CommentCreateNestedManyWithoutArticleInput
   }
 
@@ -8146,7 +8378,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     favoriteCount?: number
-    userId?: string | null
+    userId: string
     comments?: CommentUncheckedCreateNestedManyWithoutArticleInput
   }
 
@@ -8198,7 +8430,7 @@ export namespace Prisma {
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
     favoriteUser?: UserCreateNestedManyWithoutFavoriteItemInput
-    comment?: CommentCreateNestedManyWithoutItemInput
+    comments?: CommentCreateNestedManyWithoutItemInput
   }
 
   export type ItemUncheckedCreateWithoutUserInput = {
@@ -8212,7 +8444,7 @@ export namespace Prisma {
     tags?: ItemCreatetagsInput | string[]
     favoriteCount?: number
     favoriteUser?: UserUncheckedCreateNestedManyWithoutFavoriteItemInput
-    comment?: CommentUncheckedCreateNestedManyWithoutItemInput
+    comments?: CommentUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type ItemCreateOrConnectWithoutUserInput = {
@@ -8222,6 +8454,32 @@ export namespace Prisma {
 
   export type ItemCreateManyUserInputEnvelope = {
     data: ItemCreateManyUserInput | ItemCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommentCreateWithoutUserInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    article?: ArticleCreateNestedOneWithoutCommentsInput
+    Item?: ItemCreateNestedOneWithoutCommentsInput
+  }
+
+  export type CommentUncheckedCreateWithoutUserInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    articleId?: string | null
+    itemId?: string | null
+  }
+
+  export type CommentCreateOrConnectWithoutUserInput = {
+    where: CommentWhereUniqueInput
+    create: XOR<CommentCreateWithoutUserInput, CommentUncheckedCreateWithoutUserInput>
+  }
+
+  export type CommentCreateManyUserInputEnvelope = {
+    data: CommentCreateManyUserInput | CommentCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -8254,7 +8512,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Item"> | Date | string
     tags?: StringNullableListFilter<"Item">
     favoriteCount?: IntFilter<"Item"> | number
-    userId?: StringNullableFilter<"Item"> | string | null
+    userId?: StringFilter<"Item"> | string
   }
 
   export type ArticleUpsertWithWhereUniqueWithoutFavoriteUserInput = {
@@ -8283,7 +8541,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Article"> | Date | string
     updatedAt?: DateTimeFilter<"Article"> | Date | string
     favoriteCount?: IntFilter<"Article"> | number
-    userId?: StringNullableFilter<"Article"> | string | null
+    userId?: StringFilter<"Article"> | string
   }
 
   export type ArticleUpsertWithWhereUniqueWithoutUserInput = {
@@ -8318,10 +8576,27 @@ export namespace Prisma {
     data: XOR<ItemUpdateManyMutationInput, ItemUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type CommentUpsertWithWhereUniqueWithoutUserInput = {
+    where: CommentWhereUniqueInput
+    update: XOR<CommentUpdateWithoutUserInput, CommentUncheckedUpdateWithoutUserInput>
+    create: XOR<CommentCreateWithoutUserInput, CommentUncheckedCreateWithoutUserInput>
+  }
+
+  export type CommentUpdateWithWhereUniqueWithoutUserInput = {
+    where: CommentWhereUniqueInput
+    data: XOR<CommentUpdateWithoutUserInput, CommentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CommentUpdateManyWithWhereWithoutUserInput = {
+    where: CommentScalarWhereInput
+    data: XOR<CommentUpdateManyMutationInput, CommentUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type CommentCreateManyArticleInput = {
     id?: string
     content: string
     createdAt?: Date | string
+    userId: string
     itemId?: string | null
   }
 
@@ -8332,10 +8607,12 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUpdateManyWithoutUserNestedInput
-    Item?: ItemUpdateManyWithoutUserNestedInput
+    articles?: ArticleUpdateManyWithoutUserNestedInput
+    items?: ItemUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFavoriteArticleInput = {
@@ -8345,10 +8622,12 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteItem?: ItemUncheckedUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUncheckedUpdateManyWithoutUserNestedInput
-    Item?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    items?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutFavoriteArticleInput = {
@@ -8358,6 +8637,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8365,13 +8645,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Item?: ItemUpdateOneWithoutCommentNestedInput
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    Item?: ItemUpdateOneWithoutCommentsNestedInput
   }
 
   export type CommentUncheckedUpdateWithoutArticleInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     itemId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8379,6 +8661,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     itemId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8386,6 +8669,7 @@ export namespace Prisma {
     id?: string
     content: string
     createdAt?: Date | string
+    userId: string
     articleId?: string | null
   }
 
@@ -8396,10 +8680,12 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteArticle?: ArticleUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUpdateManyWithoutUserNestedInput
-    Item?: ItemUpdateManyWithoutUserNestedInput
+    articles?: ArticleUpdateManyWithoutUserNestedInput
+    items?: ItemUpdateManyWithoutUserNestedInput
+    comments?: CommentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFavoriteItemInput = {
@@ -8409,10 +8695,12 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteArticle?: ArticleUncheckedUpdateManyWithoutFavoriteUserNestedInput
-    Article?: ArticleUncheckedUpdateManyWithoutUserNestedInput
-    Item?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    articles?: ArticleUncheckedUpdateManyWithoutUserNestedInput
+    items?: ItemUncheckedUpdateManyWithoutUserNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutFavoriteItemInput = {
@@ -8422,6 +8710,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     encryptedPassword?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8429,6 +8718,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
     article?: ArticleUpdateOneWithoutCommentsNestedInput
   }
 
@@ -8436,6 +8726,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     articleId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8443,6 +8734,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     articleId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8467,6 +8759,14 @@ export namespace Prisma {
     favoriteCount?: number
   }
 
+  export type CommentCreateManyUserInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    articleId?: string | null
+    itemId?: string | null
+  }
+
   export type ItemUpdateWithoutFavoriteUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -8477,8 +8777,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    user?: UserUpdateOneWithoutItemNestedInput
-    comment?: CommentUpdateManyWithoutItemNestedInput
+    user?: UserUpdateOneRequiredWithoutItemsNestedInput
+    comments?: CommentUpdateManyWithoutItemNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutFavoriteUserInput = {
@@ -8491,8 +8791,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    comment?: CommentUncheckedUpdateManyWithoutItemNestedInput
+    userId?: StringFieldUpdateOperationsInput | string
+    comments?: CommentUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type ItemUncheckedUpdateManyWithoutFavoriteUserInput = {
@@ -8505,7 +8805,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ArticleUpdateWithoutFavoriteUserInput = {
@@ -8515,7 +8815,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    user?: UserUpdateOneWithoutArticleNestedInput
+    user?: UserUpdateOneRequiredWithoutArticlesNestedInput
     comments?: CommentUpdateManyWithoutArticleNestedInput
   }
 
@@ -8526,7 +8826,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     comments?: CommentUncheckedUpdateManyWithoutArticleNestedInput
   }
 
@@ -8537,7 +8837,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCount?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ArticleUpdateWithoutUserInput = {
@@ -8582,7 +8882,7 @@ export namespace Prisma {
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
     favoriteUser?: UserUpdateManyWithoutFavoriteItemNestedInput
-    comment?: CommentUpdateManyWithoutItemNestedInput
+    comments?: CommentUpdateManyWithoutItemNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutUserInput = {
@@ -8596,7 +8896,7 @@ export namespace Prisma {
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
     favoriteUser?: UserUncheckedUpdateManyWithoutFavoriteItemNestedInput
-    comment?: CommentUncheckedUpdateManyWithoutItemNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type ItemUncheckedUpdateManyWithoutUserInput = {
@@ -8609,6 +8909,30 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: ItemUpdatetagsInput | string[]
     favoriteCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CommentUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    article?: ArticleUpdateOneWithoutCommentsNestedInput
+    Item?: ItemUpdateOneWithoutCommentsNestedInput
+  }
+
+  export type CommentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    articleId?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CommentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    articleId?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 
