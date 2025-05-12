@@ -15,7 +15,7 @@ const productsRouter = express.Router();
 
 /**
  * @swagger
- * /api/products:
+ * /products:
  *   get:
  *     summary: 상품 목록 조회
  *     tags: [Products]
@@ -42,7 +42,7 @@ productsRouter.get("/", auth.verifyOptionalAuth, productController.getProducts);
 
 /**
  * @swagger
- * /api/products/{id}:
+ * /products/{id}:
  *   get:
  *     summary: 특정 상품 조회
  *     tags: [Products]
@@ -69,7 +69,7 @@ productsRouter.get(
 
 /**
  * @swagger
- * /api/products:
+ * /products:
  *   post:
  *     summary: 상품 등록
  *     tags: [Products]
@@ -109,7 +109,7 @@ productsRouter.post(
 
 /**
  * @swagger
- * /api/products/{id}:
+ * /products/{id}:
  *   patch:
  *     summary: 상품 수정
  *     tags: [Products]
@@ -154,7 +154,7 @@ productsRouter.patch(
 
 /**
  * @swagger
- * /api/products/{id}:
+ * /products/{id}:
  *   delete:
  *     summary: 상품 삭제
  *     tags: [Products]
@@ -183,7 +183,7 @@ productsRouter.delete(
 
 /**
  * @swagger
- * /api/products/{productId}/like:
+ * /products/{productId}/like:
  *   post:
  *     summary: 상품 좋아요 추가
  *     tags: [Products]
@@ -210,7 +210,7 @@ productsRouter.post(
 
 /**
  * @swagger
- * /api/products/{productId}/like:
+ * /products/{productId}/like:
  *   delete:
  *     summary: 상품 좋아요 취소
  *     tags: [Products]
@@ -235,67 +235,11 @@ productsRouter.delete(
   productController.unlikeProduct
 );
 
-/**
- * @swagger
- * /api/products/{productId}/comments:
- *   get:
- *     summary: 상품 댓글 목록 조회
- *     tags: [Products, Comments]
- *     parameters:
- *       - name: productId
- *         in: path
- *         required: true
- *         description: 상품 ID
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: 댓글 목록 조회 성공
- *       404:
- *         description: 상품을 찾을 수 없음
- */
 productsRouter.get(
   "/:productId/comments",
   commentController.getCommentsByProductId
 );
 
-/**
- * @swagger
- * /api/products/{productId}/comments:
- *   post:
- *     summary: 상품 댓글 작성
- *     tags: [Products, Comments]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: productId
- *         in: path
- *         required: true
- *         description: 상품 ID
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - content
- *             properties:
- *               content:
- *                 type: string
- *                 description: 댓글 내용
- *     responses:
- *       201:
- *         description: 댓글 작성 성공
- *       400:
- *         description: 잘못된 요청
- *       401:
- *         description: 인증 실패
- *       404:
- *         description: 상품을 찾을 수 없음
- */
 productsRouter.post(
   "/:productId/comments",
   auth.verifyAccessToken,
