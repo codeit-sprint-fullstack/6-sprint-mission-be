@@ -1,14 +1,25 @@
 import { BadRequestError } from "../exceptions.js";
 import productRepository from "../repositories/productRepository.js";
 
-async function getProducts({ offset, search }) {
-  const options = { orderBy: { createdAt: "desc" } };
-  if (offset) options.skip = offset;
-  if (search) {
+async function getProducts({
+  page = 1,
+  pageSize = 10,
+  orderBy = "recent",
+  keyword,
+}) {
+  const offset = (page - 1) * pageSize;
+  const options = { skip: offset, take: pageSize, orderBy: {}, where: {} };
+
+  if (orderBy === "recent") {
+    options.orderBy = { createdAt: "desc" };
+  } else if (orderBy === "favorite") {
+    options.orderBy = { favoriteCount: "desc" };
+  }
+  if (keyword) {
     options.where = {
       OR: [
-        { name: { contains: search } },
-        { description: { contains: search } },
+        { name: { contains: keyword, mode: "insensitive" } },
+        { description: { contains: keyword, mode: "insensitive" } },
       ],
     };
   }

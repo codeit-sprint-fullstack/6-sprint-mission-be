@@ -13,7 +13,7 @@ export async function getComments(req, res, next) {
       ? Number(req.params.productId)
       : null;
     const { cursor, limit } = req.query;
-    const take = Number(limit) || 10;
+    const take = Number(limit) || 3;
 
     const comments = await commentService.getComments({
       articleId: articleIdParam,

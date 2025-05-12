@@ -7,8 +7,10 @@ import productService from "../services/productService.js";
 export async function getProducts(req, res, next) {
   try {
     const products = await productService.getProducts({
-      offset: Number(req.query.offset),
-      search: req.query.search,
+      page: Number(req.query.page),
+      pageSize: Number(req.query.pageSize),
+      orderBy: req.query.orderBy,
+      keyword: req.query.keyword,
     });
     res.json(products);
   } catch (e) {

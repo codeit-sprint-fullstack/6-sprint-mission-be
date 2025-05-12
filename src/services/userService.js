@@ -58,6 +58,14 @@ async function getUser(email, password) {
 }
 
 /**
+ * id로 유저 정보 가져오는 함수
+ */
+async function getUserById(userId) {
+  const user = await userRepository.findById(userId);
+  return filterSensitiveUserData(user);
+}
+
+/**
  * 유저 정보 업데이트 함수
  */
 async function updateUser(id, data) {
@@ -92,6 +100,7 @@ async function refreshToken(userId, refreshToken) {
 export default {
   createUser,
   getUser,
+  getUserById,
   updateUser,
   createToken,
   refreshToken,

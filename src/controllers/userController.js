@@ -56,3 +56,17 @@ export async function refreshToken(req, res, next) {
     return next(error);
   }
 }
+
+/**
+ * 유저 정보 조회
+ */
+export async function getUser(req, res, next) {
+  try {
+    const { userId } = req.auth;
+    const user = await userService.getUserById(userId);
+    console.log(user);
+    return res.json(user);
+  } catch (error) {
+    return next(error);
+  }
+}
