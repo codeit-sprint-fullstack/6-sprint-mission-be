@@ -1,28 +1,25 @@
 // src/controllers/product.controller.js
-const prismaClient = require("../models/prisma/prismaClient.js");
 const catchAsync = require("../utils/catchAsync.js");
+const productService = require("../services/product.service.js");
 
 exports.createProduct = catchAsync(async (req, res) => {
-  const newProduct = await prismaClient.product.create({
-    data: { ...req.body, userId: req.user.id },
-  });
+  const newProduct = await productService.createProduct(req.body, req.user.id);
   res.status(201).send(newProduct);
 });
 
 exports.getAllProducts = catchAsync(async (req, res) => {
-  const products = await prismaClient.product.findMany();
-  res.send(products);
+  const products = await productService.getAllProducts();
+  res.status(200).send(products);
 });
 
 exports.getProductById = catchAsync(async (req, res) => {
-  const product = await prismaClient.product.findUnique({
-    where: { id: parseInt(req.params.productId) },
-    // include: { tags, user, comments }, // 필요에 따라 include
-  });
+  const product = await productService.getProductById(
+    parseInt(req.params.productId)
+  );
   if (!product) {
     return res.status(404).send({ message: "Product not found" });
   }
-  res.send(product);
+  res.status(200).send(product);
 });
 
 exports.updateProduct = catchAsync(async (req, res) => {

@@ -12,7 +12,7 @@ GET http://localhost:3000/products
 
 ### 프로덕트 조회
 
-GET http://localhost:3000/products/1
+GET http://localhost:3000/products/2
 
 ### 로그인
 
@@ -51,11 +51,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 
 POST http://localhost:3000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAwOTE5OSwiZXhwIjoxNzQ3MDEyNzk5fQ.sdATdMiveU1w9HfAtyeZyKBKir9Cp1qqqPsEN1ub2xM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxMjA3MywiZXhwIjoxNzQ3MDE1NjczfQ.Or6Q-7g-Jy3XCflsnHznJlxMTA7w2YN-3XPDiMHGjOw
 
 {
-  "name": "Samsung OLED 모니터",
-  "price": 270000
+  "name": "Samsung MP3 플레이어",
+  "price": 45000
 }
 
 ### 사진 업로드 (실제 이미지 전송시 image/png 로 개선 필요)

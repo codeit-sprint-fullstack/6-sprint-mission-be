@@ -1,5 +1,5 @@
 // src/controllers/article.controller.js
-const prisma = require("../models/prisma/prismaClient.js");
+const prisma = require("../repositories/prisma/prismaClient.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 exports.createArticle = catchAsync(async (req, res) => {
