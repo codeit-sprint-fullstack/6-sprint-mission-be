@@ -17,8 +17,8 @@ async function getProductById(productId) {
   return product;
 }
 
-async function updateProduct(productId) {
-  const updatedProduct = await productRepository.update(productId);
+async function updateProduct(productId, updateData) {
+  const updatedProduct = await productRepository.update(productId, updateData);
   return updatedProduct;
 }
 

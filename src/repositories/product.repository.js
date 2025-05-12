@@ -20,10 +20,10 @@ async function getById(productId) {
   return product;
 }
 
-async function update(productId) {
+async function update(productId, updateData) {
   const updatedProduct = await prismaClient.product.update({
     where: { id: productId },
-    data: req.body,
+    data: updateData,
   });
   return updatedProduct;
 }

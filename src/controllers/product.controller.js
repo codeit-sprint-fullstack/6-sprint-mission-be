@@ -23,13 +23,13 @@ getProductById = catchAsync(async (req, res) => {
 });
 
 updateProduct = catchAsync(async (req, res) => {
-  await productService.updateProduct(parseInt(req.params.productId));
-  res.status(204).send("성공적으로 수정했습니다.");
+  await productService.updateProduct(parseInt(req.params.productId), req.body);
+  res.status(204).send("No Content");
 });
 
 deleteProductById = catchAsync(async (req, res) => {
   await productService.deleteProductById(parseInt(req.params.productId));
-  res.status(204).send("성공적으로 삭제했습니다."); // 디버깅 용도로 deletedProduct.id 반환중
+  res.status(204).send("No Content");
 });
 
 addToFavorites = catchAsync(async (req, res) => {

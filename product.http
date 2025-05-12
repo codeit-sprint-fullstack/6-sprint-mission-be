@@ -11,7 +11,7 @@ GET http://localhost:3000/products/2
 
 POST http://localhost:3000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxNjQzMCwiZXhwIjoxNzQ3MDIwMDMwfQ.l8LYBiRLnySDrjsgW4dP2IUzwtD2NgiFpvIczLt3xA8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
 
 {
   "name": "Samsung 갤럭시 탭 S7",
@@ -22,13 +22,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 
 DELETE http://localhost:3000/products/7
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxNzM4OCwiZXhwIjoxNzQ3MDIwOTg4fQ.Qb2zFDBqzmjNIWOxcbanST-bmsOj5yigOJVq8QYaxvo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
 
 ### 프로덕트 수정
 
-PUT http://localhost:3000/products/4
+PUT http://localhost:3000/products/8
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxNzM4OCwiZXhwIjoxNzQ3MDIwOTg4fQ.Qb2zFDBqzmjNIWOxcbanST-bmsOj5yigOJVq8QYaxvo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
 
 {
   "name": "Samsung 갤럭시 탭 S8",
