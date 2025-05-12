@@ -1,5 +1,7 @@
 generator client {
   provider = "prisma-client-js"
+  // prisma 7버전 이상부턴 아래 코드를 넣어야 에러안남
+  // output   = "../node_modules/@prisma/client"
 }
 
 datasource db {

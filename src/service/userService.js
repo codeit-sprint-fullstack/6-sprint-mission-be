@@ -83,22 +83,8 @@ async function getUserById(id) {
 }
 
 // 유저 패스워드 검사
-// async function verifyPassword(inputPassword, password) {
-//   const isMatch = await bcrypt.compare(inputPassword, password);
-//   // const isMatch = inputPassword === password;
-//   if (!isMatch) {
-//     const error = new Error("비밀번호가 일치하지 않습니다.");
-//     error.code = 401;
-//     throw error;
-//   }
-// }
-
-// 에러 확인용
 async function verifyPassword(inputPassword, password) {
   try {
-    console.log("🔑 입력 비밀번호:", inputPassword);
-    console.log("🔒 저장된 해시:", password);
-
     const isMatch = await bcrypt.compare(inputPassword, password);
     console.log("✅ bcrypt.compare 결과:", isMatch);
 
@@ -108,8 +94,9 @@ async function verifyPassword(inputPassword, password) {
       throw error;
     }
   } catch (err) {
-    console.error("❌ bcrypt 에러:", err); // 🔥 이 부분에서 Render 오류 발생 가능
-    throw new Error("비밀번호 비교 중 에러 발생");
+    console.error("❌ bcrypt 에러:", err);
+    // ❗ 여기서 새 에러 던지면 code 없어져서 401 인식 불가!
+    throw err; // ✅ 원래 에러 그대로 전달
   }
 }
 
