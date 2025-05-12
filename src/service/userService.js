@@ -61,6 +61,7 @@ async function getUser(email, password) {
     await verifyPassword(password, user.encryptedPassword);
     return filterSensitiveUserData(user);
   } catch (error) {
+    console.error("❌ getUser 내부 실제 에러:", error); // 🔥 이게 핵심!
     if (error.code === 401) throw error;
     const customError = new Error("데이터베이스 작업 중 오류가 발생했습니다");
     customError.code = 500;
