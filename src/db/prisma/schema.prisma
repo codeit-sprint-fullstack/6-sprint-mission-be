@@ -17,9 +17,10 @@ model Article {
   id        Int       @id @default(autoincrement())
   title     String
   content   String
+  like      Int       @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Comments   Comment[]
+  Comments  Comment[]
 }
 
 model Comment {
@@ -29,6 +30,29 @@ model Comment {
   updatedAt DateTime @updatedAt
   article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId Int
-
 }
 
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  tags        String[]
+  favorite    Int
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  email             String    @unique
+  nickname          String
+  image             String?
+  encryptedPassword String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  product           Product[]
+}
