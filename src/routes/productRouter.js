@@ -14,7 +14,7 @@ import commentRouter from "./commentRouter.js";
 
 const productRouter = express.Router();
 
-productRouter.get("/", auth.verifyAccessToken, getProducts);
+productRouter.get("/", getProducts);
 productRouter.post(
   "/",
   auth.verifyAccessToken,

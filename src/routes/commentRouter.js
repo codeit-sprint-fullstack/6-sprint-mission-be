@@ -18,7 +18,7 @@ commentRouter.post(
   validate,
   createComment
 );
-commentRouter.get("/", auth.verifyAccessToken, getComments);
+commentRouter.get("/", getComments);
 commentRouter.patch(
   "/:commentId",
   auth.verifyAccessToken,

@@ -12,7 +12,7 @@ export async function getProducts(req, res, next) {
       orderBy: req.query.orderBy,
       keyword: req.query.keyword,
     });
-    res.json(products);
+    res.json({ totalCount: products.length, list: products });
   } catch (e) {
     next(e);
   }
