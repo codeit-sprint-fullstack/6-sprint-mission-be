@@ -31,5 +31,5 @@
   },
   "prisma": {
     "schema": "src/db/prisma/schema.prisma"
-  },
+  }
 }
