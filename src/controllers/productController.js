@@ -2,6 +2,7 @@ import express from "express";
 import productService from "../services/productService.js";
 import varify from "../middlewares/varify.js";
 import auth from "../middlewares/auth.js";
+import upload from "../middlewares/images.js";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -35,12 +36,34 @@ productController
   .post(
     // varify.requestStructure,
     auth.varifyAccessToken,
+    upload.single("image"),
     async (req, res, next) => {
       //디버깅
       console.log("req.body", req.body);
+      console.log("req.file", req.file);
 
       try {
-        const createProduct = await productService.create(req.body);
+        const parsedTags = (() => {
+          try {
+            const tags = JSON.parse(req.body.tags);
+            return Array.isArray(tags) ? tags : [tags];
+          } catch (e) {
+            return [req.body.tags];
+          }
+        })();
+
+        const data = {
+          name: req.body.name,
+          description: req.body.description,
+          price: Number(req.body.price),
+          tags: parsedTags,
+          imageUrl: req.file
+            ? `http://localhost:3000/uploads/${req.file.filename}`
+            : null,
+        };
+
+        const createProduct = await productService.create(data);
+
         return res.json(createProduct);
       } catch (error) {
         next(error);
@@ -49,7 +72,33 @@ productController
   )
   .get(async (req, res, next) => {
     try {
-      const product = await productService.getAll();
+      const {
+        page = 1,
+        pageSize = 10,
+        orderBy = "recent",
+        keyword = "",
+      } = req.query;
+
+      const take = parseInt(pageSize);
+      const skip = (parseInt(page) - 1) * take;
+      const orderField =
+        orderBy === "recent"
+          ? "createdAt"
+          : orderBy === "favorite"
+          ? "favorite"
+          : "createdAt";
+
+      const validOrderOption = ["recent", "favorite"];
+      if (!validOrderOption.includes(orderBy)) {
+        return res.status(400).json({ message: "잘못된  요청입니다." });
+      }
+
+      const product = await productService.getAll({
+        order: orderField,
+        skip,
+        take,
+        keyword,
+      });
 
       if (!product) varify.throwNotFoundError();
 

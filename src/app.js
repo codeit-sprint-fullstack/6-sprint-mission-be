@@ -15,6 +15,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use("/uploads", express.static("uploads"));
+
 app.use("/users/me", userController); //사용자 정보 컨트롤러
 app.use("/auth", authController); //회원가입, 로그인 컨트롤러
 app.use("/products", productController); //상품+댓글 컨토롤러

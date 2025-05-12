@@ -8,8 +8,8 @@ async function getById(id) {
   return await productRepository.getById(id);
 }
 
-async function getAll() {
-  return productRepository.getAll();
+async function getAll(options) {
+  return productRepository.getAll(options);
 }
 
 async function update(id, data) {

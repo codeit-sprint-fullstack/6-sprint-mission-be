@@ -7,6 +7,7 @@ async function save(product) {
       description: product.description,
       price: product.price,
       tags: product.tags,
+      imageUrl: product.imageUrl,
     },
   });
 }
@@ -40,12 +41,53 @@ async function save(product) {
 async function getById(id) {
   const product = await prisma.product.findUnique({
     where: { id },
+    // select: {
+    //   imageUrl: true,
+    // }
   });
   return product;
 }
 
-async function getAll() {
-  const products = await prisma.product.findMany();
+async function getAll(options) {
+  const { order = "createdAt", skip = 0, take = 4, keyword = "" } = options;
+
+  // const orderByField =
+  //   order === "recent"
+  //     ? "createdAt"
+  //     : order === "favorite"
+  //     ? { favorites: { _count: "desc" } }
+  //     : null;
+
+  let orderByOption;
+
+  if (order === "favorite") {
+    orderByOption = {
+      favorites: {
+        _count: "desc",
+      },
+    };
+  } else {
+    orderByOption = {
+      [order]: "desc",
+    };
+  }
+
+  const products = await prisma.product.findMany({
+    where: {
+      name: {
+        contains: keyword,
+        mode: "insensitive",
+      },
+    },
+    orderBy: orderByOption,
+    skip,
+    take,
+    include: {
+      _count: {
+        select: { favorites: true },
+      },
+    },
+  });
   return products;
 }
 

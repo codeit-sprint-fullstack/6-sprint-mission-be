@@ -26,10 +26,10 @@ async function main() {
     data: ProductMocks,
     skipDuplicates: true,
   });
-  await prisma.comment.createMany({
-    data: CommentMocks,
-    skipDuplicates: true,
-  });
+  // await prisma.comment.createMany({
+  //   data: CommentMocks,
+  //   skipDuplicates: true,
+  // });
 }
 
 main()
