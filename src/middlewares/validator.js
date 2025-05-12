@@ -1,7 +1,7 @@
 import { body, validationResult } from "express-validator";
 import { BadRequestError } from "../exceptions.js";
 
-export const checkProductValidity = [
+export const createProductValidator = [
   body("name")
     .notEmpty()
     .withMessage("상품명을 입력해주세요.")
@@ -19,7 +19,7 @@ export const checkProductValidity = [
     .withMessage("0 이상 숫자로 입력해주세요."),
 ];
 
-export function validate(req, res, next) {
+export function validator(req, res, next) {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
