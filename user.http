@@ -1,0 +1,34 @@
+### 로그인
+
+POST http://localhost:3000/auth/signIn
+Content-Type: application/json
+
+{
+  "email":"friday123@email.com",
+  "password":"friday123"
+}
+
+### 회원가입
+
+POST http://localhost:3000/auth/signUp
+Content-Type: application/json
+
+{
+  "nickname": "friday",
+  "email": "friday123@email.com",
+  "password": "friday123"
+}
+
+### 사진 업로드 (실제 이미지 전송시 image/png 로 개선 필요)
+
+POST http://localhost:3000/upload
+Content-Type: multipart/form-data; boundary=---------------------------abcd123456
+
+-----------------------------abcd123456
+Content-Disposition: form-data; name="image"; filename="blank.txt"
+Content-Type: text/plain
+
+This is the content of the file.
+-----------------------------abcd123456--
+
+### 

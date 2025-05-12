@@ -1,0 +1,21 @@
+### 프로덕트 목록조회
+
+GET http://localhost:3000/products
+
+### 프로덕트 조회
+
+GET http://localhost:3000/products/2
+
+
+### 프로덕트 등록
+
+POST http://localhost:3000/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxMjA3MywiZXhwIjoxNzQ3MDE1NjczfQ.Or6Q-7g-Jy3XCflsnHznJlxMTA7w2YN-3XPDiMHGjOw
+
+{
+  "name": "Samsung MP3 플레이어",
+  "price": 45000
+}
+
+###
