@@ -3,8 +3,8 @@ POST http://localhost:5050/users
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "name": "테스트유저",
+  "email": "test5@example.com",
+  "name": "테스트유저1",
   "password": "12345678"
 }
 
@@ -19,4 +19,4 @@ Content-Type: application/json
 
 ### 액세스 토큰 재발급
 POST http://localhost:5050/token/refresh
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwODk1OSwiZXhwIjoxNzQ4MjE4NTU5fQ.FoBLTPPOupZK2hZNjSfBoQfup61Yr74yVeyqhsBLgac
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc0NzAzNzIwMSwiZXhwIjoxNzQ4MjQ2ODAxfQ._vweTgwi18ufIaoTyJZ3K1bEOAuazS33H3RpzIoXwXk

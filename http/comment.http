@@ -1,6 +1,6 @@
 ### 자유게시글에 댓글 작성
 POST http://localhost:5050/comment/article/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### 상품에 댓글 작성
 POST http://localhost:5050/comment/product/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 Content-Type: application/json
 
 {

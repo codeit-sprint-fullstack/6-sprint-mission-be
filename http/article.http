@@ -1,6 +1,6 @@
 ### 자유게시글 생성
 POST http://localhost:5050/article
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -23,11 +23,11 @@ Content-Type: image/jpeg
 GET http://localhost:5050/article
 
 ### 자유게시글 단건 조회
-GET http://localhost:5050/article/1
+GET http://localhost:5050/article/5
 
 ### 자유게시글 수정
-PUT http://localhost:5050/article/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+PUT http://localhost:5050/article/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 Content-Type: application/json
 
 {
@@ -36,17 +36,17 @@ Content-Type: application/json
 }
 
 ### 자유게시글 삭제
-DELETE http://localhost:5050/article/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+DELETE http://localhost:5050/article/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 
 ### 자유게시글 좋아요 추가
-POST http://localhost:5050/article/1/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+POST http://localhost:5050/article/5/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 
 ### 자유게시글 좋아요 취소
-DELETE http://localhost:5050/article/1/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+DELETE http://localhost:5050/article/5/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
 
 ### 자유게시글 좋아요 여부 확인
-GET http://localhost:5050/article/1/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAxMjQyNSwiZXhwIjoxNzQ3MDE2MDI1fQ.km9phg-DQ1u4HLByhxO7AWMUbKLG7ZJvSWqg7AeC5NA
+GET http://localhost:5050/article/5/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
