@@ -11,11 +11,28 @@ GET http://localhost:3000/products/2
 
 POST http://localhost:3000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxMjA3MywiZXhwIjoxNzQ3MDE1NjczfQ.Or6Q-7g-Jy3XCflsnHznJlxMTA7w2YN-3XPDiMHGjOw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxNjQzMCwiZXhwIjoxNzQ3MDIwMDMwfQ.l8LYBiRLnySDrjsgW4dP2IUzwtD2NgiFpvIczLt3xA8
 
 {
-  "name": "Samsung MP3 플레이어",
-  "price": 45000
+  "name": "Samsung 갤럭시 탭 S7",
+  "price": 200000
+}
+
+### 프로덕트 삭제
+
+DELETE http://localhost:3000/products/7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxNzM4OCwiZXhwIjoxNzQ3MDIwOTg4fQ.Qb2zFDBqzmjNIWOxcbanST-bmsOj5yigOJVq8QYaxvo
+
+### 프로덕트 수정
+
+PUT http://localhost:3000/products/4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAxNzM4OCwiZXhwIjoxNzQ3MDIwOTg4fQ.Qb2zFDBqzmjNIWOxcbanST-bmsOj5yigOJVq8QYaxvo
+
+{
+  "name": "Samsung 갤럭시 탭 S8",
+  "price": 300000
 }
 
 ###

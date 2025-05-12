@@ -85,7 +85,7 @@ router.get("/:productId", productController.getProductById);
  * 404:
  * description: Product not found
  */
-router.patch("/:productId", authMiddleware, productController.updateProduct);
+router.put("/:productId", authMiddleware, productController.updateProduct);
 
 /**
  * @swagger
@@ -108,7 +108,11 @@ router.patch("/:productId", authMiddleware, productController.updateProduct);
  * 404:
  * description: Product not found
  */
-router.delete("/:productId", authMiddleware, productController.deleteProduct);
+router.delete(
+  "/:productId",
+  authMiddleware,
+  productController.deleteProductById
+);
 
 /**
  * @swagger

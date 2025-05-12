@@ -1,4 +1,5 @@
 // src/services/product.service.js
+const { product } = require("../repositories/prisma/prismaClient.js");
 const productRepository = require("../repositories/product.repository.js");
 
 async function createProduct(productData, userId) {
@@ -16,8 +17,20 @@ async function getProductById(productId) {
   return product;
 }
 
+async function updateProduct(productId) {
+  const updatedProduct = await productRepository.update(productId);
+  return updatedProduct;
+}
+
+async function deleteProductById(productId) {
+  const deletedProduct = await productRepository.deleteById(productId);
+  return deletedProduct;
+}
+
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
+  updateProduct,
+  deleteProductById,
 };

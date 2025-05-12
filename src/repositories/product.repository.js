@@ -20,8 +20,25 @@ async function getById(productId) {
   return product;
 }
 
+async function update(productId) {
+  const updatedProduct = await prismaClient.product.update({
+    where: { id: productId },
+    data: req.body,
+  });
+  return updatedProduct;
+}
+
+async function deleteById(productId) {
+  const deletedProduct = await prismaClient.product.delete({
+    where: { id: productId },
+  });
+  return deletedProduct;
+}
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
+  deleteById,
 };
