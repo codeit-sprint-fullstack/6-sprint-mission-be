@@ -1,39 +1,77 @@
-// src/config/swagger.js
-import swaggerJSDoc from "swagger-jsdoc";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import indexRouter from "./src/routes/index.route.js";
+import cookieParser from "cookie-parser";
+import path from "path";
 
-const isProd = process.env.NODE_ENV === "production";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./src/config/swagger.js";
 
-const swaggerDefinition = {
-  openapi: "3.0.0",
-  info: {
-    title: "My API",
-    version: "1.0.0",
-    description: "API 문서 자동 생성 예시입니다.",
-  },
-  servers: [
-    {
-      url: isProd
-        ? "https://six-sprint-mission-be.onrender.com"
-        : "http://localhost:7777",
-      description: isProd ? "배포 서버" : "로컬 개발 서버",
+dotenv.config();
+
+const PORT = 7777;
+const ALLOWEPORT = 3000;
+const app = express();
+
+// ✅ 정적 파일 서빙 (최상단에 위치하는 것이 안전)
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.use(cookieParser()); // ✅ 필수!
+
+// 허용할 도메인들
+const allowedOrigins = [
+  `http://localhost:${ALLOWEPORT}`, // 로컬 환경
+  "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
+  "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
+  "https://6-sprint-mission-fe.vercel.app",
+  // 배포된 환경
+];
+
+// CORS 설정
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // 요청하는 origin이 허용된 origin 목록에 있는지 확인
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
     },
-  ],
-  components: {
-    securitySchemes: {
-      refreshToken: {
-        type: "apiKey",
-        in: "cookie",
-        name: "refreshToken",
-      },
-    },
-  },
-};
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // PATCH 추가
+    allowedHeaders: ["Content-Type", "Authorization"], // 허용할 헤더 설정
+  })
+);
 
-const options = {
-  swaggerDefinition,
-  apis: ["./src/routes/*.js"],
-};
+app.use(express.json());
 
-const swaggerSpec = swaggerJSDoc(options);
+// 스웨거 링크
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-export default swaggerSpec;
+app.use(indexRouter);
+
+app.use((err, req, res, next) => {
+  console.log(err);
+
+  switch (err.name) {
+    case "ValidationError":
+      res
+        .status(400)
+        .send({ message: "ValidationError : body의 내용이 빠졌습니다!" });
+      break;
+    case "CastError":
+      res.status(400).send({ message: "Invalid product ID" });
+      break;
+    case "UnauthorizedError":
+      return res
+        .status(401)
+        .json({ message: "인증에 실패했습니다. 다시 로그인해주세요." });
+    default:
+      res.status(500).send({ message: err.message });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

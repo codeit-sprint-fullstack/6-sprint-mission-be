@@ -1,6 +1,8 @@
 // src/config/swagger.js
 import swaggerJSDoc from "swagger-jsdoc";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
@@ -10,8 +12,10 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "http://localhost:7777",
-      description: "pandaMarket-server",
+      url: isProd
+        ? "https://six-sprint-mission-be.onrender.com"
+        : "http://localhost:7777",
+      description: isProd ? "배포 서버" : "로컬 개발 서버",
     },
   ],
   components: {
@@ -19,7 +23,7 @@ const swaggerDefinition = {
       refreshToken: {
         type: "apiKey",
         in: "cookie",
-        name: "refreshToken", // 또는 Authorization 헤더 등 실제 사용 방식에 맞춰
+        name: "refreshToken",
       },
     },
   },
@@ -27,7 +31,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ["./src/routes/*.js"], // JSDoc 주석이 작성된 파일 경로
+  apis: ["./src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
