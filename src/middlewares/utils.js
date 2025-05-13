@@ -7,18 +7,35 @@ export function generateAccessToken(user) {
     nickname: user.nickname,
   };
 
-  const secretKey = `${process.env.JWT_SECRET_KEY}`;
+  const accessSecret = `${process.env.JWT_SECRET_KEY}`;
 
-  if (!secretKey) {
-    console.error("JWT_SECRET_KEY가 .env 파일에 없거나 비어 있습니다.");
+  if (!accessSecret) {
+    console.error("SECRET_KEY가 .env 파일에 없습니다.");
     throw new Error("시크릿키를 확인하세요");
   }
 
-  const expiresIn = "1h";
+  const accessToken = jwt.sign(payload, accessSecret, { expiresIn: "1h" });
 
-  const token = jwt.sign(payload, secretKey, { expiresIn });
+  return accessToken;
+}
 
-  return token;
+export function generateRefreshToken(user) {
+  const payload = {
+    userId: user.id,
+    email: user.email,
+    nickname: user.nickname,
+  };
+
+  const refreshSecret = `${process.env.JWT_REFRESH_SECRET_KEY}`;
+
+  if (!refreshSecret) {
+    console.error("SECRET_KEY가 .env 파일에 없습니다.");
+    throw new Error("시크릿키를 확인하세요");
+  }
+
+  const refreshToken = jwt.sign(payload, refreshSecret, { expiresIn: "2w" });
+
+  return refreshToken;
 }
 
 export function authenticate(req, res, next) {

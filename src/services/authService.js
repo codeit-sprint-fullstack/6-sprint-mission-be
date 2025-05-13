@@ -5,14 +5,24 @@ async function create(user) {
   return await authRepository.save(user);
 }
 
-function createToken(user) {
+function createAccessToken(user) {
   const secretKey = `${process.env.JWT_SECRET_KEY}`;
 
   const payload = { userId: user.id };
-  const token = jwt.sign(payload, secretKey, {
+  const accessToken = jwt.sign(payload, secretKey, {
     expiresIn: "1h",
   });
-  return token;
+  return accessToken;
+}
+
+function createRefreshToken(user) {
+  const secretKey = `${process.env.JWT_REFRESH_SECRET_KEY}`;
+
+  const payload = { userId: user.id };
+  const refreshToken = jwt.sign(payload, secretKey, {
+    expiresIn: "1h",
+  });
+  return refreshToken;
 }
 
 async function getByEmail(user) {
@@ -21,6 +31,7 @@ async function getByEmail(user) {
 
 export default {
   create,
-  createToken,
+  createAccessToken,
+  createRefreshToken,
   getByEmail,
 };
