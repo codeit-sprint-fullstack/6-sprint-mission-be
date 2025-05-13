@@ -252,7 +252,7 @@ authRouter.post(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-authRouter.post("/logout", auth.verifyAccessToken, authController.logOut);
+authRouter.post("/logout", auth.verifyOptionalAuth, authController.logOut);
 
 /**
  * 인증 관련 에러를 처리하는 미들웨어

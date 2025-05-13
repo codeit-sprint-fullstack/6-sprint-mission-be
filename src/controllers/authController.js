@@ -1,6 +1,7 @@
 import authService from "../service/authService.js";
 import userService from "../service/userService.js";
 import { REFRESH_TOKEN_TTL_MS } from "../constants/token.js";
+import jwt from "jsonwebtoken";
 
 // 로그인
 const signIn = async (req, res, next) => {
@@ -31,19 +32,25 @@ const signIn = async (req, res, next) => {
 // 예: 사용자 정보를 req.user에 담아두는 미들웨어를 썼다고 가정
 const logOut = async (req, res, next) => {
   try {
-    const userId = req.auth?.userId;
+    let userId = req.auth?.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+      // accessToken 없으면 refreshToken에서 추출 시도
+      const token = req.cookies?.refreshToken;
+      console.log("token", token);
+      if (!token) {
+        return res.status(401).json({ message: "로그인 정보가 없습니다." });
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      userId = decoded.userId;
     }
 
-    // authService를 통해 로그아웃 처리
     await authService.logout(userId);
 
-    // ✅ 클라이언트의 HttpOnly refreshToken 쿠키 제거
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: true, // 배포 환경이면 true
+      secure: true,
       sameSite: "lax",
       path: "/",
     });

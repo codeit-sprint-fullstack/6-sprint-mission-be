@@ -12,9 +12,7 @@ Content-Type: application/json
 ### 로그아웃
 POST http://localhost:7777/auth/logOut
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrdTd2dm4wMDAwY3YzMXp0cDA4bTZzIiwiaWF0IjoxNzQ3MDk5MjQ3LCJleHAiOjE3NDcxMDAxNDd9.5pDiiivta7NIl2K0WoDwY5EqF2zsOtpUWqCXVYWZeWY
-
-
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrdTd2dm4wMDAwY3YzMXp0cDA4bTZzIiwiaWF0IjoxNzQ3MTAwNDU4LCJleHAiOjE3NDc5NjQ0NTh9.flJILERjaI84KfjgEXnP29klEMKkGc0QCn4Jxr1oRgc
 
 ### 회원가입
 POST http://localhost:7777/auth/signUp
