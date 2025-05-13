@@ -1,6 +1,6 @@
 ### 로그인
 
-POST http://localhost:3000/auth/signIn
+POST http://localhost:5050/auth/signIn
 Content-Type: application/json
 
 {

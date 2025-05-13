@@ -86,6 +86,6 @@ router.post("/signIn", authController.signIn);
  * token:
  * type: string
  */
-router.post("/refresh-token", authController.refreshToken);
+// router.post("/refresh-token", authController.refreshToken);
 
 module.exports = router;
