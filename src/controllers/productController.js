@@ -49,7 +49,12 @@ const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, tags } = req.body;
     const userId = req.auth.userId;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    // 여러 이미지 파일 처리
+    const imagePaths =
+      req.files && req.files.length > 0
+        ? req.files.map((file) => `/uploads/${file.filename}`)
+        : [];
 
     const product = await productService.createProduct({
       name,
@@ -57,7 +62,7 @@ const createProduct = async (req, res, next) => {
       price,
       tags,
       userId,
-      image: imagePath,
+      image: imagePaths,
     });
 
     res.status(201).json({
@@ -73,7 +78,12 @@ const createProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    // 여러 이미지 파일 처리
+    const imagePaths =
+      req.files && req.files.length > 0
+        ? req.files.map((file) => `/uploads/${file.filename}`)
+        : undefined;
 
     const existingProduct = await productService.getProductById(productId);
 
@@ -83,7 +93,7 @@ const updateProduct = async (req, res, next) => {
 
     const data = {
       ...req.body,
-      ...(imagePath && { image: imagePath }),
+      ...(imagePaths && { image: imagePaths }),
     };
 
     const updatedProduct = await productService.updateProduct(productId, data);

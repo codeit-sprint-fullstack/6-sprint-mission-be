@@ -107,9 +107,12 @@ productsRouter.get(
  *                 type: number
  *               description:
  *                 type: string
- *               image:
- *                 type: string
- *                 format: binary
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 최대 3개의 이미지 파일 (선택사항)
  *     responses:
  *       201:
  *         description: 상품 등록 성공
@@ -121,7 +124,7 @@ productsRouter.get(
 productsRouter.post(
   "/",
   auth.verifyAccessToken,
-  upload.single("image"),
+  upload.array("images", 3),
   validateProduct,
   productController.createProduct
 );
@@ -154,9 +157,12 @@ productsRouter.post(
  *                 type: number
  *               description:
  *                 type: string
- *               image:
- *                 type: string
- *                 format: binary
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 최대 3개의 이미지 파일 (선택사항)
  *     responses:
  *       200:
  *         description: 상품 수정 성공
@@ -170,7 +176,7 @@ productsRouter.post(
 productsRouter.patch(
   "/:id",
   auth.verifyAccessToken,
-  upload.single("image"),
+  upload.array("images", 3),
   validateProduct,
   productController.updateProduct
 );
