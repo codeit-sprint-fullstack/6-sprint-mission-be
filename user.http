@@ -4,13 +4,13 @@ POST http://localhost:5050/auth/signIn
 Content-Type: application/json
 
 {
-  "email":"friday123@email.com",
-  "password":"friday123"
+  "email":"test@test.com",
+  "password":"test123"
 }
 
 ### 회원가입
 
-POST http://localhost:3000/auth/signUp
+POST http://localhost:5050/auth/signUp
 Content-Type: application/json
 
 {

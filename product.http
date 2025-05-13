@@ -1,15 +1,14 @@
 ### 프로덕트 목록조회
 
-GET http://localhost:3000/products
+GET http://localhost:5050/products
 
 ### 프로덕트 조회
 
-GET http://localhost:3000/products/8
-
+GET http://localhost:5050/products/8
 
 ### 프로덕트 등록
 
-POST http://localhost:3000/products
+POST http://localhost:5050/products
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
 
@@ -20,13 +19,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 
 ### 프로덕트 삭제
 
-DELETE http://localhost:3000/products/7
+DELETE http://localhost:5050/products/7
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
 
 ### 프로덕트 수정
 
-PUT http://localhost:3000/products/8
+PUT http://localhost:5050/products/8
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
 

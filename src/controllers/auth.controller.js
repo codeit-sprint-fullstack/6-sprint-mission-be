@@ -29,8 +29,8 @@ exports.signIn = catchAsync(async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new ApiError(401, "Incorrect email or password");
   }
-  const token = generateToken(user.id);
-  res.send({ token });
+  const accessToken = generateToken(user.id);
+  res.send({ accessToken, user });
 });
 
 // refreshToken 기능은 제외 (더 복잡한 관리가 필요)
