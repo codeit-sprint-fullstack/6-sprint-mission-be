@@ -16,8 +16,8 @@ const signIn = async (req, res, next) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true, // 클라이언트 JS에서 접근 차단
-      sameSite: "Lax", // 🔧 개발환경용 (로컬 쿠키 전송 허용), 배포 시 "none"으로 변경
-      secure: false, // 🔧 개발환경용 (http에서도 쿠키 허용), 배포 시 true로 변경
+      sameSite: "none", // ✅ cross-site 쿠키 허용
+      secure: true, // ✅ HTTPS만 허용
       path: "/",
       maxAge: REFRESH_TOKEN_TTL_MS,
     });
@@ -47,8 +47,8 @@ const logOut = async (req, res, next) => {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      sameSite: "Lax", // 🔧 로컬에서만 사용 가능 (추후 배포 시 "none")
-      secure: false, // 🔧 배포 시 true
+      sameSite: "none", // ✅ cross-site 쿠키 허용
+      secure: true, // ✅ HTTPS만 허용
       path: "/",
     });
 
@@ -95,8 +95,8 @@ const refreshToken = async (req, res, next) => {
     if (newRefreshToken) {
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
-        sameSite: "Lax", // 🔧 로컬에서 쿠키 테스트 가능하도록 설정
-        secure: false, // 🔧 배포 시 반드시 true로 변경 필요
+        sameSite: "none", // ✅ cross-site 쿠키 허용
+        secure: true, // ✅ HTTPS만 허용
         path: "/",
         maxAge: REFRESH_TOKEN_TTL_MS,
       });

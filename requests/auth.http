@@ -31,4 +31,4 @@ Content-Type: application/json
 // 정확히는 쿠키의 maxAge와 토큰의 expiresIn의 간극에 따른 오류였음
 POST http://localhost:7777/auth/token/refresh
 Content-Type: application/json
-Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrdTd2dm4wMDAwY3YzMXp0cDA4bTZzIiwiaWF0IjoxNzQ3MDk4MTE1LCJleHAiOjE3NDc5NjIxMTV9.o0dvMr_sUaeZQeZlpVWISay5W33e_mBllXtFzsSwWx8
+Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrdTd2dm4wMDAwY3YzMXp0cDA4bTZzIiwiaWF0IjoxNzQ3MTAwNDU4LCJleHAiOjE3NDc5NjQ0NTh9.flJILERjaI84KfjgEXnP29klEMKkGc0QCn4Jxr1oRgc
