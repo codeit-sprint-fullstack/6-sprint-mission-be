@@ -4,6 +4,20 @@ import auth from "../middlewares/auth.js";
 
 const userController = express.Router();
 
+/** 
+ * 유저 확인
+ */
+userController.get("/me", auth.verifyAccessToken, async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const user = await userService.getMe(userId);
+
+    res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /**
  * 회원가입
  */

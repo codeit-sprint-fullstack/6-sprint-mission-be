@@ -30,6 +30,20 @@ async function verifyPassword(inputPassword, hashedPassword) {
 }
 
 /**
+ * 유저 확인
+ */
+async function getMe(userId) {
+  const user = await userRepository.findById(userId);
+  if (!user) {
+    const error = new Error("사용자를 찾을 수 없습니다.");
+    error.code = 404;
+    throw error;
+  }
+
+  return filterSensitiveUserData(user);
+}
+
+/**
  * 회원가입
  */
 async function createUser(user) {
@@ -119,6 +133,7 @@ async function refreshToken(userId, refreshToken) {
 export default {
   createUser,
   getUser,
+  getMe,
   createToken,
   updateUser,
   refreshToken,
