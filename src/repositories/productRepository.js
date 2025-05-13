@@ -12,7 +12,7 @@ async function save(data, ownerId) {
 
 async function findById(productId, userId) {
   return await prisma.$transaction([
-    prisma.favorite.findUnique({
+    prisma.productFavorite.findUnique({
       where: { userId_productId: { userId, productId } },
     }),
     prisma.product.findUnique({
@@ -42,14 +42,14 @@ async function remove(productId) {
 }
 
 async function findLike(productId, userId) {
-  return prisma.favorite.findUnique({
+  return prisma.productFavorite.findUnique({
     where: { userId_productId: { userId, productId } },
   });
 }
 
 async function createLike(productId, userId) {
   const [, product] = await prisma.$transaction([
-    prisma.favorite.create({
+    prisma.productFavorite.create({
       data: { userId, productId },
     }),
     prisma.product.update({
@@ -62,7 +62,7 @@ async function createLike(productId, userId) {
 
 async function deleteLike(productId, userId) {
   const [, product] = await prisma.$transaction([
-    prisma.favorite.delete({
+    prisma.productFavorite.delete({
       where: { userId_productId: { userId, productId } },
     }),
     prisma.product.update({

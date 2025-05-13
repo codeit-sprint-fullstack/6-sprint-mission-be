@@ -3,9 +3,10 @@ POST http://localhost:5050/auth/signUp
 Content-Type: application/json
 
 {
-  "email": "test3@test.com",
-  "nickname": "test3",
-  "password": "test"
+  "email": "test1@test.com",
+  "nickname": "test1",
+  "password": "testtest",
+  "passwordConfirmation": "testtest"
 }
 
 
@@ -14,10 +15,23 @@ POST http://localhost:5050/auth/signIn
 Content-Type: application/json
 
 {
+  "email": "test@test.com",
+  "password": "testtest"
+}
+
+### 로그인2
+POST http://localhost:5050/auth/signIn
+Content-Type: application/json
+
+{
   "email": "test1@test.com",
-  "password": "test"
+  "password": "testtest"
 }
 
 ### 토큰 갱신
 POST http://localhost:5050/auth/refresh-token
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc0OTgzNiwiZXhwIjoxNzQ3OTU5NDM2fQ.y2XpB0hE1o1sDFaik1MEIHeatOUylAEHpXGaWCApCVw
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
+
+### 유저 정보 가져오기
+GET http://localhost:5050/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA1MTk4NCwiZXhwIjoxNzQ3MDU1NTg0fQ.igu4onWJD8seDHqBODpF9b5hp72UAcbdqjNp-DVvZCg

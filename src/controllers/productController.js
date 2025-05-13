@@ -1,3 +1,4 @@
+import { PRODUCT_NOT_FOUND } from "../constant.js";
 import { NotFoundError } from "../exceptions.js";
 import productService from "../services/productService.js";
 
@@ -39,15 +40,18 @@ export async function getProduct(req, res, next) {
   try {
     const productId = Number(req.params.productId);
     const userId = req.auth.userId;
-    const product = await productService.getProduct(productId, userId);
-    if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
-
-    const { owner, ...rest } = product[1];
-
+    const [favorite, product] = await productService.getProduct(
+      productId,
+      userId
+    );
+    if (!product) {
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
+    }
+    const { owner, ...rest } = product;
     res.json({
       ...rest,
       ownerNickname: owner.nickname,
-      isFavorite: !!product[0],
+      isFavorite: !!favorite,
     });
   } catch (e) {
     next(e);
@@ -60,14 +64,8 @@ export async function getProduct(req, res, next) {
 export async function updateProduct(req, res, next) {
   try {
     const productId = Number(req.params.productId);
-    const { name, description, price, tags } = req.body;
-    const product = await productService.updateProduct(productId, {
-      name,
-      description,
-      price,
-      tags,
-    });
-    if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
+    const data = req.body;
+    const product = await productService.updateProduct(productId, data);
     res.json(product);
   } catch (e) {
     next(e);
@@ -80,7 +78,6 @@ export async function updateProduct(req, res, next) {
 export async function deleteProduct(req, res, next) {
   try {
     const productId = Number(req.params.productId);
-    if (isNaN(productId)) throw new Error("상품 ID는 숫자여야 합니다.");
     await productService.deleteProduct(productId);
     res.json({ id: productId });
   } catch (e) {
@@ -96,7 +93,6 @@ export async function likeProduct(req, res, next) {
     const productId = +req.params.productId;
     const userId = req.auth.userId;
     const product = await productService.likeProduct(productId, userId);
-    if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
     res.json({ ...product, isFavorite: true });
   } catch (e) {
     next(e);
@@ -111,7 +107,6 @@ export async function unlikeProduct(req, res, next) {
     const productId = +req.params.productId;
     const userId = req.auth.userId;
     const product = await productService.unlikeProduct(productId, userId);
-    if (!product) throw new NotFoundError("상품을 찾을 수 없습니다.");
     res.json({ ...product, isFavorite: false });
   } catch (e) {
     next(e);

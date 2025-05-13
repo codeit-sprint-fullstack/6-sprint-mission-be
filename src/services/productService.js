@@ -1,4 +1,5 @@
-import { BadRequestError } from "../exceptions.js";
+import { PRODUCT_NOT_FOUND } from "../constant.js";
+import { BadRequestError, NotFoundError } from "../exceptions.js";
 import productRepository from "../repositories/productRepository.js";
 
 async function getProducts({
@@ -35,27 +36,55 @@ async function getProduct(productId, userId) {
 }
 
 async function updateProduct(productId, data) {
-  return productRepository.update(productId, data);
+  try {
+    return await productRepository.update(productId, data);
+  } catch (e) {
+    if (e.code === "P2025") {
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
+    }
+    throw e;
+  }
 }
 
 async function deleteProduct(productId) {
-  return productRepository.remove(productId);
+  try {
+    return await productRepository.remove(productId);
+  } catch (e) {
+    if (e.code === "P2025") {
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
+    }
+    throw e;
+  }
 }
 
 async function likeProduct(productId, userId) {
-  const alreadyLike = await productRepository.findLike(productId, userId);
-  if (alreadyLike) {
-    throw new BadRequestError("이미 찜한 상품입니다.");
+  try {
+    const alreadyLike = await productRepository.findLike(productId, userId);
+    if (alreadyLike) {
+      throw new BadRequestError("이미 찜한 상품입니다.");
+    }
+    return await productRepository.createLike(productId, userId);
+  } catch (e) {
+    if (e.code === "P2003") {
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
+    }
+    throw e;
   }
-  return productRepository.createLike(productId, userId);
 }
 
 async function unlikeProduct(productId, userId) {
-  const alreadyLike = await productRepository.findLike(productId, userId);
-  if (!alreadyLike) {
-    throw new BadRequestError("찜하지 않은 상품입니다.");
+  try {
+    const alreadyLike = await productRepository.findLike(productId, userId);
+    if (!alreadyLike) {
+      throw new BadRequestError("찜하지 않은 상품입니다.");
+    }
+    return await productRepository.deleteLike(productId, userId);
+  } catch (e) {
+    if (e.code === "P2003") {
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
+    }
+    throw e;
   }
-  return productRepository.deleteLike(productId, userId);
 }
 
 export default {

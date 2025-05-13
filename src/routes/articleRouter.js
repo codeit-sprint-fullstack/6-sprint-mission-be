@@ -1,20 +1,38 @@
 import express from "express";
-import commentRouter from "./commentRouter.js";
 import {
   createArticle,
   deleteArticle,
   getArticle,
   getArticles,
+  likeArticle,
+  unlikeArticle,
   updateArticle,
 } from "../controllers/articleController.js";
+import auth from "../middlewares/auth.js";
+import commentRouter from "./commentRouter.js";
+import { articleValidator, validate } from "../middlewares/validator.js";
 
 const articleRouter = express.Router();
 
-articleRouter.post("/articles", createArticle);
-articleRouter.get("/articles", getArticles);
-articleRouter.get("/articles/:articleId", getArticle);
-articleRouter.patch("/articles/:articleId", updateArticle);
-articleRouter.delete("/articles/:articleId", deleteArticle);
+articleRouter.get("/", getArticles);
+articleRouter.post(
+  "/",
+  auth.verifyAccessToken,
+  articleValidator,
+  validate,
+  createArticle
+);
+articleRouter.get("/:articleId", auth.verifyAccessToken, getArticle);
+articleRouter.patch(
+  "/:articleId",
+  auth.verifyAccessToken,
+  articleValidator,
+  validate,
+  updateArticle
+);
+articleRouter.delete("/:articleId", auth.verifyAccessToken, deleteArticle);
+articleRouter.post("/:articleId/like", auth.verifyAccessToken, likeArticle);
+articleRouter.delete("/:articleId/like", auth.verifyAccessToken, unlikeArticle);
 articleRouter.use("/:articleId/comments", commentRouter);
 
 export default articleRouter;

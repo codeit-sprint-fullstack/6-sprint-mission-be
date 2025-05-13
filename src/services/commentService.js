@@ -20,7 +20,6 @@ async function updateComment(commentId, data) {
     return await commentRepository.update(commentId, data);
   } catch (e) {
     if (e.code === "P2025") {
-      // Record not found 에러
       throw new NotFoundError("댓글을 찾을 수 없습니다.");
     }
     throw e;

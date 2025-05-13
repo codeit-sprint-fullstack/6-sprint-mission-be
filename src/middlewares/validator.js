@@ -12,7 +12,9 @@ export function validate(req, res, next) {
         value: err.value,
       };
     });
-    return next(new BadRequestError("Validation Failed", validationErrors));
+    const errorMsg = errors.array()[0]?.msg || "Validation Failed";
+
+    return next(new BadRequestError(errorMsg, validationErrors));
   }
 
   next();
@@ -56,17 +58,21 @@ export const productValidator = [
     .notEmpty()
     .withMessage("상품명을 입력해주세요.")
     .isLength({ max: 10 })
-    .withMessage("10자 이내로 입력해주세요."),
+    .withMessage("상품명을 10자 이내로 입력해주세요."),
   body("description")
-    .notEmpty()
-    .withMessage("설명을 입력해주세요.")
     .isLength({ min: 10 })
-    .withMessage("10자 이상 입력해주세요."),
+    .withMessage("설명을 10자 이상 입력해주세요."),
   body("price")
-    .notEmpty()
-    .withMessage("가격을 입력해주세요.")
     .isInt({ min: 0 })
-    .withMessage("0 이상 숫자로 입력해주세요."),
+    .withMessage("가격을 0 이상 숫자로 입력해주세요."),
+];
+
+// 게시글 등록 및 수정 유효성 검사
+export const articleValidator = [
+  body("title").notEmpty().withMessage("게시글 제목을 작성해주세요."),
+  body("content")
+    .isLength({ min: 10 })
+    .withMessage("게시글 내용을 10자 이상 작성해주세요."),
 ];
 
 // 댓글 등록 및 수정 유효성 검사

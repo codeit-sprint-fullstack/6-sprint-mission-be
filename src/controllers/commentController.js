@@ -87,7 +87,6 @@ export async function deleteComment(req, res, next) {
   try {
     const userId = req.auth.userId;
     const commentId = Number(req.params.commentId);
-    if (isNaN(commentId)) throw new Error("댓글 ID는 숫자여야 합니다.");
     const comment = await commentService.deleteComment(commentId);
     if (userId !== comment.writerId) {
       throw new ForbiddenError("댓글 작성자만 삭제할 수 있습니다.");

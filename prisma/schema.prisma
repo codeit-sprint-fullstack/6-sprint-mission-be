@@ -8,32 +8,33 @@ datasource db {
 }
 
 model Article {
-  id             Int       @id @default(autoincrement())
-  title          String
-  content        String
-  images         String[]
-  likeCount      Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  writedId       Int
-  articleComment Comment[]
-  writer         User      @relation(fields: [writedId], references: [id], onDelete: Cascade)
+  id               Int               @id @default(autoincrement())
+  title            String
+  content          String
+  images           String[]
+  likeCount        Int               @default(0)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  writerId         Int
+  articleComment   Comment[]
+  writer           User              @relation(fields: [writerId], references: [id], onDelete: Cascade)
+  articleFavorites ArticleFavorite[]
 }
 
 model Product {
-  id             Int        @id @default(autoincrement())
-  name           String
-  description    String
-  price          Int
-  tags           String[]
-  images         String[]
-  ownerId        Int
-  favoriteCount  Int        @default(0)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  productComment Comment[]
-  owner          User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  favorites      Favorite[]
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String
+  price           Int
+  tags            String[]
+  images          String[]
+  ownerId         Int
+  favoriteCount   Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  productComment  Comment[]
+  owner           User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  productFavorits ProductFavorite[]
 }
 
 model Comment {
@@ -50,25 +51,35 @@ model Comment {
 }
 
 model User {
-  id             Int        @id @default(autoincrement())
-  email          String     @unique
-  nickname       String     @unique
-  image          String?
-  hashedPassword String
-  refreshToken   String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  articles       Article[]
-  products       Product[]
-  favorites      Favorite[]
-  comments       Comment[]
+  id               Int               @id @default(autoincrement())
+  email            String            @unique
+  nickname         String            @unique
+  image            String?
+  hashedPassword   String
+  refreshToken     String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  articles         Article[]
+  products         Product[]
+  comments         Comment[]
+  productFavorites ProductFavorite[]
+  articleFavorites ArticleFavorite[]
 }
 
-model Favorite {
-  userId    Int
-  productId Int
+model ProductFavorite {
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    Int
+  productId Int
 
   @@id([userId, productId])
+}
+
+model ArticleFavorite {
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    Int
+  articleId Int
+
+  @@id([userId, articleId])
 }
