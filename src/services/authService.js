@@ -3,39 +3,36 @@ import jwt from 'jsonwebtoken';
 import * as authRepository from '../repositories/authRepository.js';
 import { HttpError } from '../middlewares/HttpError.js';
 import bcrypt from 'bcrypt';
-
 export const signUp = async (data) => {
-    const entity = await authRepository.save(data);
     if (data.password !== data.passwordConfirmation) {
-        throw HttpError(401, '비밀번호가 일치하지 않습니다.');
+        throw new HttpError(401, '비밀번호가 일치하지 않습니다.');
     }
-    const user = await authRepository.findByEmail(data.email);
-    if (user) {
+
+    const existingUser = await authRepository.findByEmail(data.email);
+    if (existingUser) {
         throw new HttpError(409, '이미 가입된 이메일 입니다.');
     }
 
+    const entity = await authRepository.save(data); // ✅ 검증 통과 후 저장
+
     const accessToken = jwt.sign(
         {
-            userId: user.id,
-            userEmail: user.email,
-            userNickname: user.nickname,
+            userId: entity.id,
+            userEmail: entity.email,
+            userNickname: entity.nickname,
         },
         process.env.ACCESS_TOKEN_SECRET,
-        {
-            expiresIn: '1h',
-        },
+        { expiresIn: '1h' },
     );
 
     const refreshToken = jwt.sign(
         {
-            userId: user.id,
-            userEmail: user.email,
-            userNickname: user.nickname,
+            userId: entity.id,
+            userEmail: entity.email,
+            userNickname: entity.nickname,
         },
         process.env.REFRESH_TOKEN_SECRET,
-        {
-            expiresIn: '7d',
-        },
+        { expiresIn: '7d' },
     );
 
     await authRepository.update(entity.id, { token: refreshToken });
