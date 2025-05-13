@@ -1,4 +1,3 @@
-import favoriteRepository from "../repositories/favoriteRepository.js";
 import productRepository from "../repositories/productRepository.js";
 
 async function create(product) {
@@ -8,11 +7,7 @@ async function create(product) {
 async function getById(productId, userId) {
   const product = await productRepository.getById(productId, userId);
 
-  const isLiked = await favoriteRepository.isProductLikedByUser(
-    userId,
-    productId
-  );
-  return { ...product, isLiked };
+  return product;
 }
 
 async function getAll(options) {

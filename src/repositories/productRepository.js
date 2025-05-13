@@ -43,13 +43,19 @@ async function getById(productId, userId) {
     where: { id: productId },
     include: {
       favorites: {
-        where: { userId },
-        select: { id: true },
+        select: { id: true, userId: true },
       },
     },
   });
 
-  return { ...product, isLiked: product.favorites.length > 0 };
+  const favoriteCounts = product.favorites.length;
+  const isLiked = product.favorites.some((fav) => fav.userId === userId);
+
+  return {
+    ...product,
+    favoriteCounts,
+    isLiked,
+  };
 }
 
 async function getAll(options) {

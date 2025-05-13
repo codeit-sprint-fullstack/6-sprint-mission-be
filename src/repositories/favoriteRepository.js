@@ -2,7 +2,7 @@ import prisma from "../config/client.prisma.js";
 
 async function addFavorite(productId, userId) {
   return await prisma.$transaction(async (tx) => {
-    const user = await tx.user.findUnique({ where: { id: Number(userId) } });
+    const user = await tx.user.findUnique({ where: { id: userId } });
     const product = await tx.product.findUnique({ where: { id: productId } });
 
     if (!user || !product) {

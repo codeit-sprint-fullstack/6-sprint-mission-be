@@ -3,7 +3,7 @@ import productService from "../services/productService.js";
 import varify from "../middlewares/varify.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/images.js";
-import utils from "../middlewares/utils.js";
+import { authenticate } from "../middlewares/utils.js";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -106,7 +106,7 @@ productController
   });
 
 //상품 상세 조회
-productController.get("/:id", utils.authenticate, async (req, res, next) => {
+productController.get("/:id", authenticate, async (req, res, next) => {
   const id = Number(req.params.id);
   const userId = req.user?.id;
 

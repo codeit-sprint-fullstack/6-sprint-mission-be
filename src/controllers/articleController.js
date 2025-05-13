@@ -1,8 +1,8 @@
 import express from "express";
 import auth from "../middlewares/auth.js";
 import articleService from "../services/articleService.js";
-import utils from "../middlewares/utils.js";
 import varify from "../middlewares/varify.js";
+import { authenticate } from "../middlewares/utils.js";
 
 const articleController = express.Router();
 const articleCommentController = express.Router();
@@ -32,7 +32,7 @@ articleController
 
 articleController
   .route("/:id")
-  .get(utils.authenticate, async (req, res, next) => {
+  .get(authenticate, async (req, res, next) => {
     const userId = Number(req.user?.id);
     const articleId = Number(req.params.id);
 
