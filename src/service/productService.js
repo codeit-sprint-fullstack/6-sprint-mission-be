@@ -100,7 +100,7 @@ async function updateProduct(id, data) {
 }
 
 async function deleteProduct(id) {
-  return productRepository.remove(Number(id));
+  return productRepository.remove(id);
 }
 
 export default {
