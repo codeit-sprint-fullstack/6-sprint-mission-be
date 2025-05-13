@@ -4,6 +4,38 @@ import express from "express";
 
 const userController = express.Router();
 
+/**
+ * @swagger
+ * /users/signup:
+ *   post:
+ *     summary: 회원가입
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - nickname
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               nickname:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *                 format: password
+ *               image:
+ *                 type: string
+ *                 description: 프로필 이미지 URL
+ *     responses:
+ *       201:
+ *         description: 회원가입 성공
+ */
 userController.post("/signup", async (req, res, next) => {
   try {
     const { email, nickname, password, image } = req.body;
@@ -24,6 +56,43 @@ userController.post("/signup", async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: 로그인
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *     responses:
+ *       200:
+ *         description: 로그인 성공 및 토큰 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ */
 userController.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -33,7 +102,6 @@ userController.post("/login", async (req, res, next) => {
       throw error;
     }
     const user = await userService.getUser(email, password);
-
     const accessToken = userService.createToken(user);
     const refreshToken = userService.createToken(user, "refresh");
     res.json({ accessToken, refreshToken, user });
@@ -42,6 +110,25 @@ userController.post("/login", async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /users/refresh-token:
+ *   post:
+ *     summary: 액세스 토큰 재발급
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 새로운 accessToken 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ */
 userController.post(
   "/refresh-token",
   auth.verifyRefreshToken,
@@ -53,6 +140,7 @@ userController.post(
         error.code = 422;
         throw error;
       }
+      const userId = req.auth.userId;
       const { newAccessToken } = await userService.refreshToken(
         userId,
         refreshToken
@@ -64,6 +152,22 @@ userController.post(
   }
 );
 
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: 내 정보 조회
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 사용자 정보 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
 userController.get("/me", auth.verifyAccessToken, async (req, res, next) => {
   try {
     const user = await userService.getUserById(req.auth.userId);

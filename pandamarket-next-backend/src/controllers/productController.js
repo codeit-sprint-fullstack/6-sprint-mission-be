@@ -6,6 +6,27 @@ import uploads from "../middlewares/multer.js";
 
 const productController = express.Router();
 
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: 상품 목록 조회
+ *     tags: [Product]
+ *     parameters:
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: 검색 키워드
+ *       - in: query
+ *         name: orderBy
+ *         schema:
+ *           type: string
+ *         description: 정렬 기준
+ *     responses:
+ *       200:
+ *         description: 상품 목록 반환
+ */
 productController.get("/", async (req, res, next) => {
   try {
     const { keyword, orderBy } = req.query;
@@ -16,16 +37,72 @@ productController.get("/", async (req, res, next) => {
   }
 });
 
-productController.get("/:id", async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    const products = await productService.getById(id);
-    res.status(200).json(products);
-  } catch (error) {
-    next(error);
+/**
+ * @swagger
+ * /products/{id}:
+ *   get:
+ *     summary: 상품 상세 조회
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 상품 ID
+ *     responses:
+ *       200:
+ *         description: 상품 정보 반환
+ */
+productController.get(
+  "/:id",
+  auth.verifyAccessToken,
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const userId = req.auth.userId;
+      const products = await productService.getById(id, userId);
+      res.status(200).json(products);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
+/**
+ * @swagger
+ * /products:
+ *   post:
+ *     summary: 상품 등록
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: 상품 생성됨
+ */
 productController.post(
   "/",
   uploads.single("image"),
@@ -61,6 +138,44 @@ productController.post(
   }
 );
 
+/**
+ * @swagger
+ * /products/{id}:
+ *   patch:
+ *     summary: 상품 수정
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 상품 ID
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: 상품 수정 완료
+ */
 productController.patch(
   "/:id",
   auth.verifyAccessToken,
@@ -104,6 +219,24 @@ productController.patch(
   }
 );
 
+/**
+ * @swagger
+ * /products/{id}:
+ *   delete:
+ *     summary: 상품 삭제
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: 상품 삭제 완료
+ */
 productController.delete(
   "/:id",
   auth.verifyAccessToken,
@@ -130,6 +263,33 @@ productController.delete(
   }
 );
 
+/**
+ * @swagger
+ * /products/{id}/comments:
+ *   post:
+ *     summary: 상품에 댓글 추가
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: 댓글 등록 완료
+ */
 productController.post(
   "/:id/comments",
   auth.verifyAccessToken,
@@ -151,6 +311,72 @@ productController.post(
         content
       );
       res.status(201).json(comment);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /products/{id}/favorite:
+ *   post:
+ *     summary: 상품 좋아요 추가
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: 좋아요 추가됨
+ */
+productController.post(
+  "/:id/favorite",
+  auth.verifyAccessToken,
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const userId = req.auth.userId;
+      const createdFavorite = await productService.postFavorite(id, userId);
+      return res.status(201).json(createdFavorite);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /products/{id}/favorite:
+ *   delete:
+ *     summary: 상품 좋아요 취소
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: 좋아요 취소됨
+ */
+productController.delete(
+  "/:id/favorite",
+  auth.verifyAccessToken,
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const userId = req.auth.userId;
+      const deletedFavorite = await productService.deleteFavorite(id, userId);
+      return res.status(201).json(deletedFavorite);
     } catch (error) {
       next(error);
     }

@@ -4,6 +4,45 @@ import express from "express";
 
 const commentController = express.Router();
 
+/**
+ * @swagger
+ * /comments/{id}:
+ *   patch:
+ *     summary: 댓글 수정
+ *     tags: [Comment]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: 수정할 댓글의 ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: 수정할 댓글 내용
+ *     responses:
+ *       201:
+ *         description: 댓글 수정 완료
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
+ *       401:
+ *         description: 권한 없음
+ *       422:
+ *         description: 댓글 존재하지 않음
+ */
 commentController.patch(
   "/:id",
   auth.verifyAccessToken,
@@ -32,6 +71,29 @@ commentController.patch(
   }
 );
 
+/**
+ * @swagger
+ * /comments/{id}:
+ *   delete:
+ *     summary: 댓글 삭제
+ *     tags: [Comment]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: 삭제할 댓글의 ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: 댓글 삭제 성공
+ *       401:
+ *         description: 권한 없음
+ *       422:
+ *         description: 댓글 존재하지 않음
+ */
 commentController.delete(
   "/:id",
   auth.verifyAccessToken,

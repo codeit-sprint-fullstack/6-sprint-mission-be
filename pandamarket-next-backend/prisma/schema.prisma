@@ -17,7 +17,7 @@ model Article {
   favoriteCount Int       @default(0)
   userId        String
   user          User      @relation("UserArticles", fields: [userId], references: [id])
-  favoriteUser  User[]    @relation("UserFavoriteArticles")
+  favoriteUsers User[]    @relation("UserFavoriteArticles")
   comments      Comment[]
 }
 
@@ -43,7 +43,7 @@ model Item {
   updatedAt     DateTime  @updatedAt
   tags          String[]
   favoriteCount Int       @default(0)
-  favoriteUser  User[]    @relation("UserFavoriteItems")
+  favoriteUsers User[]    @relation("UserFavoriteItems")
   userId        String
   user          User      @relation("UserItems", fields: [userId], references: [id])
   comments      Comment[]
@@ -58,8 +58,8 @@ model User {
   image             String
   refreshToken      String?
   updatedAt         DateTime  @updatedAt
-  favoriteItem      Item[]    @relation("UserFavoriteItems")
-  favoriteArticle   Article[] @relation("UserFavoriteArticles")
+  favoriteItems     Item[]    @relation("UserFavoriteItems")
+  favoriteArticles  Article[] @relation("UserFavoriteArticles")
   articles          Article[] @relation("UserArticles")
   items             Item[]    @relation("UserItems")
   comments          Comment[]

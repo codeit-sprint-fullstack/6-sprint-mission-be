@@ -9,8 +9,8 @@ async function createProduct(product) {
   }
 }
 
-async function getById(id) {
-  return await productRepository.getById(id);
+async function getById(id, userId) {
+  return await productRepository.getById(id, userId);
 }
 
 async function getProducts(keyword, orderBy) {
@@ -50,10 +50,30 @@ async function deleteProduct(id) {
   }
 }
 
+async function postFavorite(id, userId) {
+  try {
+    const createdFavorite = await productRepository.createFavorite(id, userId);
+    return createdFavorite;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deleteFavorite(id, userId) {
+  try {
+    const deletedFavorite = await productRepository.removeFavorite(id, userId);
+    return deletedFavorite;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default {
   createProduct,
   getById,
   deleteProduct,
   getProducts,
   patchProduct,
+  postFavorite,
+  deleteFavorite,
 };
