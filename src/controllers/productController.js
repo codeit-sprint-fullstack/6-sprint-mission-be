@@ -87,8 +87,10 @@ export const toggleLike = async (req, res, next) => {
         const productId = Number(req.params.productId);
 
         const result = await productService.toggleLike(productId, userId);
+
         res.status(200).json({
-            message: result.liked ? '좋아요 추가됨' : '좋아요 취소됨',
+            liked: result.liked, // 좋아요 여부
+            favoriteCount: result.favoriteCount, // 현재 좋아요 수
         });
     } catch (err) {
         next(err);
