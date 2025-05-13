@@ -19,4 +19,4 @@ Content-Type: application/json
 
 ### 액세스 토큰 재발급
 POST http://localhost:5050/token/refresh
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc0NzAzNzIwMSwiZXhwIjoxNzQ4MjQ2ODAxfQ._vweTgwi18ufIaoTyJZ3K1bEOAuazS33H3RpzIoXwXk
+Cookie: refreshToken={{Token}}

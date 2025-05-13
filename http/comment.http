@@ -1,7 +1,6 @@
 ### 자유게시글에 댓글 작성
 POST http://localhost:5050/comment/article/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
-Content-Type: application/json
+Authorization: Bearer {{Token}}
 
 {
   "content": "이 게시글 정말 유익하네요!"
@@ -9,7 +8,7 @@ Content-Type: application/json
 
 ### 상품에 댓글 작성
 POST http://localhost:5050/comment/product/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAzNzUwNSwiZXhwIjoxNzQ3MDQxMTA1fQ.njRhJpmGGPnY659_Su7vFLv-hXJYgP96yh95VTMjGmo
+Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
@@ -24,7 +23,7 @@ GET http://localhost:5050/comment/product/1
 
 ### 댓글 수정
 PUT http://localhost:5050/comment/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
+Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
@@ -33,5 +32,4 @@ Content-Type: application/json
 
 ### 댓글 삭제
 DELETE http://localhost:5050/comment/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAwOTg0NywiZXhwIjoxNzQ3MDEzNDQ3fQ.nanF7KooCNTT40NsFYYVavu92HinpP78QLDUv2WSijU
-
+Authorization: Bearer {{Token}}

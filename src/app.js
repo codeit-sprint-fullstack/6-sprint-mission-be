@@ -14,7 +14,12 @@ const app = express();
 
 dotenv.config();
 
-app.use(cors()); // CORS 허용 (프론트와 포트 다를 경우 필수)
+app.use(
+  cors({
+    origin: "http://localhost:3000", // 프론트엔드 주소
+    credentials: true, // 쿠키 전송 허용
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
