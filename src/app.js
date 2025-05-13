@@ -28,7 +28,7 @@ import { GetProductListRequestStruct } from './structs/product/GetProductListReq
 dotenv.config({ path: path.join(path.resolve(), '.env') });
 
 const app = express();
-app.use(cors());
+app.use(cors()); // allow all origins for dev
 app.use(express.json());
 app.use(
     '/api-docs',

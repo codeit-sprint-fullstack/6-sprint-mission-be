@@ -1,14 +1,10 @@
 import express from "express";
-import { signUpController } from "../controllers/auth.js";
-import { validateRequest } from "../middlewares/validation.js"; // Assuming you have a validation middleware
-import { CreateUserRequestStruct } from "../structs/user/CreateUserRequestStruct.js";
+import { loginController } from "../controllers/auth.js";
+import { validateRequest } from "../middlewares/validation.js";
+import { LoginRequestStruct } from "../structs/auth/LoginRequestStruct.js"; // You'll need to create this struct
 
 const router = express.Router();
 
-router.post(
-  "/signUp",
-  validateRequest(CreateUserRequestStruct),
-  signUpController
-);
+router.post("/login", validateRequest(LoginRequestStruct), loginController);
 
 export default router;
