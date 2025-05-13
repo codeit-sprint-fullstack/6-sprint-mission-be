@@ -70,7 +70,23 @@ export const updateMyPassword = async (id, data) => {
     };
 };
 
-//유저 프로덕트랑
-//유저 페이보릿은 프로덕트 api들 만들고 만들기
-export const getMyProduct = async (id) => {};
-export const getMyFavorites = async (id) => {};
+// 유저 게시글
+export const getMyArticle = async (id) => {
+    const user = await userRepository.userArticles(id);
+    if (!user) throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
+    return user.articles; // ✅ 수정됨
+};
+
+// 유저 프로덕트
+export const getMyProduct = async (id) => {
+    const user = await userRepository.userProduct(id);
+    if (!user) throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
+    return user.products; // ✅ 수정됨
+};
+
+// 유저 좋아요 목록
+export const getMyFavorites = async (id) => {
+    const user = await userRepository.userFavorites(id);
+    if (!user) throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
+    return user.myLikes; // ✅ 그대로 OK
+};

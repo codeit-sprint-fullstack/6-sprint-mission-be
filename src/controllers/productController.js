@@ -81,21 +81,15 @@ export const deleteProduct = async (req, res, next) => {
     }
 };
 
-export const likeProduct = async (req, res, next) => {
+export const toggleLike = async (req, res, next) => {
     try {
+        const userId = req.userId;
         const productId = Number(req.params.productId);
-        await productService.LikeAdd(productId);
-        res.status(200).json({ message: '좋아요 추가 완료' });
-    } catch (err) {
-        next(err);
-    }
-};
 
-export const unlikeProduct = async (req, res, next) => {
-    try {
-        const productId = Number(req.params.productId);
-        await productService.LikeDelete(productId);
-        res.status(200).json({ message: '좋아요 제거 완료' });
+        const result = await productService.toggleLike(productId, userId);
+        res.status(200).json({
+            message: result.liked ? '좋아요 추가됨' : '좋아요 취소됨',
+        });
     } catch (err) {
         next(err);
     }

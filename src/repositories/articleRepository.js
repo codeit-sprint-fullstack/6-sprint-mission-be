@@ -71,3 +71,51 @@ export const FindMany = async ({ cursor, take, orderBy, word }) => {
         },
     });
 };
+export const toggleLike = async (userId, articleId) => {
+    return prismaClient.$transaction(async (tx) => {
+        const existing = await tx.myLikes.findUnique({
+            where: {
+                userId_articleId: {
+                    userId,
+                    articleId,
+                },
+            },
+        });
+
+        if (existing) {
+            // 좋아요 취소
+            await tx.myLikes.delete({
+                where: {
+                    userId_articleId: {
+                        userId,
+                        articleId,
+                    },
+                },
+            });
+
+            await tx.article.update({
+                where: { id: articleId },
+                data: { likeCount: { decrement: 1 } },
+            });
+
+            return { liked: false };
+        } else {
+            // 좋아요 추가
+            await tx.myLikes.create({
+                data: {
+                    userId,
+                    articleId,
+                    type: 'article',
+                    tableId: articleId,
+                },
+            });
+
+            await tx.article.update({
+                where: { id: articleId },
+                data: { likeCount: { increment: 1 } },
+            });
+
+            return { liked: true };
+        }
+    });
+};

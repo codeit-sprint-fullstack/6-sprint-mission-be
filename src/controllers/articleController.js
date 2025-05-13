@@ -42,3 +42,12 @@ export const listComments = async (req, res) => {
     const comments = await articleService.listComments(Number(req.params.articleId), req.query);
     res.json(comments);
 };
+
+export const toggleLike = async (req, res) => {
+    const userId = req.userId;
+    const articleId = Number(req.params.articleId);
+    const result = await articleService.toggleLike(articleId, userId);
+    res.status(200).json({
+        message: result.liked ? '좋아요 추가됨' : '좋아요 취소됨',
+    });
+};

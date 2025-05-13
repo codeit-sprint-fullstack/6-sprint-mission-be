@@ -106,3 +106,7 @@ export const listComments = async (articleId, { cursor, take }) => {
         nextCursor: hasNext ? entities[entities.length - 1].id : null,
     };
 };
+export const toggleLike = async (articleId, userId) => {
+    const result = await articleRepository.toggleLike(userId, articleId);
+    return result;
+};

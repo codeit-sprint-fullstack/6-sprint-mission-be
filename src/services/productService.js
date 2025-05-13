@@ -63,7 +63,7 @@ export const createProduct = async (userId, userNickname, data) => {
         ownerNickname: entity.ownerNickname,
         createdAt: entity.createdAt,
     };
-};
+}; //
 export const updateProduct = async (id, userId, data) => {
     const entity = await productRepository.FindById(id);
     if (!entity) throw new HttpError(404, '상품이 존재하지 않습니다');
@@ -87,5 +87,7 @@ export const deleteProduct = async (id, userId) => {
     await productRepository.Delete(id);
 };
 
-export const LikeAdd = async (id) => {};
-export const LikeDelete = async (id) => {};
+export const toggleLike = async (productId, userId) => {
+    const result = await productRepository.toggleLike(userId, productId);
+    return result;
+};

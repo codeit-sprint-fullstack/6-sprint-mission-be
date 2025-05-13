@@ -26,3 +26,34 @@ export async function update(id, data) {
         data: data,
     });
 }
+
+// 유저가 등록한 상품 가져오기
+export const userProduct = async (id) => {
+    return prismaClient.user.findUnique({
+        where: { id },
+        include: { products: true },
+    });
+};
+
+// 유저가 등록한 게시글 가져오기
+export const userArticles = async (id) => {
+    return prismaClient.user.findUnique({
+        where: { id },
+        include: { articles: true },
+    });
+};
+
+// 유저 좋아요목록 가져오기
+export const userFavorites = async (id) => {
+    return prismaClient.user.findUnique({
+        where: { id },
+        include: {
+            myLikes: {
+                include: {
+                    product: true,
+                    article: true,
+                },
+            },
+        },
+    });
+};

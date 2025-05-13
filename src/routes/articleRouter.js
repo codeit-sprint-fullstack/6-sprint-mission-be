@@ -12,5 +12,6 @@ router.patch('/:articleId', authMiddleware, errorHandler(articleController.updat
 router.delete('/:articleId', authMiddleware, errorHandler(articleController.deleteArticle));
 router.post('/:articleId/comments', authMiddleware, errorHandler(articleController.createComment));
 router.get('/:articleId/comments', errorHandler(articleController.listComments));
+router.post('/:articleId/like', authMiddleware, errorHandler(articleController.toggleLike));
 
 export default router;

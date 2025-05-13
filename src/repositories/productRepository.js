@@ -77,7 +77,7 @@ export const Create = async (data) => {
     return prismaClient.product.create({ data });
 };
 
-// 상품 정보 수정하기
+// 상품 정보 수정하기/
 export const Update = async (id, data) => {
     return prismaClient.$transaction(async (tx) => {
         const exists = await tx.product.findUnique({ where: { id } });
@@ -111,6 +111,51 @@ export const Delete = async (id) => {
     });
 };
 
-export const LikeAdd = async (id) => {};
+export const toggleLike = async (userId, productId) => {
+    return prismaClient.$transaction(async (tx) => {
+        const existing = await tx.myLikes.findUnique({
+            where: {
+                userId_productId: {
+                    userId,
+                    productId,
+                },
+            },
+        });
 
-export const LikeDelete = async (id) => {};
+        if (existing) {
+            // 좋아요 취소
+            await tx.myLikes.delete({
+                where: {
+                    userId_productId: {
+                        userId,
+                        productId,
+                    },
+                },
+            });
+
+            await tx.product.update({
+                where: { id: productId },
+                data: { favoriteCount: { decrement: 1 } },
+            });
+
+            return { liked: false };
+        } else {
+            // 좋아요 추가
+            await tx.myLikes.create({
+                data: {
+                    userId,
+                    productId,
+                    type: 'product',
+                    tableId: productId,
+                },
+            });
+
+            await tx.product.update({
+                where: { id: productId },
+                data: { favoriteCount: { increment: 1 } },
+            });
+
+            return { liked: true };
+        }
+    });
+};

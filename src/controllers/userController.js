@@ -67,5 +67,34 @@ export const updateMyPassword = async (req, res, next) => {
         next(err);
     }
 };
-export const getMyProduct = async (req, res, next) => {};
-export const getMyFavorites = async (req, res, next) => {};
+export const getMyProduct = async (req, res, next) => {
+    try {
+        const userId = assertUserId(req);
+        const products = await userService.getMyProduct(userId);
+        res.status(200).json(products);
+    } catch (err) {
+        next(err);
+    }
+};
+
+// 내가 쓴 게시글 가져오기
+export const getMyArticle = async (req, res, next) => {
+    try {
+        const userId = assertUserId(req);
+        const articles = await userService.getMyArticle(userId);
+        res.status(200).json(articles);
+    } catch (err) {
+        next(err);
+    }
+};
+
+// 내가 누른 좋아요 목록 가져오기
+export const getMyFavorites = async (req, res, next) => {
+    try {
+        const userId = assertUserId(req);
+        const favorites = await userService.getMyFavorites(userId);
+        res.status(200).json(favorites);
+    } catch (err) {
+        next(err);
+    }
+};
