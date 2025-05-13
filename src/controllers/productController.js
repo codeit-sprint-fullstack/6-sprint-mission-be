@@ -50,6 +50,23 @@ const createProduct = async (req, res, next) => {
     const { name, description, price, tags } = req.body;
     const userId = req.auth.userId;
 
+    // tags 데이터 처리: 문자열로 전송된 경우 배열로 변환
+    let processedTags = tags;
+    if (typeof tags === "string") {
+      try {
+        // JSON 문자열로 전송된 경우 파싱
+        if (tags.startsWith("[") && tags.endsWith("]")) {
+          processedTags = JSON.parse(tags);
+        } else {
+          // 쉼표로 구분된 문자열인 경우
+          processedTags = tags.split(",").map((tag) => tag.trim());
+        }
+      } catch (e) {
+        // 파싱 실패 시 빈 배열로 설정
+        processedTags = [];
+      }
+    }
+
     // 여러 이미지 파일 처리
     const imagePaths =
       req.files && req.files.length > 0
@@ -60,7 +77,7 @@ const createProduct = async (req, res, next) => {
       name,
       description,
       price,
-      tags,
+      tags: processedTags || [],
       userId,
       image: imagePaths,
     });
@@ -78,12 +95,46 @@ const createProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
+    const { existingImages, tags, ...otherData } = req.body;
 
     // 여러 이미지 파일 처리
-    const imagePaths =
+    const newImagePaths =
       req.files && req.files.length > 0
         ? req.files.map((file) => `/uploads/${file.filename}`)
-        : undefined;
+        : [];
+
+    // 기존 이미지 처리: 문자열로 전송된 경우 배열로 변환
+    let existingImagePaths = [];
+    if (existingImages) {
+      try {
+        existingImagePaths =
+          typeof existingImages === "string"
+            ? JSON.parse(existingImages)
+            : existingImages;
+      } catch (e) {
+        existingImagePaths = [];
+      }
+    }
+
+    // 새 이미지와 기존 이미지 병합
+    const finalImagePaths = [...existingImagePaths, ...newImagePaths];
+
+    // tags 데이터 처리: 문자열로 전송된 경우 배열로 변환
+    let processedTags = tags;
+    if (typeof tags === "string") {
+      try {
+        // JSON 문자열로 전송된 경우 파싱
+        if (tags.startsWith("[") && tags.endsWith("]")) {
+          processedTags = JSON.parse(tags);
+        } else {
+          // 쉼표로 구분된 문자열인 경우
+          processedTags = tags.split(",").map((tag) => tag.trim());
+        }
+      } catch (e) {
+        // 파싱 실패 시 기존 태그 유지
+        processedTags = undefined;
+      }
+    }
 
     const existingProduct = await productService.getProductById(productId);
 
@@ -91,9 +142,11 @@ const updateProduct = async (req, res, next) => {
       return res.status(403).json({ message: "수정 권한이 없습니다." });
     }
 
+    // Prisma 모델에 맞는 데이터 구성
     const data = {
-      ...req.body,
-      ...(imagePaths && { image: imagePaths }),
+      ...otherData,
+      ...(processedTags !== undefined && { tags: processedTags }),
+      ...(finalImagePaths.length > 0 && { image: finalImagePaths }),
     };
 
     const updatedProduct = await productService.updateProduct(productId, data);
@@ -103,6 +156,7 @@ const updateProduct = async (req, res, next) => {
       data: updatedProduct,
     });
   } catch (err) {
+    console.error("Update error:", err);
     if (err.code === "P2025") {
       return res.status(404).json({
         message: "상품을 찾을 수 없습니다.",
