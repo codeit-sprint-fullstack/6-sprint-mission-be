@@ -8,6 +8,7 @@ async function save(product) {
       price: product.price,
       tags: product.tags,
       imageUrl: product.imageUrl,
+      authorId: product.authorId,
     },
   });
 }
@@ -101,10 +102,10 @@ async function getAll(options) {
   return products;
 }
 
-async function update(id, data) {
+async function update(productId, data) {
   const updatedProduct = await prisma.product.update({
     where: {
-      id: id,
+      id: productId,
     },
     data: {
       images: data.images,

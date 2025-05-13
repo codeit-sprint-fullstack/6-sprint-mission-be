@@ -23,17 +23,21 @@ model User {
   updatedAt         DateTime   @updatedAt
   comment           Comment[]
   Favorite          Favorite[]
+  Product           Product[]
 }
 
 model Product {
-  id              Int        @id @default(autoincrement())
-  name            String
-  description     String     @default("")
-  price           Int
-  tags            String[]   @default([])
-  imageUrl        String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @default("")
+  price       Int
+  tags        String[] @default([])
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author          User?      @relation(fields: [authorId], references: [id])
+  authorId        Int?
   ProductComments Comment[]
   favorites       Favorite[]
 }

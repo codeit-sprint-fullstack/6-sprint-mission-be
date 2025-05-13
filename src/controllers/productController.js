@@ -4,6 +4,7 @@ import varify from "../middlewares/varify.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/images.js";
 import { authenticate } from "../middlewares/utils.js";
+import jwt from "jsonwebtoken";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -49,6 +50,10 @@ productController
           }
         })();
 
+        const accessToken = req.headers.authorization?.split(" ")[1];
+        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
+        const userId = decoded.userId;
+
         const data = {
           name: req.body.name,
           description: req.body.description,
@@ -57,6 +62,7 @@ productController
           imageUrl: req.file
             ? `http://localhost:3000/uploads/${req.file.filename}`
             : null,
+          authorId: userId,
         };
 
         const createProduct = await productService.create(data);
@@ -128,7 +134,10 @@ productController
   .route("/:id")
   .all(auth.varifyAccessToken)
   .patch(async (req, res, next) => {
-    const id = parseInt(req.params.id, 10);
+    const id = Number(req.params.id);
+    const accessToken = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
+    const userId = decoded.userId;
     try {
       const updatedProduct = await productService.update(id, req.body);
 

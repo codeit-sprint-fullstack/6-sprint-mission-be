@@ -50,7 +50,7 @@ authController.post("/signIn", async (req, res, next) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: false, //개발 단계에서는 http를 사용중임
-      sameSite: "Lax",
+      sameSite: "None",
       maxAge: 14 * 24 * 60 * 60 * 1000,
       path: "/",
     });
@@ -85,7 +85,7 @@ authController.post("/refresh", (req, res, next) => {
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: false, //개발 환경은 http 사용중임
-      sameSite: "Lax",
+      sameSite: "None",
       maxAge: 14 * 24 * 60 * 60 * 1000,
       path: "/",
     });
@@ -101,12 +101,12 @@ authController.post("/logout", (req, res, next) => {
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: false, //개발 중에는 http 사용중
-      sameSite: "Lax",
+      sameSite: "None",
       path: "/",
     });
     return res.status(200).json({ message: "로그아웃 완료" });
   } catch (error) {
-    next(err);
+    next(error);
   }
 });
 
