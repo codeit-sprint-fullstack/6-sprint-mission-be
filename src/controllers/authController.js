@@ -15,10 +15,10 @@ const signIn = async (req, res, next) => {
     await userService.updateUser(user.id, { refreshToken });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      sameSite: "none",
+      httpOnly: true, // 클라이언트 JS에서 접근 차단
+      sameSite: "Lax", // 🔧 개발환경용 (로컬 쿠키 전송 허용), 배포 시 "none"으로 변경
+      secure: false, // 🔧 개발환경용 (http에서도 쿠키 허용), 배포 시 true로 변경
       path: "/",
-      secure: false,
       maxAge: REFRESH_TOKEN_TTL_MS,
     });
 
@@ -29,15 +29,12 @@ const signIn = async (req, res, next) => {
 };
 
 // 로그아웃
-// 예: 사용자 정보를 req.user에 담아두는 미들웨어를 썼다고 가정
 const logOut = async (req, res, next) => {
   try {
     let userId = req.auth?.userId;
 
     if (!userId) {
-      // accessToken 없으면 refreshToken에서 추출 시도
       const token = req.cookies?.refreshToken;
-      console.log("token", token);
       if (!token) {
         return res.status(401).json({ message: "로그인 정보가 없습니다." });
       }
@@ -50,8 +47,8 @@ const logOut = async (req, res, next) => {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: true,
-      sameSite: "lax",
+      sameSite: "Lax", // 🔧 로컬에서만 사용 가능 (추후 배포 시 "none")
+      secure: false, // 🔧 배포 시 true
       path: "/",
     });
 
@@ -62,7 +59,6 @@ const logOut = async (req, res, next) => {
 };
 
 // 회원가입
-// TODO: 회원가입시에 바로 로그인을 진행시킬까 말까
 const signUp = async (req, res, next) => {
   try {
     const { nickname, email, password } = req.body;
@@ -99,10 +95,10 @@ const refreshToken = async (req, res, next) => {
     if (newRefreshToken) {
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
-        sameSite: "none",
-        secure: false,
+        sameSite: "Lax", // 🔧 로컬에서 쿠키 테스트 가능하도록 설정
+        secure: false, // 🔧 배포 시 반드시 true로 변경 필요
         path: "/",
-        maxAge: 1000 * 60 * 60 * 24 * 14,
+        maxAge: REFRESH_TOKEN_TTL_MS,
       });
     }
 
