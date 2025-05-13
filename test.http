@@ -132,9 +132,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c
 ###
 
 ### 🟢 상품 댓글 생성 (인증 필요)
-POST http://localhost:5000/comments/products/40/comments
+POST http://localhost:5000/comments/products/58/comments
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDMwMjUwLCJleHAiOjE3NDcwMzM4NTB9.WhVGI391_H1JNXt91H0kBcC_fzYQnQTy-TapmBxROeo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDQwOTMzLCJleHAiOjE3NDcwNDQ1MzN9.bJpWKwqtL73CXh4u6oJ6ZSmmjUfHdwTSL7cHwxCG89A
 
 {
   "content": "곧 삭제할 댓글."
@@ -143,14 +143,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c
 ###
 
 ### 🔵 상품 댓글 목록 조회
-GET http://localhost:5000/comments/products/40/comments
+GET http://localhost:5000/comments/products/58/comments
 
 ###
 
 ### 🟡 상품 댓글 수정 (인증 필요)
 PATCH http://localhost:5000/comments/products/comments/96
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDMwMjUwLCJleHAiOjE3NDcwMzM4NTB9.WhVGI391_H1JNXt91H0kBcC_fzYQnQTy-TapmBxROeo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDQwOTMzLCJleHAiOjE3NDcwNDQ1MzN9.bJpWKwqtL73CXh4u6oJ6ZSmmjUfHdwTSL7cHwxCG89A
 
 {
   "content": "수정된 1111."

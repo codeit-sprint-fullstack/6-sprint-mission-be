@@ -5,28 +5,17 @@ import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
+// ✅ 게시글 댓글 목록 조회 (비인증)
+router.get('/articles/:id/comments', errorHandler(commentController.getArticleComments));
+
+// ✅ 상품 댓글 목록 조회 (비인증)
+router.get('/products/:id/comments', errorHandler(commentController.getProductComments));
+
 // ✅ 게시글 댓글 생성 (인증 필요)
 router.post(
     '/articles/:articleId/comments',
     authMiddleware,
     errorHandler(commentController.createArticleComment),
-);
-
-// ✅ 게시글 댓글 목록 조회 (비인증)
-router.get('/articles/:id/comments', errorHandler(commentController.getArticleComments));
-
-// ✅ 게시글 댓글 수정 (인증 필요)
-router.patch(
-    '/articles/comments/:commentId',
-    authMiddleware,
-    errorHandler(commentController.updateArticleComment),
-);
-
-// ✅ 게시글 댓글 삭제 (인증 필요)
-router.delete(
-    '/articles/comments/:commentId',
-    authMiddleware,
-    errorHandler(commentController.deleteArticleComment),
 );
 
 // ✅ 상품 댓글 생성 (인증 필요)
@@ -36,21 +25,14 @@ router.post(
     errorHandler(commentController.createProductComment),
 );
 
-// ✅ 상품 댓글 목록 조회 (비인증)
-router.get('/products/:id/comments', errorHandler(commentController.getProductComments));
+// ✅ 댓글 수정 (인증 필요)
+router.patch('/comments/:commentId', authMiddleware, errorHandler(commentController.updateComment));
 
-// ✅ 상품 댓글 수정 (인증 필요)
-router.patch(
-    '/products/comments/:commentId',
-    authMiddleware,
-    errorHandler(commentController.updateProductComment),
-);
-
-// ✅ 상품 댓글 삭제 (인증 필요)
+// ✅ 댓글 삭제 (인증 필요)
 router.delete(
-    '/products/comments/:commentId',
+    '/comments/:commentId',
     authMiddleware,
-    errorHandler(commentController.deleteProductComment),
+    errorHandler(commentController.deleteComment),
 );
 
 export default router;

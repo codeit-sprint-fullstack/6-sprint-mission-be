@@ -37,63 +37,28 @@ export const createProductComment = async (req, res, next) => {
     }
 };
 
-// 게시글 댓글 수정
-export const updateArticleComment = async (req, res, next) => {
+// 댓글 수정
+export const updateComment = async (req, res, next) => {
     try {
         const { commentId } = req.params;
         const { content } = req.body;
         const userId = req.userId;
 
-        const updated = await commentService.updateArticleComment(
-            Number(commentId),
-            userId,
-            content,
-        );
+        const updated = await commentService.updateComment(Number(commentId), userId, content);
         res.status(200).json(updated);
     } catch (err) {
         next(err);
     }
 };
 
-// 상품 댓글 수정
-export const updateProductComment = async (req, res, next) => {
-    try {
-        const { commentId } = req.params;
-        const { content } = req.body;
-        const userId = req.userId;
-
-        const updated = await commentService.updateProductComment(
-            Number(commentId),
-            userId,
-            content,
-        );
-        res.status(200).json(updated);
-    } catch (err) {
-        next(err);
-    }
-};
-
-// 게시글 댓글 삭제
-export const deleteArticleComment = async (req, res, next) => {
+// 댓글 삭제
+export const deleteComment = async (req, res, next) => {
     try {
         const { commentId } = req.params;
         const userId = req.userId;
 
-        const deleted = await commentService.deleteArticleComment(Number(commentId), userId);
-        res.status(200).json(deleted);
-    } catch (err) {
-        next(err);
-    }
-};
-
-// 상품 댓글 삭제
-export const deleteProductComment = async (req, res, next) => {
-    try {
-        const { commentId } = req.params;
-        const userId = req.userId;
-
-        const deleted = await commentService.deleteProductComment(Number(commentId), userId);
-        res.status(200).json(deleted);
+        await commentService.deleteComment(Number(commentId), userId);
+        res.sendStatus(204); // ✅ No Content, 응답 바디 없음
     } catch (err) {
         next(err);
     }

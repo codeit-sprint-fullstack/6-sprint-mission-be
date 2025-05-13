@@ -29,8 +29,8 @@ export async function createProductComment(userId, productId, content) {
     });
 }
 
-// 게시글 댓글 수정
-export async function updateArticleComment(commentId, userId, content) {
+// 댓글 수정
+export async function updateComment(commentId, userId, content) {
     const existing = await commentRepository.getById(commentId); // ✅ 수정
     if (existing.userId !== userId) {
         throw new HttpError(403, '댓글 수정 권한이 없습니다');
@@ -38,26 +38,8 @@ export async function updateArticleComment(commentId, userId, content) {
     return await commentRepository.Update(commentId, { content });
 }
 
-// 상품 댓글 수정
-export async function updateProductComment(commentId, userId, content) {
-    const existing = await commentRepository.getById(commentId); // ✅ 수정
-    if (existing.userId !== userId) {
-        throw new HttpError(403, '댓글 수정 권한이 없습니다');
-    }
-    return await commentRepository.Update(commentId, { content });
-}
-
-// 게시글 댓글 삭제
-export async function deleteArticleComment(commentId, userId) {
-    const existing = await commentRepository.getById(commentId);
-    if (existing.userId !== userId) {
-        throw new HttpError(403, '댓글 삭제 권한이 없습니다');
-    }
-    await commentRepository.Delete(commentId);
-}
-
-// 상품 댓글 삭제
-export async function deleteProductComment(commentId, userId) {
+// 댓글 삭제
+export async function deleteComment(commentId, userId) {
     const existing = await commentRepository.getById(commentId); // ✅ 여기 반드시 수정 필요
     if (existing.userId !== userId) {
         throw new HttpError(403, '댓글 삭제 권한이 없습니다');
