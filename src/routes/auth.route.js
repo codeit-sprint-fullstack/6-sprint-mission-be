@@ -217,6 +217,44 @@ authRouter.post(
 );
 
 /**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: 로그아웃
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 로그아웃 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 로그아웃 되었습니다.
+ *       401:
+ *         description: 인증되지 않은 사용자
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 인증되지 않은 사용자입니다.
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+authRouter.post("/logout", auth.verifyAccessToken, authController.logOut);
+
+/**
  * 인증 관련 에러를 처리하는 미들웨어
  * 이 미들웨어는 라우터의 맨 마지막에 위치하여 이전 핸들러에서 발생한 인증 관련 에러를 처리합니다.
  * next()로 전달된 에러가 code 속성이 401 또는 403인 경우 또는 name이 'UnauthorizedError'인 경우

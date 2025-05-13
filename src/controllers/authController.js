@@ -27,6 +27,33 @@ const signIn = async (req, res, next) => {
   }
 };
 
+// 로그아웃
+// 예: 사용자 정보를 req.user에 담아두는 미들웨어를 썼다고 가정
+const logOut = async (req, res, next) => {
+  try {
+    const userId = req.auth?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+    }
+
+    // authService를 통해 로그아웃 처리
+    await authService.logout(userId);
+
+    // ✅ 클라이언트의 HttpOnly refreshToken 쿠키 제거
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true, // 배포 환경이면 true
+      sameSite: "lax",
+      path: "/",
+    });
+
+    return res.status(200).json({ message: "로그아웃 되었습니다." });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // 회원가입
 // TODO: 회원가입시에 바로 로그인을 진행시킬까 말까
 const signUp = async (req, res, next) => {
@@ -82,4 +109,5 @@ export default {
   signIn,
   signUp,
   refreshToken,
+  logOut,
 };

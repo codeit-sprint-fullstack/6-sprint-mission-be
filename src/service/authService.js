@@ -121,6 +121,20 @@ async function changePassword(userId, currentPassword, newPassword) {
   }
 }
 
+// 로그아웃
+async function logout(userId) {
+  try {
+    // 사용자의 refreshToken을 null로 업데이트
+    await userRepository.update(userId, { refreshToken: null });
+    return true;
+  } catch (error) {
+    console.error("❌ 로그아웃 중 오류 발생:", error);
+    const customError = new Error("로그아웃 처리 중 오류가 발생했습니다");
+    customError.code = 500;
+    throw customError;
+  }
+}
+
 export default {
   signIn,
   createToken,
@@ -128,4 +142,5 @@ export default {
   changePassword,
   verifyPassword,
   filterSensitiveUserData,
+  logout,
 };
