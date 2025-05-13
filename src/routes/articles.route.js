@@ -191,9 +191,12 @@ articlesRouter.get(
  *               content:
  *                 type: string
  *                 example: 게시글 내용입니다.
- *               image:
- *                 type: string
- *                 format: binary
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 최대 3개의 이미지 파일을 업로드할 수 있습니다.
  *     responses:
  *       201:
  *         description: 게시글 생성 성공
@@ -215,7 +218,9 @@ articlesRouter.get(
  *                     content:
  *                       type: string
  *                     image:
- *                       type: string
+ *                       type: array
+ *                       items:
+ *                         type: string
  *                     likes:
  *                       type: integer
  *                     createdAt:
@@ -242,7 +247,7 @@ articlesRouter.get(
 articlesRouter.post(
   "/",
   auth.verifyAccessToken,
-  upload.single("image"),
+  upload.array("images", 3),
   articleController.createArticle
 );
 
@@ -274,9 +279,17 @@ articlesRouter.post(
  *               content:
  *                 type: string
  *                 example: 수정된 게시글 내용입니다.
- *               image:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: 최대 3개의 이미지 파일을 업로드할 수 있습니다.
+ *               existingImages:
  *                 type: string
- *                 format: binary
+ *                 format: json
+ *                 example: "['/uploads/image1.jpg', '/uploads/image2.jpg']"
+ *                 description: 유지할 기존 이미지 경로의 JSON 배열
  *     responses:
  *       200:
  *         description: 게시글 수정 성공
@@ -298,7 +311,9 @@ articlesRouter.post(
  *                     content:
  *                       type: string
  *                     image:
- *                       type: string
+ *                       type: array
+ *                       items:
+ *                         type: string
  *                     likes:
  *                       type: integer
  *                     createdAt:
@@ -327,7 +342,7 @@ articlesRouter.post(
 articlesRouter.patch(
   "/:articleId",
   auth.verifyAccessToken,
-  upload.single("image"),
+  upload.array("images", 3),
   articleController.updateArticle
 );
 

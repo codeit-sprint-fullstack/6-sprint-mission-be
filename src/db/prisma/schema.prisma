@@ -47,7 +47,7 @@ model Article {
   id          String        @id @default(cuid())
   title       String
   content     String
-  image       String?
+  image       String[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   // TODO: likesCount로 수정

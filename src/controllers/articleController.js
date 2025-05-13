@@ -43,13 +43,14 @@ const createArticle = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const userId = req.auth.userId;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const imagePaths =
+      req.files?.map((file) => `/uploads/${file.filename}`) || [];
 
     const article = await articleService.createArticle({
       title,
       content,
       userId,
-      image: imagePath,
+      image: imagePaths,
     });
     res
       .status(201)
@@ -63,13 +64,32 @@ const createArticle = async (req, res, next) => {
 const updateArticle = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
-    const { title, content } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const { title, content, existingImages } = req.body;
+
+    // 새 이미지 경로 처리
+    const newImagePaths =
+      req.files?.map((file) => `/uploads/${file.filename}`) || [];
+
+    // 기존 이미지 처리
+    let existingImagePaths = [];
+    if (existingImages) {
+      try {
+        existingImagePaths =
+          typeof existingImages === "string"
+            ? JSON.parse(existingImages)
+            : existingImages;
+      } catch (e) {
+        existingImagePaths = [];
+      }
+    }
+
+    // 최종 이미지 경로 배열
+    const finalImagePaths = [...existingImagePaths, ...newImagePaths];
 
     const data = {
       title,
       content,
-      ...(imagePath && { image: imagePath }),
+      ...(finalImagePaths.length > 0 && { image: finalImagePaths }),
     };
 
     const article = await articleService.updateArticle(articleId, data);
