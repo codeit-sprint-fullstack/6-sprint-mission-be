@@ -30,6 +30,7 @@ model Product {
   name        String
   description String
   price       Int
+  image       String?
   // TODO: likesCount로 수정
   likes       Int?
   createdAt   DateTime      @default(now())
@@ -46,6 +47,7 @@ model Article {
   id          String        @id @default(cuid())
   title       String
   content     String
+  image       String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   // TODO: likesCount로 수정

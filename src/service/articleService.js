@@ -18,6 +18,7 @@ async function getArticles({
       id: true,
       title: true,
       content: true,
+      image: true,
       likes: true,
       createdAt: true,
       updatedAt: true,
@@ -96,19 +97,20 @@ async function getArticleById(id, userId) {
 }
 
 // 새 게시글 작성
-async function createArticle({ title, content, userId }) {
+async function createArticle({ title, content, userId, image }) {
   return articleRepository.create({
     title,
     content,
     likes: 0,
     userId,
+    image,
   });
 }
 
 // 게시글 수정
-async function updateArticle(id, { title, content }) {
+async function updateArticle(id, { title, content, image }) {
   try {
-    return await articleRepository.update(id, { title, content });
+    return await articleRepository.update(id, { title, content, image });
   } catch (error) {
     if (error.code === "P2025") {
       const notFoundError = new Error("게시글을 찾을 수 없습니다.");

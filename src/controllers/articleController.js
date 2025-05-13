@@ -43,11 +43,13 @@ const createArticle = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const userId = req.auth.userId;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
 
     const article = await articleService.createArticle({
       title,
       content,
       userId,
+      image: imagePath,
     });
     res
       .status(201)
@@ -62,10 +64,15 @@ const updateArticle = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const { title, content } = req.body;
-    const article = await articleService.updateArticle(articleId, {
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    const data = {
       title,
       content,
-    });
+      ...(imagePath && { image: imagePath }),
+    };
+
+    const article = await articleService.updateArticle(articleId, data);
 
     res.status(200).json({
       message: "게시글이 성공적으로 수정되었습니다.",

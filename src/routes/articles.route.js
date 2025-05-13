@@ -1,8 +1,21 @@
 import express from "express";
+import multer from "multer";
 import articleController from "../controllers/articleController.js";
 import auth from "../middlewares/users/auth.js";
 
 const articlesRouter = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({ storage });
 
 /**
  * @swagger
@@ -165,7 +178,7 @@ articlesRouter.get(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -178,6 +191,9 @@ articlesRouter.get(
  *               content:
  *                 type: string
  *                 example: 게시글 내용입니다.
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: 게시글 생성 성공
@@ -197,6 +213,8 @@ articlesRouter.get(
  *                     title:
  *                       type: string
  *                     content:
+ *                       type: string
+ *                     image:
  *                       type: string
  *                     likes:
  *                       type: integer
@@ -224,6 +242,7 @@ articlesRouter.get(
 articlesRouter.post(
   "/",
   auth.verifyAccessToken,
+  upload.single("image"),
   articleController.createArticle
 );
 
@@ -245,7 +264,7 @@ articlesRouter.post(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -255,6 +274,9 @@ articlesRouter.post(
  *               content:
  *                 type: string
  *                 example: 수정된 게시글 내용입니다.
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: 게시글 수정 성공
@@ -274,6 +296,8 @@ articlesRouter.post(
  *                     title:
  *                       type: string
  *                     content:
+ *                       type: string
+ *                     image:
  *                       type: string
  *                     likes:
  *                       type: integer
@@ -303,6 +327,7 @@ articlesRouter.post(
 articlesRouter.patch(
   "/:articleId",
   auth.verifyAccessToken,
+  upload.single("image"),
   articleController.updateArticle
 );
 

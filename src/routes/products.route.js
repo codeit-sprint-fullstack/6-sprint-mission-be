@@ -1,10 +1,23 @@
 import express from "express";
+import multer from "multer";
 import productController from "../controllers/productController.js";
 import commentController from "../controllers/commentController.js";
 import { validateProduct } from "../middlewares/products/validateProduct.js";
 import auth from "../middlewares/users/auth.js";
 
 const productsRouter = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({ storage });
 
 /**
  * @swagger
@@ -80,7 +93,7 @@ productsRouter.get(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -94,6 +107,9 @@ productsRouter.get(
  *                 type: number
  *               description:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: 상품 등록 성공
@@ -105,6 +121,7 @@ productsRouter.get(
 productsRouter.post(
   "/",
   auth.verifyAccessToken,
+  upload.single("image"),
   validateProduct,
   productController.createProduct
 );
@@ -127,7 +144,7 @@ productsRouter.post(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -137,6 +154,9 @@ productsRouter.post(
  *                 type: number
  *               description:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: 상품 수정 성공
@@ -150,6 +170,7 @@ productsRouter.post(
 productsRouter.patch(
   "/:id",
   auth.verifyAccessToken,
+  upload.single("image"),
   validateProduct,
   productController.updateProduct
 );

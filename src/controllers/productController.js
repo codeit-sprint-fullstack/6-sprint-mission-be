@@ -49,6 +49,7 @@ const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, tags } = req.body;
     const userId = req.auth.userId;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
 
     const product = await productService.createProduct({
       name,
@@ -56,6 +57,7 @@ const createProduct = async (req, res, next) => {
       price,
       tags,
       userId,
+      image: imagePath,
     });
 
     res.status(201).json({
@@ -71,6 +73,7 @@ const createProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
 
     const existingProduct = await productService.getProductById(productId);
 
@@ -78,10 +81,12 @@ const updateProduct = async (req, res, next) => {
       return res.status(403).json({ message: "수정 권한이 없습니다." });
     }
 
-    const updatedProduct = await productService.updateProduct(
-      productId,
-      req.body
-    );
+    const data = {
+      ...req.body,
+      ...(imagePath && { image: imagePath }),
+    };
+
+    const updatedProduct = await productService.updateProduct(productId, data);
 
     res.status(200).json({
       message: "상품이 성공적으로 수정되었습니다.",

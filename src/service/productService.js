@@ -74,7 +74,14 @@ async function getProductById(productId, userId = null) {
   };
 }
 
-async function createProduct({ name, description, price, tags = [], userId }) {
+async function createProduct({
+  name,
+  description,
+  price,
+  tags = [],
+  userId,
+  image,
+}) {
   const productData = {
     name,
     description,
@@ -82,6 +89,7 @@ async function createProduct({ name, description, price, tags = [], userId }) {
     tags,
     likes: 0,
     userId,
+    image,
   };
 
   return productRepository.create(productData);
