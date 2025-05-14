@@ -16,8 +16,30 @@ const productRepository = {
     });
   },
 
-  findAllProducts: async () => {
+  findAllProducts: async (sort, search, skip, limit) => {
+    const orderBy = {};
+    if (sort === 'favorite') {
+      orderBy._count = { likes: 'desc' }; 
+    } else {
+      orderBy.createdAt = 'desc'; 
+    }
+
+    // NaN 방지 처리
+    if (isNaN(skip) || skip < 0) skip = 0;
+    if (isNaN(limit) || limit < 1) limit = 10;
+
+    const where = {};
+    if (search) {
+      where.OR = [
+        { name: { contains: search } },
+        { description: { contains: search } },
+        { user: { nickname: { contains: search } } },
+        { tags: { has: search } },
+      ];
+    }
+
     return prisma.product.findMany({
+      where,
       include: {
         user: {
           select: {
@@ -28,9 +50,9 @@ const productRepository = {
         likes: true,
         comments: true,
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy,
+      skip,
+      take: limit,
     });
   },
 

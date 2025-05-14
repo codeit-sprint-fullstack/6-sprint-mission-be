@@ -5,8 +5,10 @@ const productService = {
     return productRepository.createProduct(userId, name, description, price, tags, images);
   },
 
-  getProducts: async () => {
-    return productRepository.findAllProducts();
+  getProducts: async (sort, search, page, limit) => {
+    const skip = (page - 1) * limit;
+    const products = await productRepository.findAllProducts(sort, search, skip, limit);
+    return products;
   },
 
   getProductById: async (id) => {

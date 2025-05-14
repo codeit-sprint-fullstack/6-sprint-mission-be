@@ -5,8 +5,10 @@ const articleService = {
     return articleRepository.createArticle(userId, title, content, images);
   },
 
-  getArticles: async () => {
-    return articleRepository.findAllArticles();
+  getArticles: async (sort, search, page, limit) => {
+    const skip = (page - 1) * limit;
+    const articles = await articleRepository.findAllArticles(sort, search, skip, limit);
+    return articles;
   },
 
   getArticleById: async (id) => {

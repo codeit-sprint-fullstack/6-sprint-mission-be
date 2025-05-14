@@ -14,8 +14,29 @@ const articleRepository = {
     });
   },
 
-  findAllArticles: async () => {
+  findAllArticles: async (sort, search, skip, limit) => {
+    const orderBy = {};
+    if (sort === 'like') {
+      orderBy._count = { likes: 'desc' };
+    } else {
+      orderBy.createdAt = 'desc'; 
+    }
+
+    // NaN 방지 처리
+    if (isNaN(skip) || skip < 0) skip = 0;
+    if (isNaN(limit) || limit < 1) limit = 10;
+
+    const where = {};
+    if (search) {
+      where.OR = [
+        { title: { contains: search } },
+        { content: { contains: search } },
+        { user: { nickname: { contains: search } } },
+      ];
+    }
+
     return prisma.article.findMany({
+      where,
       include: {
         user: {
           select: {
@@ -26,11 +47,12 @@ const articleRepository = {
         likes: true,
         comments: true,
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy,
+      skip,
+      take: limit,
     });
   },
+
 
   findArticleById: async (id) => {
     return prisma.article.findUnique({

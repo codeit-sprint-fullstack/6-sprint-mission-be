@@ -14,7 +14,8 @@ const articleController = {
 
   getArticles: async (req, res, next) => {
     try {
-      const articles = await articleService.getArticles();
+      const { page = 1, pageSize: limit = 10, orderBy: sort = 'recent', keyword: search } = req.query;
+      const articles = await articleService.getArticles(sort, search, parseInt(page), parseInt(limit));
       return res.status(200).json(articles);
     } catch (error) {
       next(error);

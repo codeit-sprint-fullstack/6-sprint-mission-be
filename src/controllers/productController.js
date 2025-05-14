@@ -14,7 +14,8 @@ const productController = {
 
   getProducts: async (req, res, next) => {
     try {
-      const products = await productService.getProducts();
+      const { page = 1, pageSize: limit = 10, orderBy: sort = 'recent', keyword: search } = req.query;
+      const products = await productService.getProducts(sort, search, parseInt(page), parseInt(limit));
       return res.status(200).json(products);
     } catch (error) {
       next(error);
