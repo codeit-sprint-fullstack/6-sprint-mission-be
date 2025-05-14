@@ -96,3 +96,16 @@ export const toggleLike = async (req, res, next) => {
         next(err);
     }
 };
+
+export const uploadProductImages = async (req, res, next) => {
+    try {
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: '이미지가 없습니다' });
+        }
+
+        const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+        res.status(200).json({ imageUrls });
+    } catch (err) {
+        next(err);
+    }
+};

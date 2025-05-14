@@ -1,8 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-
-import { authMiddleware } from './middlewares/authMiddleware.js';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
@@ -11,11 +10,16 @@ import commentRouter from './routes/commentRouter.js';
 
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // 글로벌 미들웨어 등록
 const allowedOrigins = [
     'http://localhost:3000', // 개발 환경
     'https://your-frontend.com', // 배포 환경
 ];
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use(
     cors({

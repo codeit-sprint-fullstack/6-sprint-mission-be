@@ -2,6 +2,7 @@ import express from 'express';
 import * as productController from '../controllers/productController.js';
 import { errorHandler } from '../middlewares/errorHandler.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
+import upload from '../middlewares/imageupload.js';
 
 const router = express.Router();
 
@@ -19,7 +20,14 @@ router.patch('/:productId', authMiddleware, errorHandler(productController.updat
 
 // 상품 삭제 (인증 필요)
 router.delete('/:productId', authMiddleware, errorHandler(productController.deleteProduct));
-
+//상품 좋아요 토글
 router.post('/:productId/like', authMiddleware, errorHandler(productController.toggleLike));
+//상품 이미지 등록
+router.post(
+    '/images',
+    authMiddleware,
+    upload.array('images', 10),
+    errorHandler(productController.uploadProductImages),
+);
 
 export default router;
