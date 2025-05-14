@@ -9,7 +9,127 @@ import jwt from "jsonwebtoken";
 
 const authController = express.Router();
 
-//회원가입
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: 인증 관련 API
+ */
+
+/**
+ * @swagger
+ * /auth/signUp:
+ *   post:
+ *     summary: 회원가입
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - nickname
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: test@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *               nickname:
+ *                 type: string
+ *                 example: pandaUser
+ *     responses:
+ *       200:
+ *         description: 회원가입 성공 및 access token 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     nickname:
+ *                       type: string
+ *       400:
+ *         description: 잘못된 요청
+ */
+
+/**
+ * @swagger
+ * /auth/signIn:
+ *   post:
+ *     summary: 로그인
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: test@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: 로그인 성공, access token과 사용자 정보 반환
+ *       404:
+ *         description: 존재하지 않는 사용자
+ */
+
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: access token 갱신
+ *     tags: [Auth]
+ *     description: refresh token이 쿠키에 있어야 함
+ *     responses:
+ *       200:
+ *         description: 새 access token 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *       401:
+ *         description: refresh token 없음
+ *       403:
+ *         description: refresh token 유효하지 않음
+ */
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: 로그아웃
+ *     tags: [Auth]
+ *     description: refresh token 쿠키 제거
+ *     responses:
+ *       200:
+ *         description: 로그아웃 완료
+ */
+
+// 회원가입
 authController.post(
   "/signUp",
   varify.signUpRequestStructure,

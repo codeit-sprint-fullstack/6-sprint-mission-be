@@ -9,34 +9,201 @@ import jwt from "jsonwebtoken";
 const productController = express.Router();
 const productCommentController = express.Router();
 
-// //상품 좋아요 등록
-// productController.post(
-//   "/:id/favorite",
-//   // auth.varifyAccessToken,
-//   async (req, res, next) => {
-//     const userId = req.user.id
-//     const productId = Number(req.params.id)
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: 상품 및 상품 댓글 관련 API
+ */
 
-//     const postLike = await productService.
-//     return res.json(createProduct);
-//   }
-// );
+/**
+ * @swagger
+ * /products:
+ *   post:
+ *     summary: 상품 등록
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               tags:
+ *                 type: string
+ *                 example: ["태그1", "태그2"]
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: 상품 등록 성공
+ */
 
-// //상품 좋아요 삭제
-// productController.post(
-//   "/:id/favorite",
-//   // auth.varifyAccessToken,
-//   async (req, res, next) => {
-//     const createProduct = await productService.create(req.body);
-//     return res.json(createProduct);
-//   }
-// );
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: 전체 상품 목록 조회
+ *     tags: [Products]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: 페이지 번호
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *         description: 페이지당 항목 수
+ *       - in: query
+ *         name: orderBy
+ *         schema:
+ *           type: string
+ *           enum: [recent, favorite]
+ *         description: 정렬 기준
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: 상품 검색 키워드
+ *     responses:
+ *       200:
+ *         description: 상품 목록 반환
+ */
 
-//상품 등록, 전체 상품 조회
+/**
+ * @swagger
+ * /products/{id}:
+ *   get:
+ *     summary: 상품 상세 조회
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: 상품 정보 및 댓글 목록 반환
+ *       404:
+ *         description: 상품을 찾을 수 없음
+ */
+
+/**
+ * @swagger
+ * /products/{id}:
+ *   patch:
+ *     summary: 상품 수정
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: 수정된 상품 반환
+ *       404:
+ *         description: 상품을 찾을 수 없음
+ */
+
+/**
+ * @swagger
+ * /products/{id}:
+ *   delete:
+ *     summary: 상품 삭제
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: 삭제된 상품 정보 반환
+ *       404:
+ *         description: 상품을 찾을 수 없음
+ */
+
+/**
+ * @swagger
+ * /products/{id}/comments:
+ *   post:
+ *     summary: 상품에 댓글 등록
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: 등록된 댓글 반환
+ */
+
+/**
+ * @swagger
+ * /products/{id}/comments:
+ *   get:
+ *     summary: 상품 댓글 조회
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: 댓글 목록 반환
+ */
+
+// 상품 등록, 전체 상품 조회
 productController
   .route("/")
   .post(
-    // varify.requestStructure,
     auth.varifyAccessToken,
     upload.single("image"),
     async (req, res, next) => {

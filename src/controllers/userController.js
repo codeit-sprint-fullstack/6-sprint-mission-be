@@ -5,6 +5,48 @@ import { generateAccessToken } from "../middlewares/utils.js";
 
 const userController = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: 사용자 정보 관련 API
+ */
+
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: 인증된 사용자 정보 가져오기
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 사용자 정보 및 새 access token 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "12345"
+ *                     email:
+ *                       type: string
+ *                       example: "user@example.com"
+ *                     nickname:
+ *                       type: string
+ *                       example: "PandaKing"
+ *       401:
+ *         description: 인증 실패 (유효하지 않은 토큰 등)
+ */
+
 //사용자 정보 가져오기
 userController.get("/", auth.varifyAccessToken, async (req, res, next) => {
   const userId = req.auth.userId;

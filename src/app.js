@@ -8,6 +8,8 @@ import errorHandler from "./middlewares/erroHandler.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import favoriteController from "./controllers/favoriteController.js";
+import { swaggerSpec } from "../swagger.js";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
@@ -20,7 +22,6 @@ app.use(
     credentials: true,
   })
 );
-
 app.use("/uploads", express.static("uploads"));
 
 app.use("/users/me", userController); //사용자 정보 컨트롤러
@@ -30,9 +31,12 @@ app.use("/articles", articleController); //게시글+댓글 컨트롤러
 app.use("/comments", commentController); //댓글 컨트롤러
 app.use("/favorites", favoriteController); //좋아요 컨트롤러
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(errorHandler);
 
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server started at ${PORT}...`);
+  console.log("swagger 문서: http://localhost:3000/api-docs");
 });
