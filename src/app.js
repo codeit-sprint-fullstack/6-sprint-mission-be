@@ -9,9 +9,14 @@ import imageRouter from "./routes/imageRouter.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { swaggerUi, specs } from "./swagger.js";
 import "dotenv/config";
+import passport from "passport";
+import "./config/passport.js";
 
 const app = express();
 const PORT = process.env.PORT || 5050;
+
+app.set("trust proxy", 1);
+app.use(passport.initialize());
 
 app.use(cors());
 app.use(express.json());

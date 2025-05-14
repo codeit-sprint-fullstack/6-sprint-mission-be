@@ -97,6 +97,26 @@ async function refreshToken(userId, refreshToken) {
   return { newAccessToken, newRefreshToken };
 }
 
+async function oauthUser(provider, providerId, email, name) {
+  const existingUser = await userRepository.findByEmail(email);
+  if (existingUser) {
+    const updatedUser = await userRepository.update(existingUser.id, {
+      nickname: name,
+      provider,
+      providerId,
+    });
+    return filterSensitiveUserData(updatedUser);
+  } else {
+    const createdUser = await userRepository.save({
+      email,
+      nickname: name,
+      provider,
+      providerId,
+    });
+    return filterSensitiveUserData(createdUser);
+  }
+}
+
 export default {
   createUser,
   getUser,
@@ -104,4 +124,5 @@ export default {
   updateUser,
   createToken,
   refreshToken,
+  oauthUser,
 };

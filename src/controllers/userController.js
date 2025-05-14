@@ -53,7 +53,7 @@ export async function refreshToken(req, res, next) {
     });
     return res.json({ accessToken: newAccessToken });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 
@@ -67,6 +67,25 @@ export async function getUser(req, res, next) {
     console.log(user);
     return res.json(user);
   } catch (error) {
-    return next(error);
+    next(error);
+  }
+}
+
+/**
+ * 소셜 로그인
+ */
+export function socialLogin(req, res, next) {
+  try {
+    const accessToken = userService.createToken(req.user);
+    const refreshToken = userService.createToken(req.user, "refresh");
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      path: "/auth/refresh-token",
+    });
+    res.json({ accessToken });
+  } catch (error) {
+    next(error);
   }
 }
