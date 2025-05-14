@@ -1,7 +1,7 @@
 # 제품 API
 
 ### 제품 목록 조회
-GET http://localhost:7777/products?pageSize=4&orderBy=recent
+GET http://localhost:7777/products?pageSize=10&orderBy=likes
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3NTAxLCJleHAiOjE3NDY5Njg0MDF9.dckNWnMCZuSHm9oDYEltsj-VMpC7pCSKbS17EMzQyF4
 
 ### 제품 목록 조회 (키워드 포함)
@@ -9,8 +9,8 @@ GET http://localhost:7777/products?page=0&pageSize=4&orderBy=recent&keyWord=새�
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2ODY3NDA3LCJleHAiOjE3NDY4NjgzMDd9.X5a8aKmfQ6d0PDSILfPWsFA35voBCAH0ElRhsx-29Bk
 
 ### 제품 상세 조회
-GET http://localhost:7777/products/cmahyolz50001upr0bxi950kc
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3NTAxLCJleHAiOjE3NDY5Njg0MDF9.dckNWnMCZuSHm9oDYEltsj-VMpC7pCSKbS17EMzQyF4
+GET http://localhost:7777/products/cmam8jm830001ha2zxd8ythrn
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3NTAxLCJleHAiOjE3NDY5Njg0MDF9.dckNWnMCZuSHm9oDYEltsj-VMpC7pCSKbS17EMzQyF4
 
 
 ### 제품 생성

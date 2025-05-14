@@ -51,6 +51,51 @@ const upload = multer({ storage });
  *     responses:
  *       200:
  *         description: 상품 목록 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       price:
+ *                         type: number
+ *                       image:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                       isLiked:
+ *                         type: boolean
+ *                       author:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                           nickname:
+ *                             type: string
+ *                           image:
+ *                             type: string
+ *                             nullable: true
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                     page:
+ *                       type: integer
+ *                     pageSize:
+ *                       type: integer
+ *                     totalPages:
+ *                       type: integer
  */
 productsRouter.get("/", auth.verifyOptionalAuth, productController.getProducts);
 
@@ -73,6 +118,44 @@ productsRouter.get("/", auth.verifyOptionalAuth, productController.getProducts);
  *     responses:
  *       200:
  *         description: 상품 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *                     image:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                     isLiked:
+ *                       type: boolean
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         nickname:
+ *                           type: string
+ *                         image:
+ *                           type: string
+ *                           nullable: true
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
  *       404:
  *         description: 상품을 찾을 수 없음
  */

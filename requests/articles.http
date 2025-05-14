@@ -11,8 +11,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZ
 
 
 ### 게시글 상세 조회
-GET http://localhost:7777/articles/cmahxebnw0001upkssl351hyy
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
+GET http://localhost:7777/articles/cmamawis80009gr304wu6tyjn
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFnZGdwaW8wMDAwdXBhbzNubnpjMW1vIiwiaWF0IjoxNzQ2OTY3MDMxLCJleHAiOjE3NDY5Njc5MzF9.Ayd_l-MEpOx8u7C349IkrJJF_8iohRqJXSoMw_Fv7U0
 
 
 ### 게시글 등록

@@ -18,6 +18,7 @@ const getProducts = async (req, res, next) => {
     res.status(200).json({
       data: result.products,
       pagination: result.pagination,
+      orderBy: result.orderBy,
     });
   } catch (err) {
     next(err);

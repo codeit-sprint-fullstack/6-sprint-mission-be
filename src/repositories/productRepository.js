@@ -6,6 +6,15 @@ async function findAll({ skip, take, where, orderBy }) {
     skip,
     take,
     orderBy,
+    include: {
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          image: true,
+        },
+      },
+    },
   });
 }
 
@@ -17,6 +26,13 @@ async function findById(id, userId) {
   return prisma.product.findUnique({
     where: { id },
     include: {
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          image: true,
+        },
+      },
       ...(userId && {
         ProductLike: {
           where: { userId }, // 로그인한 사용자 기준 필터

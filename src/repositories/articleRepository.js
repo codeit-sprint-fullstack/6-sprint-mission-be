@@ -2,7 +2,38 @@ import { prisma } from "../db/prisma/client.prisma.js";
 
 // 전체 조회
 async function findAll(options) {
-  return prisma.article.findMany(options);
+  // select와 include를 동시에 사용할 수 없으므로 분기 처리
+  if (options.select) {
+    // select를 사용하는 경우에는 select 내부에 user 객체를 넣어야 함
+    return prisma.article.findMany({
+      ...options,
+      select: {
+        ...options.select,
+        user: {
+          select: {
+            id: true,
+            nickname: true,
+            image: true,
+          },
+        },
+      },
+    });
+  } else {
+    // select를 사용하지 않는 경우 include만 사용
+    return prisma.article.findMany({
+      ...options,
+      include: {
+        ...(options.include || {}),
+        user: {
+          select: {
+            id: true,
+            nickname: true,
+            image: true,
+          },
+        },
+      },
+    });
+  }
 }
 
 // 단일 조회
@@ -12,6 +43,13 @@ async function findById(id, userId) {
       id,
     },
     include: {
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          image: true,
+        },
+      },
       ...(userId && {
         ArticleLike: {
           where: { userId },

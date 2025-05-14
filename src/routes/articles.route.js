@@ -81,6 +81,16 @@ const upload = multer({ storage });
  *                         type: integer
  *                       isLiked:
  *                         type: boolean
+ *                       author:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                           nickname:
+ *                             type: string
+ *                           image:
+ *                             type: string
+ *                             nullable: true
  *                       createdAt:
  *                         type: string
  *                         format: date-time
@@ -146,6 +156,16 @@ articlesRouter.get("/", auth.verifyOptionalAuth, articleController.getArticles);
  *                       type: integer
  *                     isLiked:
  *                       type: boolean
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         nickname:
+ *                           type: string
+ *                         image:
+ *                           type: string
+ *                           nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -223,6 +243,16 @@ articlesRouter.get(
  *                         type: string
  *                     likes:
  *                       type: integer
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         nickname:
+ *                           type: string
+ *                         image:
+ *                           type: string
+ *                           nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -316,6 +346,16 @@ articlesRouter.post(
  *                         type: string
  *                     likes:
  *                       type: integer
+ *                     author:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         nickname:
+ *                           type: string
+ *                         image:
+ *                           type: string
+ *                           nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time

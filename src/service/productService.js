@@ -4,9 +4,9 @@ import productRepository from "../repositories/productRepository.js";
 async function getProducts({
   page = 0,
   pageSize = 10,
-  orderBy = "recent",
+  orderBy = "recent", // ✅ orderBy → sort 로 변경
   keyWord = "",
-  userId = null, // ✅ 유저 ID 추가
+  userId = null,
 }) {
   const skip = Number(page) * Number(pageSize);
   const take = Number(pageSize);
@@ -20,12 +20,20 @@ async function getProducts({
       }
     : {};
 
-  const orderByOption = {
-    createdAt: orderBy === "recent" ? "desc" : "asc",
-  };
+  // ✅ 정렬 조건 분기
+  const orderByOption =
+    orderBy === "likes"
+      ? { likes: "desc" } // likes 컬럼 기준
+      : { createdAt: "desc" };
 
+  // ✅ 전체 상품과 총 개수 fetch
   const [products, total] = await Promise.all([
-    productRepository.findAll({ skip, take, where, orderBy: orderByOption }),
+    productRepository.findAll({
+      skip,
+      take,
+      where,
+      orderBy: orderByOption,
+    }),
     productRepository.countAll(where),
   ]);
 
@@ -39,21 +47,27 @@ async function getProducts({
     likedProductIds = likes.map((like) => like.productId);
   }
 
-  // ✅ products에 isLiked 필드 추가
-  const productsWithLike = products.map((product) => ({
-    ...product,
-    isLiked: likedProductIds.includes(product.id),
-  }));
+  // ✅ isLiked 필드 추가
+  const productsWithLike = products.map((product) => {
+    // user 정보 추출
+    const { user, ...productData } = product;
+
+    return {
+      ...productData,
+      author: user, // 작성자 정보 추가
+      isLiked: likedProductIds.includes(product.id),
+    };
+  });
 
   return {
     products: productsWithLike,
-    // TODO : offset과 limit로 변수명 수정하기
     pagination: {
       total,
       page: Number(page),
       pageSize: take,
       totalPages: Math.ceil(total / take),
     },
+    sort: orderBy,
   };
 }
 
@@ -65,11 +79,13 @@ async function getProductById(productId, userId = null) {
 
   const isLiked = userId ? product.ProductLike.length > 0 : false;
 
-  const { ProductLike, ...rest } = product;
+  // ProductLike와 user 정보 추출
+  const { ProductLike, user, ...rest } = product;
 
   // ProductLike 제외
   return {
     ...rest,
+    author: user, // 작성자 정보 추가
     isLiked,
   };
 }

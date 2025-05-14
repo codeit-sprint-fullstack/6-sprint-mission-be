@@ -59,10 +59,16 @@ async function getArticles({
   }
 
   // ✅ products에 isLiked 필드 추가
-  const articlesWithLike = articles.map((article) => ({
-    ...article,
-    isLiked: likedArticleIds.includes(article.id),
-  }));
+  const articlesWithLike = articles.map((article) => {
+    // user 객체 분리 (user 필드는 include에서 가져옴)
+    const { user, ...articleData } = article;
+
+    return {
+      ...articleData,
+      author: user, // 작성자 정보
+      isLiked: likedArticleIds.includes(article.id),
+    };
+  });
 
   return {
     articles: articlesWithLike,
@@ -87,11 +93,12 @@ async function getArticleById(id, userId) {
   }
 
   const isLiked = userId ? article.ArticleLike.length > 0 : false;
-  // ArticleLike 제외
-  const { ArticleLike, ...rest } = article;
+  // ArticleLike와 user 객체 분리
+  const { ArticleLike, user, ...rest } = article;
 
   return {
     ...rest,
+    author: user, // 작성자 정보
     isLiked,
   };
 }
