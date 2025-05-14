@@ -16,8 +16,11 @@ const getArticles = async (query) => {
 };
 
 // 게시글 상세조회
-const getArticle = async (articleId) => {
-  const article = await articleRepository.findById(articleId);
+const getArticle = async (userId, articleId) => {
+  const [article, isLiked] = await articleRepository.findById(
+    userId,
+    articleId
+  );
 
   if (!article) {
     const error = new Error("해당 게시글을 찾을 수 없습니다.");
@@ -26,7 +29,7 @@ const getArticle = async (articleId) => {
     throw error;
   }
 
-  return article;
+  return { ...article, isLiked: !!isLiked };
 };
 
 // 게시글 작성
@@ -84,10 +87,21 @@ const deleteArticle = async (articleId) => {
   });
 };
 
+// 게시글 좋아요
+const addlikeArticle = (userId, articleId) => {
+  return articleRepository.addlikeArticle(userId, articleId);
+};
+
+// 게시글 좋아요 취소
+const cancelLikeArticle = (userId, articleId) => {
+  return articleRepository.cancelLikeArticle(userId, articleId);
+};
 export default {
   getArticles,
   getArticle,
   createArticle,
   updateArticle,
   deleteArticle,
+  addlikeArticle,
+  cancelLikeArticle,
 };

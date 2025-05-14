@@ -21,11 +21,19 @@ const findAll = (query) => {
   ]);
 };
 
-const findByIdWithTx = (tx, productId) => {
-  return tx.product.findUnique({
-    where: { id: productId },
-    omit: { updatedAt: true },
-  });
+const findByIdWithTx = (tx, userId, productId) => {
+  return Promise.all([
+    tx.product.findUnique({
+      where: { id: productId },
+      omit: { updatedAt: true },
+    }),
+    tx.productImage.findMany({
+      where: { productId },
+    }),
+    tx.productLike.findUnique({
+      where: { userId_productId: { userId, productId } },
+    }),
+  ]);
 };
 
 const findProductTagByIdWithTx = (tx, productId) => {
@@ -39,7 +47,13 @@ const createWithTx = (tx, body) => {
   const { name, description, price } = body;
 
   return tx.product.create({
-    data: { name, description, price },
+    data: { name, description, price: Number(price) },
+  });
+};
+
+const createProductImageWithTx = (tx, imageUrl = "", userId, productId) => {
+  return tx.productImage.create({
+    data: { imageUrl, userId, productId },
   });
 };
 
@@ -72,15 +86,28 @@ const deleteProductWithTx = (tx, productId) => {
   return tx.product.delete({ where: { id: productId } });
 };
 
+const addlikeProduct = (userId, productId) => {
+  return prisma.productLike.create({ data: { userId, productId } });
+};
+
+const cancelLikeProduct = (userId, productId) => {
+  return prisma.productLike.delete({
+    where: { userId_productId: { userId, productId } },
+  });
+};
+
 export default {
   findAll,
   findByIdWithTx,
   findProductTagByIdWithTx,
   createWithTx,
+  createProductImageWithTx,
   findTagByNameWithTx,
   createTagWithTx,
   createProductTagWithTx,
   updateProductWithTx,
   deleteProductTagsWithTx,
   deleteProductWithTx,
+  addlikeProduct,
+  cancelLikeProduct,
 };

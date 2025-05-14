@@ -21,11 +21,16 @@ const findAll = (query) => {
   ]);
 };
 
-const findById = (articleId) => {
-  return prisma.article.findUnique({
-    where: { id: articleId },
-    omit: { updatedAt: true },
-  });
+const findById = (userId, articleId) => {
+  return Promise.all([
+    prisma.article.findUnique({
+      where: { id: articleId },
+      omit: { updatedAt: true },
+    }),
+    prisma.articleLike.findUnique({
+      where: { userId_articleId: { userId, articleId } },
+    }),
+  ]);
 };
 
 const findByIdWithTx = (tx, articleId) => {
@@ -55,6 +60,16 @@ const deleteWithTx = (tx, articleId) => {
   });
 };
 
+const addlikeArticle = (userId, articleId) => {
+  return prisma.articleLike.create({ data: { userId, articleId } });
+};
+
+const cancelLikeArticle = (userId, articleId) => {
+  return prisma.articleLike.delete({
+    where: { userId_articleId: { userId, articleId } },
+  });
+};
+
 export default {
   findAll,
   findById,
@@ -62,4 +77,6 @@ export default {
   create,
   updateWithTx,
   deleteWithTx,
+  addlikeArticle,
+  cancelLikeArticle,
 };

@@ -23,14 +23,14 @@ export default function requiredDataValidate(req, res, next) {
       throw error;
     }
 
-    if (!+price) {
+    if (typeof Number(price) !== "number") {
       const error = new Error("가격은 숫자만 입력해주세요.");
       error.code = 400;
 
       throw error;
     }
 
-    tags.map((tag) => {
+    JSON.parse(tags).map((tag) => {
       if (Boolean(5 < tag.length)) {
         const error = new Error("태그는 5글자 이내로 입력해주세요.");
         error.code = 400;

@@ -24,6 +24,7 @@ app.use(
     ],
   })
 );
+app.use("/images", express.static("uploads"));
 
 // 3. routes 등록
 app.use(router);

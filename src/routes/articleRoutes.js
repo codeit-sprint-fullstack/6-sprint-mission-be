@@ -18,4 +18,10 @@ articleRouter.patch("/:articleId", articleController.updateArticle);
 // 게시글 삭제
 articleRouter.delete("/:articleId", articleController.deleteArticle);
 
+// 게시글 좋아요
+articleRouter.post("/:articleId/like", articleController.addlikeArticle);
+
+// 게시글 좋아요 취소
+articleRouter.delete("/:articleId/like", articleController.cancelLikeArticle);
+
 export default articleRouter;

@@ -16,9 +16,13 @@ const getProducts = async (query) => {
 };
 
 // 상품 상세조회
-const getProduct = async (productId) => {
+const getProduct = async (userId, productId) => {
   return await prisma.$transaction(async (tx) => {
-    const product = await productRepository.findByIdWithTx(tx, productId);
+    const [product, images, isLiked] = await productRepository.findByIdWithTx(
+      tx,
+      userId,
+      productId
+    );
 
     if (!product) {
       const error = new Error("존재하지 않는 상품입니다.");
@@ -33,27 +37,21 @@ const getProduct = async (productId) => {
     );
 
     const tags = productTag.map((tag) => tag.tag.name);
+    const imageUrls = images.map((image) => image.imageUrl);
 
-    return { ...product, tags };
+    return { ...product, tags, images: imageUrls, isLiked: !!isLiked };
   });
 };
 
 // 상품 등록
-const createProduct = async (body) => {
-  const { name, description, price, tags } = body;
-
-  if (!name || !description || !price || !tags) {
-    const error = new Error("필수 항목을 모두 입력해주세요.");
-    error.code = 400;
-
-    throw error;
-  }
+const createProduct = async (body, images) => {
+  const { tags } = body;
 
   return await prisma.$transaction(async (tx) => {
     const newProduct = await productRepository.createWithTx(tx, body);
 
     const newTags = await Promise.all(
-      tags.map(async (tagName) => {
+      JSON.parse(tags).map(async (tagName) => {
         let tag = await productRepository.findTagByNameWithTx(tx, tagName);
 
         if (!tag) {
@@ -70,7 +68,20 @@ const createProduct = async (body) => {
       })
     );
 
-    return { ...newProduct, tags: newTags };
+    const newImages = await Promise.all(
+      images.map(async (image) => {
+        const newImage = await productRepository.createProductImageWithTx(
+          tx,
+          image.filename,
+          userId,
+          newProduct.id
+        );
+
+        return newImage.imageUrl;
+      })
+    );
+
+    return { ...newProduct, tags: newTags, images: newImages };
   });
 };
 
@@ -128,10 +139,22 @@ const deleteProduct = async (productId) => {
   });
 };
 
+// 상품 좋아요
+const addlikeProduct = (userId, productId) => {
+  return productRepository.addlikeProduct(userId, productId);
+};
+
+// 상품 좋아요 취소
+const cancelLikeProduct = (userId, productId) => {
+  return productRepository.cancelLikeProduct(userId, productId);
+};
+
 export default {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
+  addlikeProduct,
+  cancelLikeProduct,
 };
