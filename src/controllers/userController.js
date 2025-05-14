@@ -84,7 +84,8 @@ export function socialLogin(req, res, next) {
       secure: true,
       path: "/auth/refresh-token",
     });
-    res.json({ accessToken });
+    const redirectUrl = process.env.FRONTEND_URL;
+    res.redirect(`${redirectUrl}/oauth-success?accessToken=${accessToken}`);
   } catch (error) {
     next(error);
   }
