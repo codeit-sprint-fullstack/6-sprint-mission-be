@@ -2,6 +2,7 @@ import express from "express";
 import prisma from "../../prisma/client.prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import auth from "../middlewares/auth.js";
 
 const userRouter = express.Router();
 
@@ -109,5 +110,30 @@ userRouter.post("/login", async (req, res, next) => {
     next(e);
   }
 });
+
+userRouter.post(
+  "/refresh-token",
+  auth.verifyRefreshToken,
+  async (req, res, next) => {
+    const userId = req.auth.id;
+    try {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) {
+        const error = new Error("인증에 실패하였습니다.");
+        error.code = 401;
+
+        throw error;
+      }
+
+      const accessToken = createToken(user);
+      const refreshToken = createToken(user, "refreshToken");
+
+      res.status(200).json({ accessToken, refreshToken });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 export default userRouter;
