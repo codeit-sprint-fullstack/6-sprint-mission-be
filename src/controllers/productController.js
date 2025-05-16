@@ -2,10 +2,18 @@ import productService from "../services/productService.js";
 
 // 상품 목록 불러오기
 const getProducts = async (req, res, next) => {
+  const baseUrl = `${req.protocol}://${req.get("host")}/images`;
+
   try {
     const [products, totalCount] = await productService.getProducts(req.query);
 
-    res.status(200).json({ list: products, totalCount });
+    const productsWithImages = products.map((product) => ({
+      ...product,
+      productImages: undefined,
+      images: product.productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
+    }));
+
+    res.status(200).json({ list: productsWithImages, totalCount });
   } catch (e) {
     next(e);
   }
@@ -13,6 +21,7 @@ const getProducts = async (req, res, next) => {
 
 // 상품 상세조회
 const getProduct = async (req, res, next) => {
+  const userId = req.auth.id;
   const productId = Number(req.params.productId);
   const baseUrl = `${req.protocol}://${req.get("host")}/images`;
 
@@ -31,11 +40,16 @@ const getProduct = async (req, res, next) => {
 
 // 상품 등록
 const createProduct = async (req, res, next) => {
+  const userId = req.auth.id;
   const images = req.files;
   const baseUrl = `${req.protocol}://${req.get("host")}/images`;
 
   try {
-    const newProduct = await productService.createProduct(req.body, images);
+    const newProduct = await productService.createProduct(
+      userId,
+      req.body,
+      images
+    );
 
     const imageUrls = newProduct.images.map(
       (imageUrl) => `${baseUrl}/${imageUrl}`
@@ -49,15 +63,24 @@ const createProduct = async (req, res, next) => {
 
 // 상품 수정
 const updateProduct = async (req, res, next) => {
+  const userId = req.auth.id;
   const productId = Number(req.params.productId);
+  const images = req.files;
+  const baseUrl = `${req.protocol}://${req.get("host")}/images`;
 
   try {
     const updatedProduct = await productService.updateProduct(
+      userId,
       productId,
-      req.body
+      req.body,
+      images
     );
 
-    res.status(200).json(updatedProduct);
+    const imageUrls = updatedProduct.images.map(
+      (imageUrl) => `${baseUrl}/${imageUrl}`
+    );
+
+    res.status(200).json({ ...updatedProduct, images: imageUrls });
   } catch (e) {
     next(e);
   }
@@ -76,9 +99,9 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-// TODO: 상품 상세조회, 상품 좋아요, 상품 좋아요 취소에 user 인증 미들웨어 달고, req.auth로 들어오는 user정보에서 id를 추출한 다음에 userId를 넘겨주기
 // 상품 좋아요
 const addlikeProduct = async (req, res, next) => {
+  const userId = req.auth.id;
   const productId = Number(req.params.productId);
 
   try {
@@ -92,6 +115,7 @@ const addlikeProduct = async (req, res, next) => {
 
 // 상품 좋아요 취소
 const cancelLikeProduct = async (req, res, next) => {
+  const userId = req.auth.id;
   const productId = Number(req.params.productId);
 
   try {

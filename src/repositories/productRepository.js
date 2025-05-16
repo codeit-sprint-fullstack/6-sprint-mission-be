@@ -16,6 +16,7 @@ const findAll = (query) => {
       take: Number(limit) || 10,
       orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
       omit: { description: true, updatedAt: true },
+      include: { productImages: { select: { imageUrl: true } } },
     }),
     prisma.product.count({ where: filter }),
   ]);
@@ -57,6 +58,12 @@ const createProductImageWithTx = (tx, imageUrl = "", userId, productId) => {
   });
 };
 
+const deleteProductImageWithTx = (tx, productId) => {
+  return tx.productImage.deleteMany({
+    where: { productId },
+  });
+};
+
 const findTagByNameWithTx = (tx, tagName) => {
   return tx.tag.findUnique({ where: { name: tagName } });
 };
@@ -74,7 +81,7 @@ const updateProductWithTx = (tx, productId, body) => {
 
   return tx.product.update({
     where: { id: productId },
-    data: { name, description, price },
+    data: { name, description, price: Number(price) },
   });
 };
 
@@ -106,6 +113,7 @@ export default {
   createTagWithTx,
   createProductTagWithTx,
   updateProductWithTx,
+  deleteProductImageWithTx,
   deleteProductTagsWithTx,
   deleteProductWithTx,
   addlikeProduct,

@@ -44,7 +44,7 @@ const getProduct = async (userId, productId) => {
 };
 
 // 상품 등록
-const createProduct = async (body, images) => {
+const createProduct = async (userId, body, images) => {
   const { tags } = body;
 
   return await prisma.$transaction(async (tx) => {
@@ -86,15 +86,8 @@ const createProduct = async (body, images) => {
 };
 
 // 상품 수정
-const updateProduct = async (productId, body) => {
-  const { name, description, price, tags } = body;
-
-  if (!(name || description || price || tags)) {
-    const error = new Error("수정할 내용을 입력해주세요.");
-    error.code = 400;
-
-    throw error;
-  }
+const updateProduct = async (userId, productId, body, images) => {
+  const { tags } = body;
 
   return await prisma.$transaction(async (tx) => {
     const updatedProduct = await productRepository.updateProductWithTx(
@@ -106,7 +99,7 @@ const updateProduct = async (productId, body) => {
     await productRepository.deleteProductTagsWithTx(tx, productId);
 
     const updatedTags = await Promise.all(
-      tags.map(async (tagName) => {
+      JSON.parse(tags).map(async (tagName) => {
         let tag = await productRepository.findTagByNameWithTx(tx, tagName);
 
         if (!tag) {
@@ -119,7 +112,22 @@ const updateProduct = async (productId, body) => {
       })
     );
 
-    return { ...updatedProduct, tags: updatedTags };
+    await productRepository.deleteProductImageWithTx(tx, productId);
+
+    const updatedImages = await Promise.all(
+      images.map(async (image) => {
+        const updatedImage = await productRepository.createProductImageWithTx(
+          tx,
+          image.filename,
+          userId,
+          productId
+        );
+
+        return updatedImage.imageUrl;
+      })
+    );
+
+    return { ...updatedProduct, tags: updatedTags, images: updatedImages };
   });
 };
 
