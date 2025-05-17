@@ -1,0 +1,222 @@
+openapi: 3.0.0
+info:
+  title: Comment API
+  version: 1.0.0
+paths:
+  /products/{productId}/comments:
+    post:
+      summary: 상품 댓글 작성
+      tags: [Comment]
+      parameters:
+        - in: query
+          name: productId
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentRequest"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+              examples:
+                Success:
+                  $ref: "#/components/examples/CommentExample"
+    get:
+      summary: 상품 댓글 목록 조회
+      tags: [Comment]
+      parameters:
+        - in: query
+          name: productId
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+                  nextCursor:
+                    type: integer
+                    nullable: true
+              examples:
+                Success:
+                  $ref: "#/components/examples/CommentListExample"
+
+  /articles/{articleId}/comments:
+    post:
+      summary: 게시글 댓글 작성
+      tags: [Comment]
+      parameters:
+        - in: query
+          name: articleId
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentRequest"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+              examples:
+                Success:
+                  $ref: "#/components/examples/CommentExample"
+    get:
+      summary: 게시글 댓글 목록 조회
+      tags: [Comment]
+      parameters:
+        - in: query
+          name: articleId
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+                  nextCursor:
+                    type: integer
+                    nullable: true
+              examples:
+                Success:
+                  $ref: "#/components/examples/CommentListExample"
+
+  /comments/{commentId}:
+    patch:
+      summary: 댓글 수정
+      tags: [Comment]
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentRequest"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+              examples:
+                Success:
+                  $ref: "#/components/examples/CommentExample"
+    delete:
+      summary: 댓글 삭제
+      tags: [Comment]
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: No Content
+
+components:
+  schemas:
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: 댓글 내용입니다.
+        writer:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 10
+            nickname:
+              type: string
+              example: 작성자
+            image:
+              type: string
+              nullable: true
+              example: null
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-08T08:13:52.165Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-05-08T08:13:52.165Z"
+
+    CommentRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          example: 댓글입니다
+      required:
+        - content
+
+  examples:
+    CommentExample:
+      value:
+        id: 1
+        content: 댓글 내용입니다.
+        writer:
+          id: 10
+          nickname: 작성자
+          image: null
+        createdAt: "2025-05-08T08:13:52.165Z"
+        updatedAt: "2025-05-08T08:13:52.165Z"
+
+    CommentListExample:
+      value:
+        list:
+          - id: 1
+            content: 첫 번째 댓글
+            writer:
+              id: 10
+              nickname: 유저1
+              image: null
+            createdAt: "2025-05-08T08:13:52.165Z"
+            updatedAt: "2025-05-08T08:13:52.165Z"
+          - id: 2
+            content: 두 번째 댓글
+            writer:
+              id: 11
+              nickname: 유저2
+              image: null
+            createdAt: "2025-05-08T08:13:52.165Z"
+            updatedAt: "2025-05-08T08:13:52.165Z"
+        nextCursor: null
