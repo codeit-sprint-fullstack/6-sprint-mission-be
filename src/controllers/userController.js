@@ -78,6 +78,12 @@ export function socialLogin(req, res, next) {
   try {
     const accessToken = userService.createToken(req.user);
     const refreshToken = userService.createToken(req.user, "refresh");
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      path: "/",
+    });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "none",
@@ -85,7 +91,7 @@ export function socialLogin(req, res, next) {
       path: "/auth/refresh-token",
     });
     const redirectUrl = process.env.FRONTEND_URL;
-    res.redirect(`${redirectUrl}/oauth-success?accessToken=${accessToken}`);
+    res.redirect(`${redirectUrl}/oauth-success`);
   } catch (error) {
     next(error);
   }
