@@ -111,6 +111,23 @@ userRouter.post("/login", async (req, res, next) => {
   }
 });
 
+// 유저 정보 불러오기
+userRouter.get("/me", auth.verifyAccessToken, async (req, res, next) => {
+  const userId = req.auth.id;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, nickname: true, image: true },
+    });
+
+    res.status(200).json(user);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// 액세스 토큰 재발급
 userRouter.post(
   "/refresh-token",
   auth.verifyRefreshToken,
