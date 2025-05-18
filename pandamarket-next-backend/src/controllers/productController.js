@@ -96,16 +96,18 @@ productController.get(
  *                 type: array
  *                 items:
  *                   type: string
- *               image:
- *                 type: string
- *                 format: binary
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
  *       201:
  *         description: 상품 생성됨
  */
 productController.post(
   "/",
-  uploads.single("image"),
+  uploads.array("images", 3),
   auth.verifyAccessToken,
   async (req, res, next) => {
     try {
@@ -120,15 +122,18 @@ productController.post(
       if (!tags) {
         tags = [];
       } else if (typeof tags === "string") {
-        tags = [tags];
+        tags = JSON.parse(tags);
       }
-      const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+      let imagePaths = [];
+      if (req.files && req.files.length > 0) {
+        imagePaths = req.files.map((file) => `/uploads/${file.filename}`);
+      }
       const product = await productService.createProduct({
         name,
         description,
         price,
         tags,
-        image: imagePath,
+        images: imagePaths,
         userId,
       });
       res.status(201).json(product);
@@ -169,9 +174,11 @@ productController.post(
  *                 type: array
  *                 items:
  *                   type: string
- *               image:
- *                 type: string
- *                 format: binary
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
  *       201:
  *         description: 상품 수정 완료
@@ -179,7 +186,7 @@ productController.post(
 productController.patch(
   "/:id",
   auth.verifyAccessToken,
-  uploads.single("image"),
+  uploads.array("images", 3),
   async (req, res, next) => {
     try {
       const id = req.params.id;
@@ -200,17 +207,20 @@ productController.patch(
       if (!tags) {
         tags = [];
       } else if (typeof tags === "string") {
-        tags = [tags];
+        tags = JSON.parse(tags);
       }
-      const imagePath = req.file
-        ? `/uploads/${req.file.filename}`
-        : product.image;
+      let imagePaths = [];
+      if (req.files && req.files.length > 0) {
+        imagePaths = req.files.map((file) => `/uploads/${file.filename}`);
+      } else {
+        imagePaths = product.images; // 기존 이미지 유지
+      }
       const updatedProduct = await productService.patchProduct(id, {
         name,
         description,
         price,
         tags,
-        image: imagePath,
+        images: imagePaths,
       });
       res.status(201).json(updatedProduct);
     } catch (error) {

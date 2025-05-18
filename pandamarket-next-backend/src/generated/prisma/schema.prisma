@@ -12,6 +12,7 @@ model Article {
   id            String    @id @default(cuid())
   title         String
   content       String
+  images        String[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   favoriteCount Int       @default(0)
@@ -38,7 +39,7 @@ model Item {
   name          String
   description   String
   price         Int
-  image         String
+  images        String[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   tags          String[]

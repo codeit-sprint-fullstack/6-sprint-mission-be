@@ -23,7 +23,11 @@ const options = {
             id: { type: "string" },
             email: { type: "string", format: "email" },
             nickname: { type: "string" },
-            image: { type: "string", nullable: true },
+            images: {
+              type: "array",
+              items: { type: "string", format: "uri" }, // 이미지 URL이니까 format: uri
+              description: "이미지 URL 목록",
+            },
             createdAt: { type: "string", format: "date-time" },
           },
         },

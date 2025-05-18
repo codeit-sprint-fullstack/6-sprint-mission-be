@@ -8,7 +8,11 @@ async function getById(id, userId) {
   const item = await prisma.item.findUnique({
     where: { id },
     include: {
-      comments: true,
+      comments: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
   const isFavorite = await prisma.item.findFirst({
@@ -29,7 +33,7 @@ async function save(product) {
       description: product.description,
       price: product.price,
       tags: product.tags,
-      image: product.image,
+      images: product.images,
       user: {
         connect: {
           id: product.userId,
@@ -47,7 +51,7 @@ async function edit(id, product) {
       description: product.description,
       price: product.price,
       tags: product.tags,
-      image: product.image,
+      images: product.images,
     },
   });
 }
@@ -59,50 +63,56 @@ async function remove(id) {
 }
 
 async function createFavorite(id, userId) {
-  const isFavorite = await prisma.item.findFirst({
-    where: {
-      id,
-      favoriteUsers: {
-        some: { id: userId },
+  return await prisma.$transaction(async (tx) => {
+    const isFavorite = await tx.item.findFirst({
+      where: {
+        id,
+        favoriteUsers: {
+          some: { id: userId },
+        },
       },
-    },
-  });
+    });
 
-  if (isFavorite) {
-    throw new Error("이미 즐겨찾기 목록에 추가된 아이템입니다.");
-  }
-  return await prisma.item.update({
-    where: { id },
-    data: {
-      favoriteUsers: { connect: { id: userId } },
-      favoriteCount: {
-        increment: 1,
+    if (isFavorite) {
+      throw new Error("이미 즐겨찾기 목록에 추가된 아이템입니다.");
+    }
+
+    return await tx.item.update({
+      where: { id },
+      data: {
+        favoriteUsers: { connect: { id: userId } },
+        favoriteCount: {
+          increment: 1,
+        },
       },
-    },
+    });
   });
 }
 
 async function removeFavorite(id, userId) {
-  const isFavorite = await prisma.item.findFirst({
-    where: {
-      id,
-      favoriteUsers: {
-        some: { id: userId },
+  return await prisma.$transaction(async (tx) => {
+    const isFavorite = await tx.item.findFirst({
+      where: {
+        id,
+        favoriteUsers: {
+          some: { id: userId },
+        },
       },
-    },
-  });
+    });
 
-  if (!isFavorite) {
-    throw new Error("이 아이템을 즐겨찾기에서 삭제할 수 없습니다.");
-  }
-  return await prisma.item.update({
-    where: { id },
-    data: {
-      favoriteUsers: { disconnect: { id: userId } },
-      favoriteCount: {
-        decrement: 1,
+    if (!isFavorite) {
+      throw new Error("이 아이템을 즐겨찾기에서 삭제할 수 없습니다.");
+    }
+
+    return await tx.item.update({
+      where: { id },
+      data: {
+        favoriteUsers: { disconnect: { id: userId } },
+        favoriteCount: {
+          decrement: 1,
+        },
       },
-    },
+    });
   });
 }
 
