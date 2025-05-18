@@ -9,7 +9,8 @@
         "dev": "node ./src/app.js",
         "precompose": "docker-compose build --no-cache",
         "compose": "docker-compose down && docker-compose up",
-        "seed": "node ./prisma/seed"
+        "seed": "node ./prisma/seed",
+        "start": "node ./src/app.js"
     },
     "prisma": {
         "seed": "node prisma/seed.js"
