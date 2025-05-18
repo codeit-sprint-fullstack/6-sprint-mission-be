@@ -1,0 +1,46 @@
+### 특정 상품에 댓글 작성
+POST http://localhost:5050/comments/products/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+{
+  "content": "상품에 대한 댓글 내용3"
+}
+
+###
+
+### 특정 상품의 모든 댓글 조회
+GET http://localhost:5050/comments/products/2
+
+###
+
+### 특정 게시글에 댓글 작성
+POST http://localhost:5050/comments/articles/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+{
+  "content": "게시글에 대한 댓글 내용1"
+}
+
+###
+
+### 특정 게시글의 모든 댓글 조회
+GET http://localhost:5050/comments/articles/2
+
+###
+
+### 특정 댓글 수정
+PATCH http://localhost:5050/comments/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+{
+  "content": "수정된 댓글 내용"
+}
+
+###
+
+###  특정 댓글 삭제
+DELETE http://localhost:5050/comments/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4

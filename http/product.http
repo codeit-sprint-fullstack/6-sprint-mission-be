@@ -1,0 +1,32 @@
+### 새 상품 등록
+POST http://localhost:5050/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MTg1OTgzLCJleHAiOjE3NDcxODk1ODN9.8KUfvmhW3vn6-TcqzU5nUg5TzZV8bfsWiAa15kVxz0E
+
+{
+  "name": "새 상품 이름3",
+  "description": "새 상품 설명",
+  "price": 10000,
+  "tags": ["태그1", "태그2"]
+}
+
+### 모든 상품 조회
+GET http://localhost:5050/products?orderBy=recent&keyword=
+
+### 특정 상품 조회
+GET http://localhost:5050/products/2
+
+### 특정 상품 정보 수정
+PATCH http://localhost:5050/products/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MTg1OTgzLCJleHAiOjE3NDcxODk1ODN9.8KUfvmhW3vn6-TcqzU5nUg5TzZV8bfsWiAa15kVxz0E
+
+{
+  "name": "수정된 상품 이름",
+  "price": 12000,
+  "tags": ["태그11", "태그12"]
+}
+
+### 특정 상품 삭제
+DELETE http://localhost:5050/products/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MTg1OTgzLCJleHAiOjE3NDcxODk1ODN9.8KUfvmhW3vn6-TcqzU5nUg5TzZV8bfsWiAa15kVxz0E

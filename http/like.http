@@ -1,0 +1,24 @@
+
+### 특정 상품 찜하기
+POST http://localhost:5050/like/products/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+### 특정 상품 찜 취소
+DELETE http://localhost:5050/like/products/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+
+
+### 특정 게시글 좋아요
+POST http://localhost:5050/like/articles/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+### 특정 게시글 좋아요 취소
+DELETE http://localhost:5050/like/articles/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MzI2MDk2LCJleHAiOjE3NDczMjk2OTZ9.aWrWLpdFO-lisU2dvqL-oLxRBvPUjw1e7_H-jAlxhQ4
+
+
+
+
+
+
