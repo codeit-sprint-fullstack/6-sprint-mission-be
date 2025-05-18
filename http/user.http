@@ -1,3 +1,4 @@
+# 회원가입
 POST http://localhost:3000/users
 Content-Type: application/json
 
@@ -6,3 +7,19 @@ Content-Type: application/json
   "nickName": "김다은",
   "password": "qwer1234"
 }
+
+### 로그인
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "kde040508@gmail.com",
+  "password": "qwer1234"
+}
+
+### 토큰 재발급 
+POST http://localhost:3000/token/refresh
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0Njc2NTI4NCwiZXhwIjoxNzQ3OTc0ODg0fQ.ZsaLmfEi9v1M11yO3z8gk75dGSfh8TfZECyjX1IKCCQ
+
+###
+ http://localhost:3000/uploads/1746979915826.png

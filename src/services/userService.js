@@ -1,5 +1,6 @@
 import userRepository from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // 비번 암호화 함수
 function hashPassword(password) {
@@ -72,7 +73,38 @@ async function getUser(email, password) {
   }
 }
 
+// 토큰 생성 함수
+function createToken(user, type) {
+  const payload = { userId: user.id };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: type === "refresh" ? "2w" : "1h",
+  });
+  return token;
+}
+
+// 로큰 재발급 함수
+async function refreshToken(userId, refreshToken) {
+  const user = await userRepository.findById(userId);
+  if (!user || user.refreshToken !== refreshToken) {
+    const error = new Error("Unauthorized");
+    error.code = 401;
+    throw error;
+  }
+  const newAccessToken = createToken(user);
+  const newRefreshToken = createToken(user, "refresh");
+  return { newAccessToken, newRefreshToken };
+}
+
+// 유저 정보 갱신
+async function updateUser(id, data) {
+  const updatedUser = await userRepository.update(id, data);
+  return filterSensitiveUserData(updatedUser);
+}
+
 export default {
   createdUser,
   getUser,
+  createToken,
+  refreshToken,
+  updateUser,
 };

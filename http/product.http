@@ -1,0 +1,23 @@
+### 상품 등록 
+POST http://localhost:3000/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0Njg5MTIyNywiZXhwIjoxNzQ2ODk0ODI3fQ.guAnxbApKDH9ohGit3K-u7gNflbATGK-Oj6-vVfXYEs
+
+{
+    "name": "유부 우동 컵라면",
+    "description": "진짜 맛있습니다. 드셔보세요",
+    "price": 10000,
+    "tags": ["맛나겟쥬?", "내가 팔아서 더 비쌈"],
+    "images": [
+        "https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Sprint_Mission/user/1014/1746780352164/food.png"
+    ]
+}
+
+### 상품 목록 조회
+GET http://localhost:3000/products?page=1&pageSize=10&orderBy=recent
+
+### 상품 상세 조회
+GET http://localhost:3000/products/8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzEyNjE4NywiZXhwIjoxNzQ3MTI5Nzg3fQ.5h3Jp6ie4ruOTBeMQXi7UDtAeqtxkjNgj98cTmZOLEM
+
+### 수정, 삭제는 프론트에서 연결하고 확인함
