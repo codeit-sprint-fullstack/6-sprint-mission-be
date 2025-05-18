@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * 사용자
+ */
+model User {
+  // 고유
+  id                 Int                @id @default(autoincrement())
+  email              String             @unique
+  nickname           String             @unique
+  image              String?
+  encryptedPassword  String
+  createdAt          DateTime           @default(now())
+  refreshToken       String?
+  // 참고
+  articles           Article[]
+  likesToArticles    LikeToArticle[]
+  commentsToArticles CommentToArticle[]
+  products           Product[]
+  likesToProducts    LikeToProduct[]
+  commentToProducts  CommentToProduct[]
+}
+
+/**
+ * 게시글
+ */
+model Article {
+  // 고유
+  id             Int                @id @default(autoincrement())
+  title          String
+  content        String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  thumbnailImage String?
+  // 참고
+  author         User               @relation(fields: [authorId], references: [id])
+  authorId       Int
+  comments       CommentToArticle[]
+  likes          LikeToArticle[]
+  // 추가
+  likeCount      Int                @default(0)
+}
+
+/**
+ * 게시글 댓글
+ */
+model CommentToArticle {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // 참고
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+/**
+ * 게시글 좋아요
+ */
+model LikeToArticle {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  // 참고
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  @@unique([articleId, userId])
+}
+
+/**
+ * 제품
+ */
+model Product {
+  // 고유
+  id               Int                @id @default(autoincrement())
+  name             String
+  description      String
+  price            Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  // 참고
+  author           User               @relation(fields: [authorId], references: [id])
+  authorId         Int
+  likes            LikeToProduct[]
+  images           ProductImage[]
+  commentToProduct CommentToProduct[]
+  tags             Tag[]
+  // 추가
+  likeCount        Int                @default(0)
+}
+
+/**
+ * 제품 이미지
+ */
+model ProductImage {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  createdAt DateTime @default(now())
+  // 참고
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
+
+/**
+ * 제품 태그: 원래 多:多지만, 미션 상에서는 1:多
+ */
+model Tag {
+  id        Int      @id @default(autoincrement())
+  tag       String
+  createdAt DateTime @default(now())
+  // 참고
+  products  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
+
+/**
+ * 제품 문의
+ */
+model CommentToProduct {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // 참고
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+/**
+ * 제품 좋아요
+ */
+model LikeToProduct {
+  // 고유
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  // 참고
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  @@unique([productId, userId])
+}

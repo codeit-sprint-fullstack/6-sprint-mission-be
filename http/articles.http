@@ -1,0 +1,25 @@
+### 게시글 등록
+POST http://localhost:3002/articles
+Content-Type: application/json
+
+### 게시글 조회
+GET http://localhost:3002/articles/3
+
+
+### 게시글 목록 조회 및 검색
+GET http://localhost:3002/articles
+
+
+### 게시글 수정
+PATCH http://localhost:3002/articles/cedd1018-1b2c-4d8f-8adb-d1065fc373ca
+Content-Type: application/json
+
+{
+  "content": "가성비 필통 중 최고봉이고, 672 Jeans standard model이 예쁘다. 인디고 블루랑 빈티지 블루 둘 다 예쁨!"
+}
+
+
+### 게시글 삭제
+DELETE http://localhost:3002/articles/005fd386-dfe2-4f63-9cbe-3b013286cb3d
+
+### 게시글 댓글 생성
