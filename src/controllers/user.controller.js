@@ -1,5 +1,5 @@
 import { asyncErrorHandler } from "../utils/asyncErrorHandler.js";
-import { signUpService } from "../services/users.js";
+import { signUpService } from "../services/user.service.js";
 
 export const createUserController = asyncErrorHandler(
   async function (req, res, next) {
@@ -14,7 +14,6 @@ export const createUserController = asyncErrorHandler(
       passwordConfirmation,
     });
 
-    
     // send response - created user info with access & refresh token
     res.status(201).json(
       {

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { userRepository } from "../repositories/user";
+import { userRepository } from "../repositories/user.repository.js";
 import jwt from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;

@@ -1,14 +1,14 @@
 import express from "express";
-import { validateRequest } from "../middlewares/validation.js"; // Assuming you have a validation middleware
+import { validateRequest } from "../middlewares/validation.js";
 import { CreateUserRequestStruct } from "../structs/user/CreateUserRequestStruct.js";
-import { createUserController } from "../controllers/users.js";
+import { createUserController } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
 router.post(
   "/users",
   validateRequest(CreateUserRequestStruct),
-  createUserController
+  createUserController()
 );
 
 export default router;
