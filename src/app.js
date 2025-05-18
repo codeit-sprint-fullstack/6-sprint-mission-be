@@ -5,6 +5,7 @@ import router from './modules/index.module.js';
 const app = express();
 const PORT = 5050;
 
+
 // CORS 설정
 const corsOptions = {
   origin: "http://localhost:3000", 

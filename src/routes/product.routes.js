@@ -1,4 +1,3 @@
-// src/routes/product.route.js
 import express from "express";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { createProduct } from "../modules/product.module.js";

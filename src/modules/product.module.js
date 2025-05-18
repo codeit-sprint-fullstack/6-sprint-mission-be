@@ -5,7 +5,7 @@ import upload from "../middlewares/multer.js";
 
 const productRouter = express.Router();
 
-// 상품 생성 
+// 상품 생성
 productRouter.post(
   "/",
   verifyToken,
@@ -24,8 +24,11 @@ productRouter.post(
           name,
           description,
           price: parseFloat(price),
-          tags: tags ? tags.split(",") : [],
-          favorite: favorite ? parseInt(favorite) : 0,
+          tags: Array.isArray(tags)
+            ? tags
+            : typeof tags === "string"
+            ? tags.split(",")
+            : [],
           image,
           user: {
             connect: { id: userId },
@@ -56,20 +59,52 @@ productRouter.get("/", async (req, res) => {
 // 특정 상품 조회
 productRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
+  const userId = req.userId; // 토큰에서 가져온 사용자 ID (미들웨어 필요)
+
   try {
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
+      include: {
+        user: {
+          select: { nickname: true },
+        },
+        favorites: {
+          select: { userId: true }, 
+        },
+        // comments: {  
+        //   include: {
+        //     user: {
+        //       select: { nickname: true },
+        //     },
+        //   },
+        // },
+      },
     });
 
     if (!product) {
       return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
     }
 
-    res.status(200).json(product);
+    // 현재 유저가 해당 상품을 즐겨찾기 했는지 확인
+    const isFavorite = product.favorites.some((fav) => fav.userId === userId);
+
+    // 상품에 대한 즐겨찾기 수를 카운트
+    const favoritesCount = product.favorites.length;
+
+    // 응답에 추가된 정보들 반환
+    res.status(200).json({
+      ...product,
+      ownerNickname: product.user?.nickname || "알 수 없음", // 상품 소유자 닉네임
+      favoritesCount, // 즐겨찾기 수
+      isFavorite, // 현재 유저의 즐겨찾기 여부
+    });
   } catch (error) {
-    res.status(500).json({ message: "서버 오류" });
+    console.error("상품 상세 조회 에러:", error);
+    res.status(500).json({ message: "서버 오류", error: error.message });
   }
 });
+
+
 
 // 상품 수정
 productRouter.patch("/:id", verifyToken, async (req, res) => {
