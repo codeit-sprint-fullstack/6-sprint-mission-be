@@ -20,7 +20,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/uploads", express.static(path.join(__dirname, "../uploads"))); // ✅ 이미지 정적 파일 접근 허용
+app.use("/uploads", express.static(path.join(__dirname, "../uploads"))); 
 app.use("/api", routes);
 
 app.listen(PORT, () => {

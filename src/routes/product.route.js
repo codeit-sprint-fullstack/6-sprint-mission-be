@@ -15,12 +15,12 @@ import { optionalVerifyToken } from "../middlewares/optionalAuth.middleware.js";
 import multer from "multer";
 
 const router = express.Router();
-const upload = multer(); // memory storage by default
+const upload = multer(); 
 
 // 전체 상품 목록 조회
 router.get("/", getAllProducts);
 
-// 상품 상세 조회 - 로그인 X 가능 (선택적 인증)
+// 상품 상세 조회 
 router.get("/:productId", optionalVerifyToken, getProductById);
 
 // 댓글 조회

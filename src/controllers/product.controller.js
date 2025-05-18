@@ -1,6 +1,6 @@
 import prisma from "../db/prisma/client.js";
 
-// ✅ 전체 상품 목록 조회
+// 전체 상품 목록 조회
 export const getAllProducts = async (req, res) => {
   try {
     const userId = req.user?.id || null;
@@ -27,7 +27,7 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-// ✅ 상품 상세 조회
+// 상품 상세 조회
 export const getProductById = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId, 10);
@@ -60,7 +60,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// ✅ 상품 등록
+// 상품 등록
 export const createProduct = async (req, res) => {
   try {
     const { name, description, price, image, tags } = req.body;
@@ -86,7 +86,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// ✅ 상품 수정
+// 상품 수정
 export const updateProduct = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);
@@ -104,7 +104,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// ✅ 상품 삭제
+// 상품 삭제
 export const deleteProduct = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);
@@ -136,7 +136,7 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-// ✅ 상품 댓글 조회
+// 상품 댓글 조회
 export const getProductComments = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId, 10);
@@ -163,7 +163,7 @@ export const getProductComments = async (req, res) => {
   }
 };
 
-// ✅ 좋아요
+// 좋아요
 export const likeProduct = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);
@@ -190,7 +190,7 @@ export const likeProduct = async (req, res) => {
   }
 };
 
-// ✅ 좋아요 취소
+//  좋아요 취소
 export const unlikeProduct = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);

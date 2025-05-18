@@ -10,9 +10,8 @@ export function optionalVerifyToken(req, res, next) {
 
     try {
       const decoded = jwt.verify(token, SECRET_KEY);
-      req.user = decoded; // ✅ 로그인된 유저 정보만 넣기
+      req.user = decoded; 
     } catch (e) {
-      // 유효하지 않은 토큰은 무시하고 넘어감 (로그인 안 한 상태)
     }
   }
 

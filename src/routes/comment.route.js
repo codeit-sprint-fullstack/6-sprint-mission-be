@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// 댓글 조회 (공개)
+// 댓글 조회 
 router.get("/:productId/comments", getComments);
 
 // 댓글 작성

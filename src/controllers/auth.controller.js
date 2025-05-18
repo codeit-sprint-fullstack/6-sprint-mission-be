@@ -43,9 +43,8 @@ export const signin = async (req, res) => {
         .json({ message: "이메일 또는 비밀번호가 잘못되었습니다." });
     }
 
-    const token = generateToken(user); // ✅ JWT 생성
+    const token = generateToken(user); 
 
-    // ✅ 토큰과 nickname 함께 응답으로 내려줌
     return res.status(200).json({
       message: "로그인 성공",
       token,

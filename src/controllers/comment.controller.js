@@ -1,6 +1,6 @@
 import prisma from "../db/prisma/client.js";
 
-// ✅ 댓글 목록 조회
+// 댓글 목록 조회
 export const getComments = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);
@@ -25,7 +25,7 @@ export const getComments = async (req, res) => {
   }
 };
 
-// ✅ 댓글 작성
+// 댓글 작성
 export const createComment = async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);
@@ -55,7 +55,7 @@ export const createComment = async (req, res) => {
   }
 };
 
-// ✅ 댓글 수정
+// 댓글 수정
 export const updateComment = async (req, res) => {
   try {
     const commentId = parseInt(req.params.commentId);
@@ -81,7 +81,7 @@ export const updateComment = async (req, res) => {
   }
 };
 
-// ✅ 댓글 삭제
+// 댓글 삭제
 export const deleteComment = async (req, res) => {
   try {
     const commentId = parseInt(req.params.commentId);

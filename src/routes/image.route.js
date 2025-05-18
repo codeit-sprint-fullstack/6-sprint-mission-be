@@ -5,7 +5,6 @@ import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// 확장자 매핑용 객체
 const mimeMap = {
   "image/jpeg": ".jpg",
   "image/png": ".png",
@@ -13,7 +12,7 @@ const mimeMap = {
   "image/webp": ".webp",
 };
 
-// 파일 저장 방식: uploads 폴더에 저장 + 확장자 자동 붙이기
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -30,7 +29,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// ✅ 이미지 업로드 라우트
 router.post("/upload", verifyToken, upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "파일이 업로드되지 않았습니다." });

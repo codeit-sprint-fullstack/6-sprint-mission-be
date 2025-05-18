@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.JWT_SECRET || "panda-secret";
 
 export function verifyToken(req, res, next) {
-  // ✅ Authorization 헤더에서 Bearer 토큰 추출
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
