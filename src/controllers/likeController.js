@@ -2,9 +2,21 @@ import likeService from '../services/likeService.js';
 
 const likeController = {
   addLike: async (req, res, next) => {
-    try {
-      const { articleId, productId } = req.body;
-      const userId = req.auth.id;  
+    try {    
+      const { itemType, itemId } = req.params;
+      const { userId } = req.auth;
+      let articleId = null;
+      let productId = null;
+
+      if (itemType === 'articles') {
+        articleId = itemId;
+      } else if (itemType === 'products') {
+        productId = itemId;
+      } else {
+        return res.status(400).json({ message: '잘못된 itemType입니다.' });
+      }
+      
+
       await likeService.addLike(userId, parseInt(articleId) || null, parseInt(productId) || null);
       return res.status(201).json({ message: '좋아요를 눌렀습니다.' });
     } catch (error) {
@@ -14,8 +26,19 @@ const likeController = {
 
   removeLike: async (req, res, next) => {
     try {
-      const { articleId, productId } = req.body;
-      const userId = req.auth.id;  
+      const { itemType, itemId } = req.params;
+      const { userId } = req.auth;
+      let articleId = null;
+      let productId = null;
+
+      if (itemType === 'articles') {
+        articleId = itemId;
+      } else if (itemType === 'products') {
+        productId = itemId;
+      } else {
+        return res.status(400).json({ message: '잘못된 itemType입니다.' });
+      }
+
       await likeService.removeLike(userId, parseInt(articleId) || null, parseInt(productId) || null);
       return res.status(200).json({ message: '좋아요를 취소했습니다.' });
     } catch (error) {
