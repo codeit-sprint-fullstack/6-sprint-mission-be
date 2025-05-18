@@ -1,4 +1,4 @@
-### ✅ 1. 회원가입
+### 회원가입
 POST http://localhost:5000/api/auth/signup
 Content-Type: application/json
 
@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ###
 
-### ✅ 2. 로그인 (accessToken 발급 확인)
+### 로그인
 POST http://localhost:5000/api/auth/signin
 Content-Type: application/json
 
@@ -19,10 +19,10 @@ Content-Type: application/json
   "password": "12345678"
 }
 
-### ✅ 3. 상품 등록
+### 상품 등록
 POST http://localhost:5000/api/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWp1bkBleGFtcGxlLmNvbSIsImlhdCI6MTc0NzExMjAzNSwiZXhwIjoxNzQ3NzE2ODM1fQ.ZQKoVvS1qR93wt6rBm9sOTIeOsRkmeM4hp55R1zHG0E
+Authorization: Bearer 
 
 {
   "name": "콩이",
@@ -32,36 +32,36 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 }
 
 
-### 🔍 댓글 목록 조회
+### 댓글 목록 조회
 GET http://localhost:5000/api/products/8/comments
 Content-Type: application/json
 
 
-### ✍ 댓글 작성 (로그인 필요)
+### ✍ 댓글 작성 
 POST http://localhost:5000/api/products/8/comments
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWp1bkBleGFtcGxlLmNvbSIsImlhdCI6MTc0NzEyMDY5MSwiZXhwIjoxNzQ3NzI1NDkxfQ.29gPelIovtfCjEZTGWvzQEoFwmFj6U7s-pq336D4Dd0
+Authorization: Bearer 
 
 {
   "content": "이 상품 정말 좋아요!"
 }
 
 
-### 📝 댓글 수정 (로그인 필요)
+### 댓글 수정 
 PATCH http://localhost:5000/api/products/comments/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWp1bkBleGFtcGxlLmNvbSIsImlhdCI6MTc0NzEyMDY5MSwiZXhwIjoxNzQ3NzI1NDkxfQ.29gPelIovtfCjEZTGWvzQEoFwmFj6U7s-pq336D4Dd0
+Authorization: Bearer 
 
 {
   "content": "수정된 댓글 내용입니다."
 }
 
 
-### 🗑 댓글 삭제 (로그인 필요)
+### 댓글 삭제 
 DELETE http://localhost:5000/api/products/comments/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWp1bkBleGFtcGxlLmNvbSIsImlhdCI6MTc0NzEyMDY5MSwiZXhwIjoxNzQ3NzI1NDkxfQ.29gPelIovtfCjEZTGWvzQEoFwmFj6U7s-pq336D4Dd0
+Authorization: Bearer 
 
 
 ### 상품 삭제
 DELETE http://localhost:5000/api/products/8
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWp1bkBleGFtcGxlLmNvbSIsImlhdCI6MTc0NzIxMDc5MiwiZXhwIjoxNzQ3ODE1NTkyfQ.aQTOVIWQAh0VxKzBxWoH3jFyUw4afMXCkkneT_PquHY
+Authorization: Bearer 
