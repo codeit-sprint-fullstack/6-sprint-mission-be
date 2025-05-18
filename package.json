@@ -1,7 +1,7 @@
 {
   "name": "6-sprint-mission-be",
   "version": "1.0.0",
-  "description": "> _이 저장소는 판다마켓 프로젝트의 백엔드 코드를 관리하는 곳입니다. 프로젝트를 클론하여 개발 환경을 설정하고, 각 브랜치에서 해당 스프린트 미션을 수행해 주세요!_ 🛠️",
+  "description": "이 저장소는 판다마켓 프로젝트의 백엔드 코드를 관리하는 곳입니다.",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/app.js",
@@ -11,27 +11,32 @@
     "type": "git",
     "url": "git+https://github.com/writing-sky/6-sprint-mission-be.git"
   },
-  "author": "",
+  "author": "sky",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/writing-SKY/6-sprint-mission-be/issues"
   },
   "homepage": "https://github.com/writing-SKY/6-sprint-mission-be#readme",
   "dependencies": {
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.7.0",
     "@prisma/extension-accelerate": "^1.3.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "express-jwt": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
     "nodemon": "^3.1.9",
-    "prisma": "^6.6.0",
+    "prisma": "^6.7.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "prisma": {
-    "schema": "./src/db/prisma/schema.prisma"
+    "schema": "./prisma/schema.prisma",
+    "seed": "node prisma/seed.js"
   }
 }

@@ -3,3 +3,6 @@ node_modules/
 .github
 package-lock.json
 http/
+prisma/migrations
+prisma/mock
+prisma/seed.js
