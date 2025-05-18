@@ -3,8 +3,10 @@ import { signUpService } from "../services/users.js";
 
 export const createUserController = asyncErrorHandler(
   async function (req, res, next) {
+    // parse the request data
     const { email, nickname, password, passwordConfirmation } = req.body;
 
+    // call service with the parsed info
     const newUser = await signUpService({
       email,
       nickname,
@@ -12,11 +14,17 @@ export const createUserController = asyncErrorHandler(
       passwordConfirmation,
     });
 
-    res.status(201).json({
-      id: newUser.id,
-      email: newUser.email,
-      nickname: newUser.nickname,
-      createdAt: newUser.createdAt,
-    });
+    
+    // send response - created user info with access & refresh token
+    res.status(201).json(
+      {
+        id: newUser.id,
+        email: newUser.email,
+        nickname: newUser.nickname,
+        createdAt: newUser.createdAt,
+      },
+      accessToken,
+      refreshToken
+    );
   }
 );

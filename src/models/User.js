@@ -24,7 +24,7 @@ export class User {
     this._id = param.id;
     this._email = param.email;
     this._nickname = param.nickname;
-    this._image = param.image;
+    this._image = param.image ?? null;
     this._encryptedPassword = param.encryptedPassword;
     this._createdAt = param.createdAt;
     this._updatedAt = param.updatedAt;
@@ -57,5 +57,4 @@ export class User {
   getUpdatedAt() {
     return this._updatedAt;
   }
-
 }
