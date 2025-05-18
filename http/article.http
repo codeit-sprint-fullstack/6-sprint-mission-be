@@ -1,0 +1,30 @@
+### 새 게시글 생성
+POST http://localhost:5050/articles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MTg1OTgzLCJleHAiOjE3NDcxODk1ODN9.8KUfvmhW3vn6-TcqzU5nUg5TzZV8bfsWiAa15kVxz0E
+
+{
+  "title": "새로운 게시글 제목5",
+  "content": "새로운 게시글 내용"
+}
+
+### 모든 게시글 조회
+GET http://localhost:5050/articles?orderBy=recent&keyword=
+
+### 특정 게시글 조회
+GET http://localhost:5050/articles/1
+
+### 특정 게시글 수정
+PATCH http://localhost:5050/articles/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MTg1OTgzLCJleHAiOjE3NDcxODk1ODN9.8KUfvmhW3vn6-TcqzU5nUg5TzZV8bfsWiAa15kVxz0E
+
+{
+  "title": "수정된 게시글 제목",
+  "content": "수정된 게시글 내용"
+}
+
+### 특정 게시글 삭제
+DELETE http://localhost:5050/articles/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MTg1OTgzLCJleHAiOjE3NDcxODk1ODN9.8KUfvmhW3vn6-TcqzU5nUg5TzZV8bfsWiAa15kVxz0E
+

@@ -1,0 +1,33 @@
+### 내 정보 조회
+GET http://localhost:5050/users/me
+Authorization: Bearer <your_access_token>  # 인증 필요
+
+### 내 정보 수정
+PATCH http://localhost:5050/users/me
+Content-Type: application/json
+Authorization: Bearer <your_access_token>  # 인증 필요
+
+{
+  "nickname": "새로운닉네임",
+  "image": "새로운이미지URL"
+  // 수정할 필드들을 JSON 형태로 포함
+}
+
+### 비밀번호 변경
+PATCH http://localhost:5050/users/me/password
+Content-Type: application/json
+Authorization: Bearer <your_access_token>  # 인증 필요
+
+{
+  "currentPassword": "현재비밀번호",
+  "newPassword": "새로운비밀번호",
+  "newPasswordConfirmation": "새로운비밀번호확인"
+}
+
+### 내가 등록한 상품 조회
+GET http://localhost:5050/users/me/products
+Authorization: Bearer <your_access_token>  # 인증 필요
+
+### 내가 찜한 상품 조회
+GET http://localhost:5050/users/me/favorites
+Authorization: Bearer <your_access_token>  # 인증 필요
