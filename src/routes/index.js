@@ -9,9 +9,9 @@ import uploadRouter from './uploadRouter.js';
 const router = express.Router();
 
 router.use('/auth', authRouter);
-router.use('/article', articleRouter);
-router.use('/product', productRouter);
-router.use('/comment', commentRouter);
+router.use('/articles', articleRouter);
+router.use('/products', productRouter);
+router.use('/comments', commentRouter);
 router.use('/like', likeRouter);
 router.use('/upload', uploadRouter);
 

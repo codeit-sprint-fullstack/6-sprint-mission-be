@@ -5,7 +5,7 @@ import authController from '../controllers/authController.js';
 const authRouter = express.Router();
 
 // 회원가입
-authRouter.post('/signup', authController.signup);
+authRouter.post('/signUp', authController.signup);
 
 // 로그인
 authRouter.post('/signIn', auth.validateEmailAndPassword, authController.login);

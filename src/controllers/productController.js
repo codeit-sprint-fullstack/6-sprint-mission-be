@@ -4,7 +4,7 @@ const productController = {
   createProduct: async (req, res, next) => {
     try {
       const { name, description, price, tags, images } = req.body;
-      const userId = req.auth.id;  
+      const {userId} = req.auth;  
       const newProduct = await productService.createProduct(userId, name, description, price, tags, images);
       return res.status(201).json(newProduct);
     } catch (error) {
@@ -36,7 +36,7 @@ const productController = {
     try {
       const { productId } = req.params;
       const { name, description, price, tags, images } = req.body;
-      const userId = req.auth.id;  
+       const {userId} = req.auth;  
       const updatedProduct = await productService.updateProduct(
         parseInt(productId),
         userId,
@@ -55,7 +55,7 @@ const productController = {
   deleteProduct: async (req, res, next) => {
     try {
       const { productId } = req.params;
-      const userId = req.auth.id;  
+       const {userId} = req.auth;  
       await productService.deleteProduct(parseInt(productId), userId);
       return res.status(204).send();   
     } catch (error) {

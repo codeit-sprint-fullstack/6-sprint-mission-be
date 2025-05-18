@@ -4,7 +4,7 @@ const articleController = {
   createArticle: async (req, res, next) => {
     try {
       const { title, content, images } = req.body;
-      const userId = req.auth.id;  
+       const {userId} = req.auth;  
       const newArticle = await articleService.createArticle(userId, title, content, images);
       return res.status(201).json(newArticle);
     } catch (error) {
@@ -36,7 +36,7 @@ const articleController = {
     try {
       const { articleId } = req.params;
       const { title, content, images } = req.body;
-      const userId = req.auth.id;  
+       const {userId} = req.auth;  
       const updatedArticle = await articleService.updateArticle(
         parseInt(articleId),
         userId,
@@ -53,7 +53,7 @@ const articleController = {
   deleteArticle: async (req, res, next) => {
     try {
       const { articleId } = req.params;
-      const userId = req.auth.id;  
+       const {userId} = req.auth;  
       await articleService.deleteArticle(parseInt(articleId), userId);
       return res.status(204).send();   
     } catch (error) {

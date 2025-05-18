@@ -37,7 +37,7 @@ const authController = {
 
   async getUserInfo(req, res, next) {
     try {
-      const userId = req.auth.id;
+       const {userId} = req.auth;
       const user = await authService.getUserById(userId);
       res.json({ id: user.id, email: user.email, nickname: user.nickname, profileImage: user.profileImage }); 
     } catch (error) {

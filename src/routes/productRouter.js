@@ -14,7 +14,7 @@ productRouter.get('/', productController.getProducts);
 productRouter.get('/:productId', productController.getProductById);
 
 // 상품 수정 (인증 필요)
-productRouter.put('/:productId', auth.verifyAccessToken, productController.updateProduct);
+productRouter.patch('/:productId', auth.verifyAccessToken, productController.updateProduct);
 
 // 상품 삭제 (인증 필요)
 productRouter.delete('/:productId', auth.verifyAccessToken, productController.deleteProduct);

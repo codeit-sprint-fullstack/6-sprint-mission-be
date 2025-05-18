@@ -3,6 +3,8 @@ import likeRepository from '../repositories/likeRepository.js';
 
 const likeService = {
   addLike: async (userId, articleId, productId) => {
+    console.log("articleId:", articleId)
+    console.log("productId:",productId)
     return prisma.$transaction(async (tx) => {
       if (!articleId && !productId) {
         throw { status: 400, message: '게시글 ID 또는 상품 ID 중 하나는 필수입니다.' };
