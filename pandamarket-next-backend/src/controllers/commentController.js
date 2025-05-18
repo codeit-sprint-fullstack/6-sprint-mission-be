@@ -113,7 +113,7 @@ commentController.delete(
         throw error;
       }
       await commentService.deleteComment(id);
-      res.status(201).json();
+      res.status(204).send();
     } catch (error) {
       next(error);
     }

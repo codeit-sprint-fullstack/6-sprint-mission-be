@@ -254,6 +254,7 @@ productController.delete(
     try {
       const id = req.params.id;
       const userId = req.auth.userId;
+
       const product = await productService.getById(id);
       if (!product) {
         const error = new Error("삭제하려는 물건이 존재하지 않습니다.");
@@ -266,7 +267,7 @@ productController.delete(
         throw error;
       }
       await productService.deleteProduct(id);
-      res.status(201).json();
+      res.status(204).send();
     } catch (error) {
       next(error);
     }
