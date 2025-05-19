@@ -13,6 +13,7 @@ const getArticles = async (req, res, next) => {
 
 // 게시글 상세조회
 const getArticle = async (req, res, next) => {
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {
@@ -26,8 +27,10 @@ const getArticle = async (req, res, next) => {
 
 // 게시글 작성
 const createArticle = async (req, res, next) => {
+  const userId = req.auth.id;
+
   try {
-    const newArticle = await articleService.createArticle(req.body);
+    const newArticle = await articleService.createArticle(userId, req.body);
 
     res.status(201).json(newArticle);
   } catch (e) {
@@ -64,10 +67,9 @@ const deleteArticle = async (req, res, next) => {
   }
 };
 
-// TODO: 게시글 상세조회, 게시글 좋아요, 게시글 좋아요 취소에 user 인증 미들웨어 달고, req.auth로 들어오는 user정보에서 id를 추출한 다음에 userId를 넘겨주기
-// TODO: 게시글 좋아요 전체 갯수 알 수 있는 목록도 반환시키기
 // 게시글 좋아요
 const addlikeArticle = async (req, res, next) => {
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {
@@ -81,6 +83,7 @@ const addlikeArticle = async (req, res, next) => {
 
 // 게시글 좋아요 취소
 const cancelLikeArticle = async (req, res, next) => {
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {

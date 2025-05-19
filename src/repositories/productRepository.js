@@ -8,33 +8,49 @@ const findAll = (query) => {
       { description: { contains: keyword || "", mode: "insensitive" } },
     ],
   };
+  const orderByCondition =
+    orderBy === "recent"
+      ? { createdAt: "desc" }
+      : { productLikes: { _count: "desc" } };
 
   return Promise.all([
     prisma.product.findMany({
       where: filter,
       skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
-      orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
-      omit: { description: true, updatedAt: true },
+      orderBy: orderByCondition,
+      omit: { description: true, authorId: true, updatedAt: true },
       include: { productImages: { select: { imageUrl: true } } },
     }),
     prisma.product.count({ where: filter }),
   ]);
 };
 
+const findProductLikeCountById = (productId) => {
+  return prisma.productLike.count({ where: { productId } });
+};
+
 const findByIdWithTx = (tx, userId, productId) => {
   return Promise.all([
     tx.product.findUnique({
       where: { id: productId },
-      omit: { updatedAt: true },
+      omit: { updatedAt: true, authorId: true },
+      include: { author: { select: { id: true, nickname: true } } },
     }),
     tx.productImage.findMany({
+      where: { productId },
+    }),
+    tx.productLike.count({
       where: { productId },
     }),
     tx.productLike.findUnique({
       where: { userId_productId: { userId, productId } },
     }),
   ]);
+};
+
+const findOnlyProductByIdWithTx = (tx, productId) => {
+  return tx.product.findUnique({ where: { id: productId } });
 };
 
 const findProductTagByIdWithTx = (tx, productId) => {
@@ -44,11 +60,11 @@ const findProductTagByIdWithTx = (tx, productId) => {
   });
 };
 
-const createWithTx = (tx, body) => {
+const createWithTx = (tx, userId, body) => {
   const { name, description, price } = body;
 
   return tx.product.create({
-    data: { name, description, price: Number(price) },
+    data: { name, description, price: Number(price), authorId: userId },
   });
 };
 
@@ -105,7 +121,9 @@ const cancelLikeProduct = (userId, productId) => {
 
 export default {
   findAll,
+  findProductLikeCountById,
   findByIdWithTx,
+  findOnlyProductByIdWithTx,
   findProductTagByIdWithTx,
   createWithTx,
   createProductImageWithTx,

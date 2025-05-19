@@ -12,17 +12,24 @@ const getProducts = async (query) => {
     throw error;
   }
 
-  return [products, totalCount];
+  const productWithLikeCount = await Promise.all(
+    products.map(async (product) => {
+      const likeCount = await productRepository.findProductLikeCountById(
+        product.id
+      );
+
+      return { ...product, likeCount };
+    })
+  );
+
+  return [productWithLikeCount, totalCount];
 };
 
 // 상품 상세조회
 const getProduct = async (userId, productId) => {
   return await prisma.$transaction(async (tx) => {
-    const [product, images, isLiked] = await productRepository.findByIdWithTx(
-      tx,
-      userId,
-      productId
-    );
+    const [product, images, likeCount, isLiked] =
+      await productRepository.findByIdWithTx(tx, userId, productId);
 
     if (!product) {
       const error = new Error("존재하지 않는 상품입니다.");
@@ -31,15 +38,21 @@ const getProduct = async (userId, productId) => {
       throw error;
     }
 
-    const productTag = await productRepository.findProductTagByIdWithTx(
+    const productTags = await productRepository.findProductTagByIdWithTx(
       tx,
       productId
     );
 
-    const tags = productTag.map((tag) => tag.tag.name);
+    const tags = productTags.map((tag) => tag.tag.name);
     const imageUrls = images.map((image) => image.imageUrl);
 
-    return { ...product, tags, images: imageUrls, isLiked: !!isLiked };
+    return {
+      ...product,
+      tags,
+      images: imageUrls,
+      likeCount,
+      isLiked: !!isLiked,
+    };
   });
 };
 
@@ -48,7 +61,7 @@ const createProduct = async (userId, body, images) => {
   const { tags } = body;
 
   return await prisma.$transaction(async (tx) => {
-    const newProduct = await productRepository.createWithTx(tx, body);
+    const newProduct = await productRepository.createWithTx(tx, userId, body);
 
     const newTags = await Promise.all(
       JSON.parse(tags).map(async (tagName) => {
@@ -134,7 +147,10 @@ const updateProduct = async (userId, productId, body, images) => {
 // 상품 삭제
 const deleteProduct = async (productId) => {
   return await prisma.$transaction(async (tx) => {
-    const product = await productRepository.findByIdWithTx(tx, productId);
+    const product = await productRepository.findOnlyProductByIdWithTx(
+      tx,
+      productId
+    );
 
     if (!product) {
       const error = new Error("이미 삭제된 상품입니다.");

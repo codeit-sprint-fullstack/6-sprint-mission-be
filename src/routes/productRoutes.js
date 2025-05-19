@@ -44,18 +44,10 @@ productRouter.delete(
   productController.deleteProduct
 );
 
-// 상품 좋아요
-productRouter.post(
-  "/:productId/like",
-  auth.verifyAccessToken,
-  productController.addlikeProduct
-);
-
-// 상품 좋아요 취소
-productRouter.delete(
-  "/:productId/like",
-  auth.verifyAccessToken,
-  productController.cancelLikeProduct
-);
+// 상품 좋아요 & 좋아요 취소
+productRouter
+  .route("/:productId/like")
+  .post(auth.verifyAccessToken, productController.addlikeProduct)
+  .delete(auth.verifyAccessToken, productController.cancelLikeProduct);
 
 export default productRouter;

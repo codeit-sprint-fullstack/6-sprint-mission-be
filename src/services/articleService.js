@@ -12,12 +12,22 @@ const getArticles = async (query) => {
     throw error;
   }
 
-  return [articles, totalCount];
+  const articletWithLikeCount = await Promise.all(
+    articles.map(async (article) => {
+      const likeCount = await articleRepository.findArticleLikeCountById(
+        article.id
+      );
+
+      return { ...article, likeCount };
+    })
+  );
+
+  return [articletWithLikeCount, totalCount];
 };
 
 // 게시글 상세조회
 const getArticle = async (userId, articleId) => {
-  const [article, isLiked] = await articleRepository.findById(
+  const [article, likeCount, isLiked] = await articleRepository.findById(
     userId,
     articleId
   );
@@ -29,11 +39,11 @@ const getArticle = async (userId, articleId) => {
     throw error;
   }
 
-  return { ...article, isLiked: !!isLiked };
+  return { ...article, likeCount, isLiked: !!isLiked };
 };
 
 // 게시글 작성
-const createArticle = (body) => {
+const createArticle = (userId, body) => {
   const { title, content } = body;
 
   if (!title || !content) {
@@ -43,7 +53,7 @@ const createArticle = (body) => {
     throw error;
   }
 
-  return articleRepository.create(body);
+  return articleRepository.create(userId, body);
 };
 
 // 게시글 수정

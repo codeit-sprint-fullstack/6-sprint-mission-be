@@ -8,24 +8,37 @@ const findAll = (query) => {
       { content: { contains: keyword || "", mode: "insensitive" } },
     ],
   };
+  const orderByCondition =
+    orderBy === "recent"
+      ? { createdAt: "desc" }
+      : { articleLikes: { _count: "desc" } };
 
   return Promise.all([
     prisma.article.findMany({
       where: filter,
       skip: (Number(offset) - 1) * Number(limit) || 0,
       take: Number(limit) || 10,
-      orderBy: { createdAt: orderBy === "recent" ? "desc" : "asc" },
-      omit: { updatedAt: true },
+      orderBy: orderByCondition,
+      omit: { updatedAt: true, authorId: true },
+      include: { author: { select: { nickname: true } } },
     }),
     prisma.article.count({ where: filter }),
   ]);
+};
+
+const findArticleLikeCountById = (articleId) => {
+  return prisma.articleLike.count({ where: { articleId } });
 };
 
 const findById = (userId, articleId) => {
   return Promise.all([
     prisma.article.findUnique({
       where: { id: articleId },
-      omit: { updatedAt: true },
+      omit: { updatedAt: true, authorId: true },
+      include: { author: { select: { id: true, nickname: true } } },
+    }),
+    prisma.articleLike.count({
+      where: { articleId },
     }),
     prisma.articleLike.findUnique({
       where: { userId_articleId: { userId, articleId } },
@@ -39,9 +52,11 @@ const findByIdWithTx = (tx, articleId) => {
   });
 };
 
-const create = (body) => {
+const create = (userId, body) => {
+  const { title, content } = body;
+
   return prisma.article.create({
-    data: body,
+    data: { title, content, authorId: userId },
   });
 };
 
@@ -72,6 +87,7 @@ const cancelLikeArticle = (userId, articleId) => {
 
 export default {
   findAll,
+  findArticleLikeCountById,
   findById,
   findByIdWithTx,
   create,
