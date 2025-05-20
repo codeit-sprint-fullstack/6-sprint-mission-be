@@ -1,0 +1,22 @@
+### 내 정보 조회 (Bearer 토큰 필요)
+GET http://localhost:3000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAyODA3OCwiZXhwIjoxNzQ3MDMxNjc4fQ.wTEJBN7Ef3bVkDoX7Eo0ba_XBDjptlD1WtmWYiBYI38
+
+### 내 정보 수정
+PATCH http://localhost:3000/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzAyODA3OCwiZXhwIjoxNzQ3MDMxNjc4fQ.wTEJBN7Ef3bVkDoX7Eo0ba_XBDjptlD1WtmWYiBYI38
+
+{
+  "nickname": "새닉네임2"
+}
+
+### 비밀번호 변경 테스트
+PATCH http://localhost:3000/users/me/password
+Content-Type: application/json
+Authorization: Bearer 여기에_토큰_입력
+
+{
+  "currentPassword": "기존비밀번호",
+  "newPassword": "새비밀번호123"
+}

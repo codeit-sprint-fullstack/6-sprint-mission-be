@@ -1,0 +1,42 @@
+### 전체 상품 목록
+GET http://localhost:3000/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+### 특정 상품 조회
+GET http://localhost:3000/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+### 상품 수정 - postman 사용
+PATCH http://localhost:3000/products/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzEyOTI0MywiZXhwIjoxNzQ3MTMyODQzfQ.I1lgeb1FCAp3qB0FDi9VIl4Q_jisHHCa81Oj0GkgO0A
+Content-Type: multipart/form-data
+
+### 상품 삭제
+DELETE http://localhost:3000/products/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzE4NjMyNiwiZXhwIjoxNzQ3MTg5OTI2fQ.Zx3YSLate-hQ01e8tBIdQ9y-3jP7yTuBVyU45Eg7gEQ
+
+
+### 좋아요 누르기
+POST http://localhost:3000/products/4/favorite
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+### 좋아요 취소
+DELETE http://localhost:3000/products/4/favorite
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+
+### 좋아요 순으로 상품 정렬
+GET http://localhost:3000/products?sort=likes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+### 최신순으로 상품 정렬 (기본값)
+GET http://localhost:3000/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+### 베스트 상품 조회 (상위 4개)
+GET http://localhost:3000/products/best
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg
+
+### 베스트 상품 조회 (상위 2개로 제한)
+GET http://localhost:3000/products/best?limit=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0NzU3NzkwMywiZXhwIjoxNzQ3NTgxNTAzfQ.jgYpltDHrvaBpcc1QcAJQpOR1hahTxQjzSFqPc3myEg

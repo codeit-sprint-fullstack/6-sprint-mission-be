@@ -1,0 +1,25 @@
+### 상품의 댓글 목록 조회
+GET http://localhost:3000/products/19/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzU1MzExMSwiZXhwIjoxNzQ3NTU2NzExfQ.nDx1viXcDonrwnkis-eqsmzRilFAOfy5z8ADA4YW5QQ
+
+### 댓글 생성
+POST http://localhost:3000/products/19/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzU1MzExMSwiZXhwIjoxNzQ3NTU2NzExfQ.nDx1viXcDonrwnkis-eqsmzRilFAOfy5z8ADA4YW5QQ
+
+{
+  "content": "이 상품 퀄리티가 좋네요! 배송도 빠르게 받을 수 있을까요?"
+}
+
+### 댓글 수정 (commentId는 생성된 댓글의 ID로 변경)
+PATCH http://localhost:3000/products/19/comments/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzU1MzExMSwiZXhwIjoxNzQ3NTU2NzExfQ.nDx1viXcDonrwnkis-eqsmzRilFAOfy5z8ADA4YW5QQ
+
+{
+  "content": "수정된 댓글 내용입니다!"
+}
+
+### 댓글 삭제 (commentId는 삭제할 댓글의 ID로 변경)
+DELETE http://localhost:3000/products/19/comments/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzU1MzExMSwiZXhwIjoxNzQ3NTU2NzExfQ.nDx1viXcDonrwnkis-eqsmzRilFAOfy5z8ADA4YW5QQ
