@@ -1,0 +1,16 @@
+# 판다 마켓 API 요청 모음
+
+### 서버 요청은 server.http 파일 참조
+# @name server
+
+### 인증 관련 요청은 auth.http 파일 참조
+# @name auth
+
+### 제품 관련 요청은 products.http 파일 참조
+# @name products
+
+### 게시글 관련 요청은 articles.http 파일 참조
+# @name articles
+
+### 댓글 관련 요청은 comments.http 파일 참조
+# @name comments 

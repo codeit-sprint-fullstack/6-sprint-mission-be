@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  // prisma 7버전 이상부턴 아래 코드를 넣어야 에러안남
+  // output   = "../node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(cuid())
+  email             String        @unique
+  nickname          String
+  image             String?
+  encryptedPassword String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  refreshToken      String?
+  ArticleLike       ArticleLike[]
+  ProductLike       ProductLike[]
+  Article           Article[]
+  Product           Product[]
+  Comment           Comment[]
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  image       String[]
+  // TODO: likesCount로 수정
+  likes       Int?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  tags        String[]
+  Comment     Comment[]
+  ProductLike ProductLike[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Article {
+  id          String        @id @default(cuid())
+  title       String
+  content     String
+  image       String[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  // TODO: likesCount로 수정
+  likes       Int?
+  ArticleLike ArticleLike[]
+  comments    Comment[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProductLike {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model ArticleLike {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  articleId String?
+  Article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  productId String?
+  Product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
