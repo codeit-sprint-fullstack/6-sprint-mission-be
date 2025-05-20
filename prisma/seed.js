@@ -15,10 +15,10 @@ async function main() {
   console.log("Starting database seeding...");
 
   // Clear existing data
-  console.log("Clearing existing data...");
-  await prisma.comment.deleteMany();
-  await prisma.article.deleteMany();
-  await prisma.product.deleteMany();
+  // console.log("Clearing existing data...");
+  // await prisma.comment.deleteMany();
+  // await prisma.article.deleteMany();
+  // await prisma.product.deleteMany();
 
   // Insert articles one by one and store their IDs
   console.log("Creating articles...");
