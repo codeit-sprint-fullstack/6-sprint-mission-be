@@ -1,6 +1,7 @@
 {
   "name": "6-sprint-mission-be",
   "version": "1.0.0",
+  "type": "module",
   "description": "> _이 저장소는 판다마켓 프로젝트의 백엔드 코드를 관리하는 곳입니다. 프로젝트를 클론하여 개발 환경을 설정하고, 각 브랜치에서 해당 스프린트 미션을 수행해 주세요!_ 🛠️",
   "main": "index.js",
   "scripts": {
@@ -22,8 +23,14 @@
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
     "@prisma/client": "^6.5.0",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-jwt": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",

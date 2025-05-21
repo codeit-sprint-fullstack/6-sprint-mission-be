@@ -1,6 +1,5 @@
 // prisma/clear.js
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+import prisma from "../src/db/prisma/client";
 
 async function main() {
   console.log("🧹 기존 데이터 삭제 중...");
