@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id               Int               @id @default(autoincrement())
+  title            String
+  content          String
+  images           String[]
+  likeCount        Int               @default(0)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  writerId         Int
+  articleComment   Comment[]
+  writer           User              @relation(fields: [writerId], references: [id], onDelete: Cascade)
+  articleFavorites ArticleFavorite[]
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String
+  price           Int
+  tags            String[]
+  images          String[]
+  ownerId         Int
+  favoriteCount   Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  productComment  Comment[]
+  owner           User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  productFavorits ProductFavorite[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  productId Int?
+  articleId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  writerId  Int
+  article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  writer    User     @relation(fields: [writerId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  email            String            @unique
+  nickname         String            @unique
+  image            String?
+  hashedPassword   String?
+  refreshToken     String?
+  provider         String            @default("local")
+  providerId       String?           @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  articles         Article[]
+  products         Product[]
+  comments         Comment[]
+  productFavorites ProductFavorite[]
+  articleFavorites ArticleFavorite[]
+}
+
+model ProductFavorite {
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    Int
+  productId Int
+
+  @@id([userId, productId])
+}
+
+model ArticleFavorite {
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    Int
+  articleId Int
+
+  @@id([userId, articleId])
+}

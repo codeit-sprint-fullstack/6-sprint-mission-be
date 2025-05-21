@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+paths:
+  /products:
+    post:
+      summary: 상품 등록
+      tags: [Product]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: 상품 이름
+                description:
+                  type: string
+                  example: 상품 설명
+                price:
+                  type: integer
+                  example: 10000
+                tags:
+                  type: array
+                  example: ["전자제품"]
+                images:
+                  type: array
+                  example: ["https://example.com/."]
+              required:
+                - name
+                - description
+                - price
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                ProductExample:
+                  $ref: "#/components/examples/ProductExample"
+    get:
+      summary: 상품 목록 조회
+      tags: [Product]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+        - in: query
+          name: keyword
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+              examples:
+                ProductExample:
+                  $ref: "#/components/examples/ProductExample"
+
+  /products/{productId}:
+    get:
+      summary: 상품 상세 조회
+      tags: [Product]
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                ProductExample:
+                  $ref: "#/components/examples/ProductExample"
+    patch:
+      summary: 상품 수정
+      tags: [Product]
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                ProductExample:
+                  $ref: "#/components/examples/ProductExample"
+    delete:
+      summary: 상품 삭제
+      tags: [Product]
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: No Content
+
+  /products/{productId}/favorite:
+    post:
+      summary: 상품 좋아요
+      tags: [Product]
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                ProductExample:
+                  $ref: "#/components/examples/ProductExample"
+    delete:
+      summary: 상품 좋아요 취소
+      tags: [Product]
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              examples:
+                ProductExample:
+                  $ref: "#/components/examples/ProductExample"
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 835
+        name:
+          type: string
+          nullable: true
+          example: 상품 이름
+        description:
+          type: string
+          nullable: true
+          example: 상품 설명
+        price:
+          type: integer
+          example: 10000
+        tags:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-05-08T08:13:52.165Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-05-08T08:13:52.165Z"
+
+  examples:
+    ProductExample:
+      value:
+        id: 835
+        name: "상품 이름"
+        description: "상품 설명"
+        price: 10000
+        tags: ["전자제품"]
+        images: ["https://example.com/."]
+        createdAt: "2025-05-08T08:13:52.165Z"
+        updatedAt: "2025-05-08T08:13:52.165Z"
