@@ -1,0 +1,37 @@
+### 프로덕트 목록조회
+
+GET http://localhost:5050/products
+
+### 프로덕트 조회
+
+GET http://localhost:5050/products/8
+
+### 프로덕트 등록
+
+POST http://localhost:5050/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc0NzEwMzQ0NiwiZXhwIjoxNzQ3MTA3MDQ2fQ.fLL6Pbqz3HpV7KiAxs8_M9OJ21xl-HOGBdBfWH1Vouo
+
+{
+  "name": "Samsung 갤럭시 노트 20",
+  "price": 600000
+}
+
+### 프로덕트 삭제
+
+DELETE http://localhost:5050/products/7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
+
+### 프로덕트 수정
+
+PUT http://localhost:5050/products/8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAyMjQwNywiZXhwIjoxNzQ3MDI2MDA3fQ.OAvFBC322-wds9T86Me9pfWBxX26y6AGmmQHjHSC_pI
+
+{
+  "name": "Samsung 갤럭시 탭 S7 FE",
+  "price": 230000
+}
+
+###

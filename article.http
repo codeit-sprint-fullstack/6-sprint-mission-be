@@ -1,0 +1,22 @@
+### 아티클 조회
+
+GET http://localhost:3000/articles/1
+
+### 아티클 목록조회
+
+GET http://localhost:3000/articles
+
+
+### 아티클 등록
+
+POST http://localhost:3000/articles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAwOTE5OSwiZXhwIjoxNzQ3MDEyNzk5fQ.sdATdMiveU1w9HfAtyeZyKBKir9Cp1qqqPsEN1ub2xM
+
+{
+  "title": "중고마켓 판다마켓 맞나요?",
+  "content": "중고물품 팔려고 하는데요?",
+  "writer": "sevendays"
+}
+
+###
