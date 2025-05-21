@@ -1,0 +1,20 @@
+###상품 댓글 목록 조회
+GET http://localhost:3000/products/2/comments
+
+###게시글 댓글 목록 조회
+GET http://localhost:3000/articles/1/comments
+
+#######################################################
+
+###댓글 수정
+PATCH http://localhost:3000/comments/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0Njc2NDE5NCwiZXhwIjoxNzQ2NzY3Nzk0fQ.V9gu_PsSuFl1Tv1DhLquHkgVO32utmOS4yE5uL-ckp0
+
+{
+    "content": "저는 유저 1입니다"
+}
+
+###댓글 삭제
+DELETE  http://localhost:3000/comments/13
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0Njc2NDMzOCwiZXhwIjoxNzQ2NzY3OTM4fQ.KpThcLEGw2jYaeMIfi8Ah1joVtBVBLSBwoJlxb9Kop8

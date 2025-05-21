@@ -1,125 +1,147 @@
-const express = require("express");
-const prisma = require("../db/prisma/client.prisma");
+// import express from "express";
+// import prisma from "../config/client.prisma.js";
+// import { GetArticleListReqStruct } from "../structs/article/GetArticleListReqStruct.js";
+// import { create } from "domain";
+// import { Article } from "../models/Article.js";
 
-const articleRouter = express.Router();
+// const articleRouter = express.Router();
 
-/**
- * 게시글 등록하기
- */
-articleRouter.post("/", async (req, res, next) => {
-  try {
-    const { title, content } = req.body;
+// /**
+//  * 게시글 등록하기
+//  */
+// articleRouter.post("/", async (req, res, next) => {
+//   try {
+//     const { title, content } = req.body;
 
-    const article = await prisma.article.create({
-      data: { title, content },
-    });
+//     const article = await prisma.article.create({
+//       data: { title, content },
+//     });
 
-    res.status(201).json(article);
-  } catch (e) {
-    next(e);
-  }
-});
+//     res.status(201).json(article);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-/**
- * 게시글 목록 조회하기
- */
-articleRouter.get("/", async (req, res, next) => {
-  try {
-    const skip = Number(req.query.offset);
-    const search = req.query.search;
+// /**
+//  * 게시글 목록 조회하기
+//  */
+// articleRouter.get("/", async (req, res, next) => {
+//   const { cursor, orderBy, word } = create(req.query, GetArticleListReqStruct);
 
-    const options = {};
+//   const parsedTake = parseInt(req.query.take) || 10;
 
-    //정렬
-    options.orderBy = { createdAt: "desc" };
+//   try {
+//     const articleEntities = await prisma.article.findMany({
+//       cursor: cursor ? { id: cursor } : undefined,
+//       take: parsedTake + 1,
+//       orderBy: orderBy === "recent" ? { id: "desc" } : { id: "asc" },
+//       where: word ? { title: { contains: word } } : undefined,
+//     });
 
-    //오프셋
-    if (skip) options.skip = skip;
+//     const articles = articleEntities.map(
+//       (articleEntitiy) => new Article(articleEntitiy)
+//     );
 
-    //검색
-    if (search)
-      options.where = {
-        OR: [
-          { title: { contains: search } },
-          { content: { contains: search } },
-        ],
-      };
+//     const hasNext = articles.length === parsedTake + 1;
 
-    const articles = await prisma.article.findMany(options);
+//     return res.send({
+//       data: articles.slice(0, parsedTake).map((article) => ({
+//         id: article.getId(),
+//         title: article.getTitle(),
+//         content: article.getContent(),
+//         createdAt: article.getCreatedAt(),
+//       })),
+//       hasNext,
+//       nextCursor: hasNext ? articles[articles.length - 1].getId() : null,
+//     });
 
-    res.json(articles);
-  } catch (e) {
-    next(e);
-  }
-});
+//     // res.json(articles);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-/**
- * 게시글 상세 조회하기
- */
-articleRouter.get("/:articleId", async (req, res, next) => {
-  try {
-    const articleId = Number(req.params.articleId);
-    if (articleId === NaN) throw new Error("아이디가 숫자가 아닙니다.");
+// // 게시글 목록 조회하기 (베스트 3개만)
+// articleRouter.get("/", async (req, res, next) => {
+//   try {
+//     const limit = parseInt(req.query.limit) || 5;
 
-    const existingArticle = await prisma.article.findUnique({
-      where: { id: articleId },
-      select: { id: true, title: true, content: true, createdAt: true },
-    });
+//     const articles = await prisma.article.findMany({ take: limit });
 
-    if (!existingArticle)
-      return res.status(404).send("존재하지 않는 게시글입니다.");
+//     res.json(articles);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-    res.json(existingArticle);
-  } catch (e) {
-    next(e);
-  }
-});
+// /**
+//  * 게시글 상세 조회하기
+//  */
+// articleRouter.get("/:articleId", async (req, res, next) => {
+//   try {
+//     const articleId = Number(req.params.articleId);
+//     if (articleId === NaN) throw new Error("아이디가 숫자가 아닙니다.");
 
-/**
- * 게시글 수정하기
- */
+//     const existingArticle = await prisma.article.findUnique({
+//       where: { id: articleId },
+//       select: { id: true, title: true, content: true, createdAt: true },
+//     });
 
-articleRouter.patch("/:articleId", async (req, res, next) => {
-  try {
-    const articleId = Number(req.params.articleId);
-    const { title, content } = req.body;
-    const existingArticle = await prisma.article.findUnique({
-      where: { id: articleId },
-    });
+//     if (!existingArticle)
+//       return res.status(404).send("존재하지 않는 게시글입니다.");
 
-    if (!existingArticle)
-      return res.status(404).json({ message: "존재하지 않는 게시글입니다." });
+//     res.json(existingArticle);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-    const article = await prisma.article.update({
-      where: { id: articleId },
-      data: { title, content },
-    });
+// /**
+//  * 게시글 수정하기
+//  */
 
-    res.json(article);
-  } catch (e) {
-    next(e);
-  }
-});
+// articleRouter.patch("/:articleId", async (req, res, next) => {
+//   try {
+//     const articleId = Number(req.params.articleId);
+//     const { title, content } = req.body;
+//     const existingArticle = await prisma.article.findUnique({
+//       where: { id: articleId },
+//     });
 
-/**
- * 게시글 삭제하기
- */
-articleRouter.delete("/:articleId", async (req, res, next) => {
-  try {
-    const articleId = Number(req.params.articleId);
-    const deleteArticle = await prisma.article.findUnique({
-      where: { id: articleId },
-    });
+//     if (!existingArticle)
+//       return res.status(404).json({ message: "존재하지 않는 게시글입니다." });
 
-    if (!deleteArticle)
-      return res.status(404).json("존재하지 않는 게시글입니다.");
+//     const article = await prisma.article.update({
+//       where: { id: articleId },
+//       data: { title, content },
+//     });
 
-    await prisma.article.delete({ where: { id: articleId } });
+//     res.json(article);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-    res.status(200).send("게시글이 삭제되었습니다.");
-  } catch (e) {
-    next(e);
-  }
-});
+// /**
+//  * 게시글 삭제하기
+//  */
+// articleRouter.delete("/:articleId", async (req, res, next) => {
+//   try {
+//     const articleId = Number(req.params.articleId);
+//     const deleteArticle = await prisma.article.findUnique({
+//       where: { id: articleId },
+//     });
 
-module.exports = articleRouter;
+//     if (!deleteArticle)
+//       return res.status(404).json("존재하지 않는 게시글입니다.");
+
+//     await prisma.article.delete({ where: { id: articleId } });
+
+//     res.status(200).send("게시글이 삭제되었습니다.");
+//   } catch (e) {
+//     next(e);
+//   }
+// });
+
+// module.exports = articleRouter;

@@ -1,0 +1,28 @@
+### 회원가입
+POST http://localhost:3000/auth/signUp
+Content-Type: application/json
+
+{
+    "email": "test2@test.com",
+    "nickname": "test2",
+    "password": "2222"
+}
+
+### 로그인 유저1
+POST http://localhost:3000/auth/signIn
+Content-Type: application/json
+
+{
+    "email": "test3@test.com",
+    "password": "3333"
+}
+
+### 로그인 유저2
+POST http://localhost:3000/auth/signIn
+Content-Type: application/json
+
+{
+   "email": "test2@test.com",
+    "password": "2222"
+}
+

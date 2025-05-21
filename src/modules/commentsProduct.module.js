@@ -1,8 +1,8 @@
 /********************************
  * 상품 관련 댓글 코드입니다
  ********************************/
-const express = require("express");
-const prisma = require("../db/prisma/client.prisma");
+import express from "express";
+import prisma from "../config/client.prisma.js";
 
 const productCommentsRouter = express.Router();
 
@@ -31,14 +31,18 @@ productCommentsRouter.post("/:productId/comment", async (req, res, next) => {
  */
 productCommentsRouter.get("/:productId/comments", async (req, res, next) => {
   try {
+    const cursor = req.query.cursor ? Number(req.query.cursor) : undefined;
+
     const productId = Number(req.params.productId);
     if (!productId) return res.json("존재하지 않는 상품입니다");
 
     const comments = await prisma.productComment.findMany({
       where: { productId },
+      cursor: cursor ? { id: cursor } : undefined,
     });
+
     if (comments.length === 0)
-      res.json("해당 상품에는 댓글이 존재하지 않습니다.");
+      return res.json("해당 상품에는 댓글이 존재하지 않습니다.");
 
     res.json(comments);
   } catch (e) {
