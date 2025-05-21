@@ -6,7 +6,7 @@ import commentRouter from "./commentRoutes.js";
 
 const router = express.Router();
 
-router.use("/users", userRouter);
+router.use("/auth", userRouter);
 router.use("/products", productRouter);
 router.use("/articles", articleRouter);
 router.use("/", commentRouter);

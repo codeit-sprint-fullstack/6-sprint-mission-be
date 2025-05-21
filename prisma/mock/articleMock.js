@@ -29,23 +29,23 @@ const ARTICLE_MOCK = [
 const ARTICLE_COMMENT_MOCK = [
   {
     content: "댓글 시드 데이터 1",
-    articleId: 33,
+    articleId: 1,
   },
   {
     content: "댓글 시드 데이터 2",
-    articleId: 34,
+    articleId: 2,
   },
   {
     content: "댓글 시드 데이터 3",
-    articleId: 35,
+    articleId: 3,
   },
   {
     content: "댓글 시드 데이터 4",
-    articleId: 36,
+    articleId: 4,
   },
   {
     content: "댓글 시드 데이터 5",
-    articleId: 37,
+    articleId: 5,
   },
 ];
 

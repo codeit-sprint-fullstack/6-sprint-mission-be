@@ -15,6 +15,7 @@ dist-ssr
 *.http
 HTTP
 temp
+uploads
 jsconfig.json
 
 # Editor directories and files
