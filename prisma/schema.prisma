@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  nickname   String
+  image      String?
+  password   String
+  token      String?   
+  articles   Article[] 
+  products   Product[]
+  comments   Comment[]
+  myLikes    myLikes[] 
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model myLikes {
+  id         Int      @id @default(autoincrement())
+  type       String
+  tableId    Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId  Int?
+  product    Product? @relation("ProductLikes", fields: [productId], references: [id], onDelete: Cascade)
+
+  articleId  Int?
+  article    Article? @relation("ArticleLikes", fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@unique([userId, articleId])
+}
+model Article {
+  id         Int       @id @default(autoincrement())
+  title      String
+  content    String
+  image      String?
+  likeCount  Int       @default(0)
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   Int
+  comments   Comment[] @relation("ArticleComments") 
+  myLikes    myLikes[] @relation("ArticleLikes")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Product {
+  id             Int       @id @default(autoincrement())
+  name           String
+  description    String
+  price          Int
+  tags           String[]
+  images         String[]
+  favoriteCount  Int       @default(0)
+  isFavorite     Boolean   @default(false)
+  ownerNickname  String
+  ownerId        Int
+  owner          User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ProductComment Comment[] @relation("ProductComments") 
+  myLikes        myLikes[] @relation("ProductLikes")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  content    String
+  type       String   // 'article' 또는 'product'
+  tableId    Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  userId     Int
+  writer     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId  Int?
+  product    Product? @relation("ProductComments", fields: [productId], references: [id], onDelete: Cascade)
+
+  articleId  Int?
+  article    Article? @relation("ArticleComments", fields: [articleId], references: [id], onDelete: Cascade)
+}
