@@ -1,0 +1,39 @@
+POST  http://localhost:5050/auth/signUp
+Content-Type: application/json
+
+{
+  "email": "test2@test.com",
+  "nickname": "test2",
+  "password": "test",
+  "passwordConfirmation" : "test"
+}
+
+
+###
+POST http://localhost:5050/auth/signIn
+Content-Type: application/json
+
+{
+  "email": "test2@test.com",
+  "password": "test"
+}
+
+
+###
+POST http://localhost:5050/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MDE1NTM2LCJleHAiOjE3NDc2MjAzMzZ9.PHPZiGAVNK6ZkOzkGx8UC86JEmpfbrDvZ7zCnR7yzes"
+}
+
+
+###
+POST http://localhost:5050/auth/refresh-token
+Cookie: refreshToken={"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZXJrdXIwMDAxdzQxZ2Y2YWVvNTdoIiwiaWF0IjoxNzQ3MDE1NTM2LCJleHAiOjE3NDc2MjAzMzZ9.PHPZiGAVNK6ZkOzkGx8UC86JEmpfbrDvZ7zCnR7yzes"}
+
+###
+GET http://localhost:3000/auth/google
+
+###
+GET http://localhost:3000/auth/google/callback
