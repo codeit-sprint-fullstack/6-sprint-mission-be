@@ -17,7 +17,7 @@ const signIn = async (req, res, next) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true, // 클라이언트 JS에서 접근 차단
       sameSite: "none", // ✅ cross-site 쿠키 허용
-      secure: true, // ✅ HTTPS만 허용
+      secure: false, //
       path: "/",
       maxAge: REFRESH_TOKEN_TTL_MS,
     });
@@ -48,7 +48,7 @@ const logOut = async (req, res, next) => {
     res.clearCookie("refreshToken", {
       httpOnly: true,
       sameSite: "none", // ✅ cross-site 쿠키 허용
-      secure: true, // ✅ HTTPS만 허용
+      secure: false, //
       path: "/",
     });
 
@@ -96,7 +96,7 @@ const refreshToken = async (req, res, next) => {
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         sameSite: "none", // ✅ cross-site 쿠키 허용
-        secure: true, // ✅ HTTPS만 허용
+        secure: false, //
         path: "/",
         maxAge: REFRESH_TOKEN_TTL_MS,
       });
