@@ -18,7 +18,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3001"],
+    origin: [
+      "http://localhost:3001",
+      "https://6-sprint-mission-fe-git-next-sprint10-sukyoung-ks-projects.vercel.app",
+    ],
     credentials: true,
   })
 );
