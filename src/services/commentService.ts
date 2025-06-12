@@ -1,7 +1,19 @@
-import { NotFoundError } from "../exceptions.js";
-import commentRepository from "../repositories/commentRepository.js";
+import commentRepository from "../repositories/commentRepository";
+import { Comment, User } from "@prisma/client";
 
-async function getComments({ articleId, productId, cursor, take }) {
+interface GetCommentsInput {
+  articleId: number | null;
+  productId: number | null;
+  take: number;
+  cursor?: number;
+}
+
+async function getComments({
+  articleId,
+  productId,
+  cursor,
+  take,
+}: GetCommentsInput) {
   const where = articleId ? { articleId } : productId ? { productId } : {};
   const comments = await commentRepository.findAll(where, take, cursor);
   const hasNextPage = comments.length > take;
@@ -11,28 +23,31 @@ async function getComments({ articleId, productId, cursor, take }) {
   return { list, nextCursor };
 }
 
-async function createComment({ articleId, productId, content, userId }) {
+async function createComment(
+  articleId: Comment["articleId"],
+  productId: Comment["productId"],
+  content: Comment["content"],
+  userId: User["id"]
+) {
   return commentRepository.save(articleId, productId, content, userId);
 }
 
-async function updateComment(commentId, data) {
+async function updateComment(
+  commentId: Comment["id"],
+  data: Pick<Comment, "content">
+) {
   try {
     return await commentRepository.update(commentId, data);
-  } catch (e) {
-    if (e.code === "P2025") {
-      throw new NotFoundError("댓글을 찾을 수 없습니다.");
-    }
-    throw e;
+  } catch (error) {
+    throw error;
   }
 }
 
-async function deleteComment(commentId) {
+async function deleteComment(commentId: Comment["id"]) {
   try {
     return await commentRepository.remove(commentId);
-  } catch (e) {
-    if (e.code === "P2025") {
-      throw new NotFoundError("댓글을 찾을 수 없습니다.");
-    }
+  } catch (error) {
+    throw error;
   }
 }
 

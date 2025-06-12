@@ -1,13 +1,20 @@
-import { ARTICLE_NOT_FOUND } from "../constant.js";
-import { BadRequestError, NotFoundError } from "../exceptions.js";
-import articleRepository from "../repositories/articleRepository.js";
+import { BadRequestError } from "../types/exceptions";
+import articleRepository from "../repositories/articleRepository";
+import { Article, User } from "@prisma/client";
+
+interface GetArticlesInput {
+  page: number;
+  pageSize: number;
+  orderBy: "recent" | "like";
+  keyword?: string | null;
+}
 
 async function getArticles({
   page = 1,
   pageSize = 10,
   orderBy = "recent",
   keyword,
-}) {
+}: GetArticlesInput) {
   const offset = (page - 1) * pageSize;
   const options = { skip: offset, take: pageSize, orderBy: {}, where: {} };
 
@@ -27,63 +34,57 @@ async function getArticles({
   return articleRepository.findAll(options);
 }
 
-async function createArticle(data, writerId) {
+async function createArticle(
+  data: Pick<Article, "title" | "content">,
+  writerId: Article["writerId"]
+) {
   return articleRepository.save(data, writerId);
 }
 
-async function getArticle(articleId, userId) {
+async function getArticle(articleId: Article["id"], userId: User["id"]) {
   return articleRepository.findById(articleId, userId);
 }
 
-async function updateArticle(articleId, data) {
+async function updateArticle(
+  articleId: Article["id"],
+  data: Pick<Article, "title" | "content">
+) {
   try {
     return await articleRepository.update(articleId, data);
-  } catch (e) {
-    if (e.code === "P2025") {
-      throw new NotFoundError(ARTICLE_NOT_FOUND);
-    }
-    throw e;
+  } catch (error) {
+    throw error;
   }
 }
 
-async function deleteArticle(articleId) {
+async function deleteArticle(articleId: Article["id"]) {
   try {
     return await articleRepository.remove(articleId);
-  } catch (e) {
-    if (e.code === "P2025") {
-      throw new NotFoundError(ARTICLE_NOT_FOUND);
-    }
-    throw e;
+  } catch (error) {
+    throw error;
   }
 }
 
-async function likeArticle(articleId, userId) {
+async function likeArticle(articleId: Article["id"], userId: User["id"]) {
   try {
     const alreadyLike = await articleRepository.findLike(articleId, userId);
     if (alreadyLike) {
       throw new BadRequestError("이미 좋아요한 게시글입니다.");
     }
     return await articleRepository.createLike(articleId, userId);
-  } catch (e) {
-    if (e.code === "P2003") {
-      throw new NotFoundError(ARTICLE_NOT_FOUND);
-    }
-    throw e;
+  } catch (error) {
+    throw error;
   }
 }
 
-async function unlikeArticle(articleId, userId) {
+async function unlikeArticle(articleId: Article["id"], userId: User["id"]) {
   try {
     const alreadyLike = await articleRepository.findLike(articleId, userId);
     if (!alreadyLike) {
       throw new BadRequestError("좋아요하지 않은 게시글입니다.");
     }
     return await articleRepository.deleteLike(articleId, userId);
-  } catch (e) {
-    if (e.code === "P2003") {
-      throw new NotFoundError(ARTICLE_NOT_FOUND);
-    }
-    throw e;
+  } catch (error) {
+    throw error;
   }
 }
 

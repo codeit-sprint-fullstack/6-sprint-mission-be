@@ -1,6 +1,8 @@
-import prisma from "../config/prisma.js";
+import { Article, User } from "@prisma/client";
+import prisma from "../config/prisma";
 
-async function findAll(options) {
+// TODO: any 수정 필요
+async function findAll(options: any) {
   return await prisma.article.findMany({
     ...options,
     select: {
@@ -21,7 +23,10 @@ async function findAll(options) {
   });
 }
 
-async function save(data, writerId) {
+async function save(
+  data: Pick<Article, "title" | "content">,
+  writerId: Article["writerId"]
+) {
   return prisma.article.create({
     data: { ...data, writer: { connect: { id: writerId } } },
     include: {
@@ -35,7 +40,7 @@ async function save(data, writerId) {
   });
 }
 
-async function findById(articleId, userId) {
+async function findById(articleId: Article["id"], userId: User["id"]) {
   return await prisma.$transaction([
     prisma.articleFavorite.findUnique({
       where: { userId_articleId: { userId, articleId } },
@@ -54,7 +59,10 @@ async function findById(articleId, userId) {
   ]);
 }
 
-async function update(articleId, data) {
+async function update(
+  articleId: Article["id"],
+  data: Pick<Article, "title" | "content">
+) {
   return prisma.article.update({
     where: {
       id: articleId,
@@ -71,19 +79,19 @@ async function update(articleId, data) {
   });
 }
 
-async function remove(articleId) {
+async function remove(articleId: Article["id"]) {
   return prisma.article.delete({
     where: { id: articleId },
   });
 }
 
-async function findLike(articleId, userId) {
+async function findLike(articleId: Article["id"], userId: User["id"]) {
   return prisma.articleFavorite.findUnique({
     where: { userId_articleId: { userId, articleId } },
   });
 }
 
-async function createLike(articleId, userId) {
+async function createLike(articleId: Article["id"], userId: User["id"]) {
   const [, article] = await prisma.$transaction([
     prisma.articleFavorite.create({
       data: { userId, articleId },
@@ -104,7 +112,7 @@ async function createLike(articleId, userId) {
   return article;
 }
 
-async function deleteLike(articleId, userId) {
+async function deleteLike(articleId: Article["id"], userId: User["id"]) {
   const [, article] = await prisma.$transaction([
     prisma.articleFavorite.delete({
       where: { userId_articleId: { userId, articleId } },

@@ -1,6 +1,7 @@
-import prisma from "../config/prisma.js";
+import { Comment, User } from "@prisma/client";
+import prisma from "../config/prisma";
 
-async function findAll(where, take, cursor) {
+async function findAll(where: any, take: number, cursor?: number) {
   return prisma.comment.findMany({
     where,
     take: take + 1, // 다음 페이지 있는지 확인
@@ -15,7 +16,7 @@ async function findAll(where, take, cursor) {
   });
 }
 
-async function findById(id) {
+async function findById(id: Comment["id"]) {
   return prisma.comment.findUnique({
     where: {
       id,
@@ -23,7 +24,12 @@ async function findById(id) {
   });
 }
 
-async function save(articleId, productId, content, userId) {
+async function save(
+  articleId: Comment["articleId"],
+  productId: Comment["productId"],
+  content: Comment["content"],
+  userId: User["id"]
+) {
   return prisma.comment.create({
     data: {
       ...(articleId && { article: { connect: { id: articleId } } }),
@@ -39,7 +45,10 @@ async function save(articleId, productId, content, userId) {
   });
 }
 
-async function update(commentId, data) {
+async function update(
+  commentId: Comment["id"],
+  data: Pick<Comment, "content">
+) {
   return prisma.comment.update({
     where: { id: commentId },
     data,
@@ -47,7 +56,7 @@ async function update(commentId, data) {
   });
 }
 
-async function remove(commentId) {
+async function remove(commentId: Comment["id"]) {
   return prisma.comment.delete({
     where: { id: commentId },
   });
