@@ -1,5 +1,5 @@
 ### 회원가입
-POST http://localhost:5050/auth/signUp
+POST http://localhost:3000/auth/signUp
 Content-Type: application/json
 
 {
@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 ### 로그인
-POST http://localhost:5050/auth/signIn
+POST http://localhost:3000/auth/signIn
 Content-Type: application/json
 
 {
@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ### 로그인2
-POST http://localhost:5050/auth/signIn
+POST http://localhost:3000/auth/signIn
 Content-Type: application/json
 
 {
@@ -29,9 +29,9 @@ Content-Type: application/json
 }
 
 ### 토큰 갱신
-POST http://localhost:5050/auth/refresh-token
+POST http://localhost:3000/auth/refresh-token
 Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
 ### 유저 정보 가져오기
-GET http://localhost:5050/users/me
+GET http://localhost:3000/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA1MTk4NCwiZXhwIjoxNzQ3MDU1NTg0fQ.igu4onWJD8seDHqBODpF9b5hp72UAcbdqjNp-DVvZCg

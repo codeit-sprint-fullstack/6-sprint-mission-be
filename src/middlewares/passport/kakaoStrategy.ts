@@ -1,13 +1,18 @@
-import { Strategy as KakaoStrategy } from "passport-kakao";
-import userService from "../../services/userService.js";
+import { Strategy as KakaoStrategy, Profile } from "passport-kakao";
+import userService from "../../services/userService";
 
 const kakaoStrategyOptions = {
-  clientID: process.env.KAKAO_CLIENT_ID,
-  clientSecret: process.env.KAKAO_CLIENT_SECRET,
+  clientID: process.env.KAKAO_CLIENT_ID as string,
+  clientSecret: process.env.KAKAO_CLIENT_SECRET as string,
   callbackURL: "/auth/kakao/callback",
 };
 
-async function verify(accessToken, refreshToken, profile, done) {
+async function verify(
+  accessToken: string,
+  refreshToken: string,
+  profile: Profile,
+  done: (error: any, user?: any) => void
+) {
   const user = await userService.oauthUser(
     profile.provider,
     profile.id.toString(),

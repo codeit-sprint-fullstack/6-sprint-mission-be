@@ -1,5 +1,5 @@
 ### 상품 등록
-POST http://localhost:5050/products
+POST http://localhost:3000/products
 Content-Type: application/json 
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
@@ -14,15 +14,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### 상품 목록 조회
-GET http://localhost:5050/products?page=1&pageSize=10&orderBy=favorite
+GET http://localhost:3000/products?page=1&pageSize=10&orderBy=favorite
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzA1Mzc0NCwiZXhwIjoxNzQ3MDU3MzQ0fQ.Wuu0YUOcf2vbS_-pO0b7aYoKopf8xZ-WGqmTOOCJwQQ
 
 ### 상품 상세 조회
-GET http://localhost:5050/products/1
+GET http://localhost:3000/products/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzA5OTkzNCwiZXhwIjoxNzQ3MTAzNTM0fQ.FYGcAr6bzajurXBG2fOLixc3x4PQM9uhSP2FfkREGHs
 
 ### 상품 수정
-PATCH  http://localhost:5050/products/1
+PATCH  http://localhost:3000/products/1
 Content-Type: application/json 
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
@@ -37,23 +37,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### 상품 삭제
-DELETE  http://localhost:5050/products/4
+DELETE  http://localhost:3000/products/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzAzNDQwNiwiZXhwIjoxNzQ3MDM4MDA2fQ.1UptaI1w52j_veofWwCeAkW240v_j7xffEF4VQv-L3Y
 
 ### 상품 좋아요
-POST http://localhost:5050/products/1/favorite
+POST http://localhost:3000/products/1/favorite
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
 ### 상품 좋아요 취소
-DELETE  http://localhost:5050/products/1/favorite
+DELETE  http://localhost:3000/products/1/favorite
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
 ### 댓글 목록 조회
-GET http://localhost:5050/products/1/comments
+GET http://localhost:3000/products/1/comments
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
 ### 댓글 등록
-POST http://localhost:5050/products/1/comments
+POST http://localhost:3000/products/1/comments
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzA2MTY2MCwiZXhwIjoxNzQ3MDY1MjYwfQ.7IhiTQ9SVquX0B-A18-iJUUon275Gm5oPQ6CY5VA-Us
 
@@ -62,7 +62,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 }
 
 ### 댓글 수정
-PATCH http://localhost:5050/products/1/comments/1
+PATCH http://localhost:3000/products/1/comments/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
@@ -71,11 +71,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhd
 }
 
 ### 댓글 삭제
-DELETE http://localhost:5050/products/1/comments/5
+DELETE http://localhost:3000/products/1/comments/5
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzA2MTY2MCwiZXhwIjoxNzQ3MDY1MjYwfQ.7IhiTQ9SVquX0B-A18-iJUUon275Gm5oPQ6CY5VA-Us
 
 ###
-GET http://localhost:5050/products/1/comments?cursor=6&limit=3
+GET http://localhost:3000/products/1/comments?cursor=6&limit=3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
 
 

@@ -1,24 +1,27 @@
 import { body, validationResult } from "express-validator";
-import { BadRequestError } from "../exceptions.js";
+// import { BadRequestError } from "../types/exceptions.js";
+// import { NextFunction, Request, Response } from "express";
 
-export function validate(req, res, next) {
-  const errors = validationResult(req);
+// export function validate(req: Request, res: Response, next: NextFunction) {
+//   const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    const validationErrors = {};
-    errors.array().forEach((err) => {
-      validationErrors[`body.${err.path}`] = {
-        message: err.msg,
-        value: err.value,
-      };
-    });
-    const errorMsg = errors.array()[0]?.msg || "Validation Failed";
+//   if (!errors.isEmpty()) {
+//     const errorArr = errors.array()
 
-    return next(new BadRequestError(errorMsg, validationErrors));
-  }
+//     const validationErrors: Record<string, {message: string, value: any}> = {};
+//     errorArr.forEach((err) => {
+//       validationErrors[`body.${err.path}`] = {
+//         message: err.msg,
+//         value: err.value,
+//       };
+//     });
+//     const errorMsg = errorArr[0]?.msg || "Validation Failed";
 
-  next();
-}
+//     return next(new BadRequestError(errorMsg, validationErrors));
+//   }
+
+//   next();
+// }
 
 // 회원가입 유효성 검사
 export const signUpValidator = [

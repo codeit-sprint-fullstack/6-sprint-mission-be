@@ -1,5 +1,5 @@
 ### 게시글 등록
-POST http://localhost:5050/articles
+POST http://localhost:3000/articles
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
@@ -9,14 +9,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 }
 
 ### 게시글 목록 조회
-GET http://localhost:5050/articles?page=1&pageSize=10
+GET http://localhost:3000/articles?page=1&pageSize=10
 
 ### 게시글 상세 조회
-GET http://localhost:5050/articles/2
+GET http://localhost:3000/articles/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
 ### 게시글 수정
-PATCH http://localhost:5050/articles/1
+PATCH http://localhost:3000/articles/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
@@ -26,22 +26,22 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 }
 
 ### 게시글 삭제
-DELETE http://localhost:5050/articles/2
+DELETE http://localhost:3000/articles/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
 ### 게시글 좋아요
-POST http://localhost:5050/articles/1/like
+POST http://localhost:3000/articles/1/like
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
 ### 게시글 좋아요 취소
-DELETE  http://localhost:5050/articles/1/like
+DELETE  http://localhost:3000/articles/1/like
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
 ### 댓글 목록 조회
-GET http://localhost:5050/articles/1/comments
+GET http://localhost:3000/articles/1/comments
 
 ### 댓글 등록
-POST http://localhost:5050/articles/1/comments
+POST http://localhost:3000/articles/1/comments
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
@@ -50,7 +50,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 }
 
 ### 댓글 수정
-PATCH http://localhost:5050/comments/11
+PATCH http://localhost:3000/comments/11
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
 
@@ -59,5 +59,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 }
 
 ### 댓글 삭제
-DELETE http://localhost:5050/comments/9
+DELETE http://localhost:3000/comments/9
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
