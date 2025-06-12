@@ -7,10 +7,10 @@ import {
   likeProduct,
   unlikeProduct,
   updateProduct,
-} from "../controllers/productController.js";
-import auth from "../middlewares/auth.js";
-import { productValidator, validate } from "../middlewares/validator.js";
-import commentRouter from "./commentRouter.js";
+} from "../controllers/productController";
+import auth from "../middlewares/auth";
+import { productValidator } from "../middlewares/validator";
+import commentRouter from "./commentRouter";
 
 const productRouter = express.Router();
 
@@ -19,7 +19,6 @@ productRouter.post(
   "/",
   auth.verifyAccessToken,
   productValidator,
-  validate,
   createProduct
 );
 productRouter.get("/:productId", auth.verifyAccessToken, getProduct);
@@ -27,7 +26,6 @@ productRouter.patch(
   "/:productId",
   auth.verifyAccessToken,
   productValidator,
-  validate,
   updateProduct
 );
 productRouter.delete("/:productId", auth.verifyAccessToken, deleteProduct);

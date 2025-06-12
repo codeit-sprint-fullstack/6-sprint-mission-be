@@ -7,10 +7,10 @@ import {
   likeArticle,
   unlikeArticle,
   updateArticle,
-} from "../controllers/articleController.js";
-import auth from "../middlewares/auth.js";
-import commentRouter from "./commentRouter.js";
-import { articleValidator, validate } from "../middlewares/validator.js";
+} from "../controllers/articleController";
+import auth from "../middlewares/auth";
+import commentRouter from "./commentRouter";
+import { articleValidator } from "../middlewares/validator";
 
 const articleRouter = express.Router();
 
@@ -19,7 +19,7 @@ articleRouter.post(
   "/",
   auth.verifyAccessToken,
   articleValidator,
-  validate,
+
   createArticle
 );
 articleRouter.get("/:articleId", auth.verifyAccessToken, getArticle);
@@ -27,7 +27,7 @@ articleRouter.patch(
   "/:articleId",
   auth.verifyAccessToken,
   articleValidator,
-  validate,
+
   updateArticle
 );
 articleRouter.delete("/:articleId", auth.verifyAccessToken, deleteArticle);

@@ -1,17 +1,18 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import multer from "multer";
-import auth from "../middlewares/auth.js";
+import auth from "../middlewares/auth";
 
 const imageRouter = express.Router();
 
 const uploads = multer({ dest: "uploads/" });
+
 imageRouter.post(
   "/upload",
   auth.verifyAccessToken,
   uploads.single("image"),
-  (req, res) => {
+  (req: Request, res: Response) => {
     const path = `${req.protocol}://${req.get("host")}/image/${
-      req.file.filename
+      req.file?.filename
     }`;
     res.json({ url: path });
   }

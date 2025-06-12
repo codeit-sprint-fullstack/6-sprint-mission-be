@@ -1,16 +1,16 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import userRouter from "./routes/userRouter.js";
-import articleRouter from "./routes/articleRouter.js";
-import productRouter from "./routes/productRouter.js";
-import commentRouter from "./routes/commentRouter.js";
-import imageRouter from "./routes/imageRouter.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import { swaggerUi, specs } from "./swagger.js";
+import userRouter from "./routes/userRouter";
+import articleRouter from "./routes/articleRouter";
+import productRouter from "./routes/productRouter";
+import commentRouter from "./routes/commentRouter";
+import imageRouter from "./routes/imageRouter";
+import errorHandler from "./middlewares/errorHandler";
+// import { swaggerUi, specs } from "./swagger";
 import "dotenv/config";
 import passport from "passport";
-import "./config/passport.js";
+import "./config/passport";
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -28,7 +28,7 @@ app.use("/articles", articleRouter);
 app.use("/products", productRouter);
 app.use("/comments", commentRouter);
 app.use("/images", imageRouter);
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+// app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(errorHandler);
 
