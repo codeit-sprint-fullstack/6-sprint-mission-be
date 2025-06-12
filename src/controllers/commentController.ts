@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Response, Request } from "express";
 import auth from "../middlewares/auth.js";
 import commentService from "../services/commentService.js";
 
@@ -70,24 +70,28 @@ commentController
   .route("/:id")
   .all(auth.varifyAccessToken, auth.verifyCommentAuth)
 
-  .patch(async (req, res, next) => {
-    const id = Number(req.params.id);
-    try {
-      const updatedComment = await commentService.update(id, req.body);
-      return res.json(updatedComment);
-    } catch (error) {
-      next(error);
+  .patch(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = Number(req.params.id);
+      try {
+        const updatedComment = await commentService.update(id, req.body);
+        res.json(updatedComment);
+      } catch (error) {
+        next(error);
+      }
     }
-  })
+  )
 
-  .delete(async (req, res, next) => {
-    const id = Number(req.params.id);
-    try {
-      const deletedComment = await commentService.deleteById(id);
-      return res.json(deletedComment);
-    } catch (error) {
-      next(error);
+  .delete(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = Number(req.params.id);
+      try {
+        const deletedComment = await commentService.deleteById(id);
+        res.json(deletedComment);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
 export default commentController;

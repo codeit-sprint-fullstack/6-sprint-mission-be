@@ -1,4 +1,8 @@
-export const ArticleMocks = [
+interface Article {
+  title: string;
+  content: string;
+}
+export const ArticleMocks: Article[] = [
   {
     title: "맥북 16인치 1테라 정도 사양이면 얼마에 팔아야하나요?",
     content: "맥북 16인치 1테라 정도 사양이면 얼마에 팔아야하나요?",

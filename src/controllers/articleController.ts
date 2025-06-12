@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import auth from "../middlewares/auth.js";
 import articleService from "../services/articleService.js";
 import varify from "../middlewares/varify.js";
@@ -6,6 +6,15 @@ import { authenticate } from "../middlewares/utils.js";
 
 const articleController = express.Router();
 const articleCommentController = express.Router();
+
+interface AuthRequest extends Request {
+  auth?: {
+    userId: number;
+  };
+  user?: {
+    id: string | number;
+  };
+}
 
 /**
  * @swagger
@@ -50,26 +59,41 @@ const articleCommentController = express.Router();
 //게시글 등록, 조회
 articleController
   .route("/")
-  .post(auth.varifyAccessToken, async (req, res, next) => {
-    const { userId } = req.auth;
-    try {
-      const createdArticle = await articleService.create({
-        ...req.body,
-        authorId: userId,
-      });
-      return res.json(createdArticle);
-    } catch (error) {
-      next(error);
+  .post(
+    auth.varifyAccessToken,
+    async (
+      req: AuthRequest,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const { userId } = req.auth;
+
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+
+      try {
+        const createdArticle = await articleService.create({
+          ...req.body,
+          authorId: userId,
+        });
+        res.json(createdArticle);
+      } catch (error) {
+        next(error);
+      }
     }
-  })
-  .get(async (req, res, next) => {
-    try {
-      const articles = await articleService.getAll();
-      return res.json(articles);
-    } catch (error) {
-      next(error);
+  )
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const articles = await articleService.getAll();
+        res.json(articles);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
 /**
  * @swagger
@@ -132,42 +156,55 @@ articleController
 //게시글 상세 조회, 수정, 삭제
 articleController
   .route("/:id")
-  .get(authenticate, async (req, res, next) => {
-    const userId = Number(req.user?.id);
-    const articleId = Number(req.params.id);
+  .get(
+    authenticate,
+    async (
+      req: AuthRequest,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const userId = Number(req.user?.id);
+      const articleId = Number(req.params.id);
 
-    try {
-      const article = await articleService.getById(articleId, userId);
+      try {
+        const article = await articleService.getById(articleId, userId);
 
-      if (!article) varify.throwNotFoundError();
+        if (!article) varify.throwNotFoundError();
 
-      const articleComments = await articleService.getAllArticleComment(
-        articleId
-      );
+        const articleComments = await articleService.getAllArticleComment(
+          articleId
+        );
 
-      return res.json({ article, articleComments });
-    } catch (error) {
-      next(error);
+        res.json({ article, articleComments });
+      } catch (error) {
+        next(error);
+      }
     }
-  })
-  .patch(auth.varifyAccessToken, async (req, res, next) => {
-    const id = Number(req.params.id);
-    try {
-      const patchedArticle = await articleService.update(id, req.body);
-      return res.json(patchedArticle);
-    } catch (error) {
-      next(error);
+  )
+  .patch(
+    auth.varifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = Number(req.params.id);
+      try {
+        const patchedArticle = await articleService.update(id, req.body);
+        res.json(patchedArticle);
+      } catch (error) {
+        next(error);
+      }
     }
-  })
-  .delete(auth.varifyAccessToken, async (req, res, next) => {
-    const id = Number(req.params.id);
-    try {
-      const deletedArticle = await articleService.deleteById(id);
-      return res.json(deletedArticle);
-    } catch (error) {
-      next(error);
+  )
+  .delete(
+    auth.varifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = Number(req.params.id);
+      try {
+        const deletedArticle = await articleService.deleteById(id);
+        res.json(deletedArticle);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
 /**
  * @swagger
@@ -216,29 +253,38 @@ articleController
 //게시글에 댓글 등록하기
 articleCommentController
   .route("/:id/comments")
-  .post(auth.varifyAccessToken, async (req, res, next) => {
-    const { userId } = req.auth;
-    const id = Number(req.params.id);
-    try {
-      const articleComment = await articleService.createArticleComment({
-        ...req.body,
-        articleId: id,
-        authorId: userId,
-      });
-      return res.json(articleComment);
-    } catch (error) {
-      next(error);
+  .post(
+    auth.varifyAccessToken,
+    async (
+      req: AuthRequest,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const { userId } = req.auth;
+      const id = Number(req.params.id);
+      try {
+        const articleComment = await articleService.createArticleComment({
+          ...req.body,
+          articleId: id,
+          authorId: userId,
+        });
+        res.json(articleComment);
+      } catch (error) {
+        next(error);
+      }
     }
-  })
-  .get(async (req, res, next) => {
-    const id = Number(req.params.id);
-    try {
-      const articleComments = await articleService.getAllArticleComment(id);
-      return res.json(articleComments);
-    } catch (error) {
-      next(error);
+  )
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = Number(req.params.id);
+      try {
+        const articleComments = await articleService.getAllArticleComment(id);
+        res.json(articleComments);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
 articleController.use("/", articleCommentController);
 

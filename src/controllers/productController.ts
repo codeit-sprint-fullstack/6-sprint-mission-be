@@ -1,13 +1,31 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import productService from "../services/productService.js";
 import varify from "../middlewares/varify.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/images.js";
 import { authenticate } from "../middlewares/utils.js";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { HttpError } from "../middlewares/erroHandler.js";
 
 const productController = express.Router();
 const productCommentController = express.Router();
+
+interface AuthRequest extends Request {
+  auth?: {
+    userId: number;
+  };
+  user?: {
+    id: number;
+  };
+  file?: Express.Multer.File;
+  body: {
+    name: string;
+    description: string;
+    price: string | number;
+    tags: string;
+    content?: string;
+  };
+}
 
 /**
  * @swagger
@@ -206,7 +224,11 @@ productController
   .post(
     auth.varifyAccessToken,
     upload.single("image"),
-    async (req, res, next) => {
+    async (
+      req: AuthRequest,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
       try {
         const parsedTags = (() => {
           try {
@@ -218,7 +240,10 @@ productController
         })();
 
         const accessToken = req.headers.authorization?.split(" ")[1];
-        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
+        const decoded = jwt.verify(
+          accessToken!,
+          process.env.JWT_SECRET_KEY!
+        ) as JwtPayload & { userId: number };
         const userId = decoded.userId;
 
         const data = {
@@ -234,129 +259,157 @@ productController
 
         const createProduct = await productService.create(data);
 
-        return res.json(createProduct);
+        res.json(createProduct);
       } catch (error) {
         next(error);
       }
     }
   )
-  .get(async (req, res, next) => {
-    try {
-      const {
-        page = 1,
-        pageSize = 10,
-        orderBy = "recent",
-        keyword = "",
-      } = req.query;
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const {
+          page = 1,
+          pageSize = 10,
+          orderBy = "recent",
+          keyword = "",
+        } = req.query;
 
-      const take = parseInt(pageSize);
-      const skip = (parseInt(page) - 1) * take;
-      const orderField =
-        orderBy === "recent"
-          ? "createdAt"
-          : orderBy === "favorite"
-          ? "favorite"
-          : "createdAt";
+        const take = parseInt(pageSize as string);
+        const skip = (parseInt(page as string) - 1) * take;
+        const orderField =
+          orderBy === "recent"
+            ? "createdAt"
+            : orderBy === "favorite"
+            ? "favorite"
+            : "createdAt";
 
-      const validOrderOption = ["recent", "favorite"];
-      if (!validOrderOption.includes(orderBy)) {
-        return res.status(400).json({ message: "잘못된  요청입니다." });
+        const validOrderOption = ["recent", "favorite"];
+        if (!validOrderOption.includes(orderBy as string)) {
+          res.status(400).json({ message: "잘못된  요청입니다." });
+        }
+
+        const product = await productService.getAll({
+          order: orderField,
+          skip,
+          take,
+          keyword,
+        });
+
+        if (!product) varify.throwNotFoundError();
+
+        res.json(product);
+      } catch (error) {
+        next(error);
       }
+    }
+  );
 
-      const product = await productService.getAll({
-        order: orderField,
-        skip,
-        take,
-        keyword,
-      });
+//상품 상세 조회
+productController.get(
+  "/:id",
+  authenticate,
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    const id = Number(req.params.id);
+    const userId = req.user?.id;
+
+    try {
+      const product = await productService.getById(id, userId);
 
       if (!product) varify.throwNotFoundError();
 
-      return res.json(product);
+      const productCommets = await productService.getAllProductComment(id);
+
+      res.json({ product, productCommets });
     } catch (error) {
       next(error);
     }
-  });
-
-//상품 상세 조회
-productController.get("/:id", authenticate, async (req, res, next) => {
-  const id = Number(req.params.id);
-  const userId = req.user?.id;
-
-  try {
-    const product = await productService.getById(id, userId);
-
-    if (!product) varify.throwNotFoundError();
-
-    const productCommets = await productService.getAllProductComment(id);
-
-    return res.json({ product, productCommets });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 //상품 수정, 삭제하기
 productController
   .route("/:id")
   .all(auth.varifyAccessToken)
-  .patch(async (req, res, next) => {
-    const id = Number(req.params.id);
-    const accessToken = req.headers.authorization?.split(" ")[1];
-    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
-    const userId = decoded.userId;
-    try {
-      const updatedProduct = await productService.update(id, req.body);
+  .patch(
+    async (
+      req: AuthRequest,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const id = Number(req.params.id);
+      const accessToken = req.headers.authorization?.split(" ")[1];
+      const decoded = jwt.verify(
+        accessToken!,
+        process.env.JWT_SECRET_KEY!
+      ) as JwtPayload & { userId: number };
 
-      if (!updatedProduct) varify.throwNotFoundError();
+      try {
+        const updatedProduct = await productService.update(id, req.body);
 
-      return res.json(updatedProduct);
-    } catch (error) {
-      next(error);
-    }
-  })
-  .delete(async (req, res, next) => {
-    const id = parseInt(req.params.id, 10);
-    const deletedProduct = await productService.deleteById(id);
-    try {
-      if (!deletedProduct) {
-        const error = new Error("존재하지 않는 상품입니다.");
-        error.code = 404;
-        throw error;
+        if (!updatedProduct) varify.throwNotFoundError();
+
+        res.json(updatedProduct);
+      } catch (error) {
+        next(error);
       }
-
-      return res.json(deletedProduct);
-    } catch (error) {
-      next(error);
     }
-  });
+  )
+  .delete(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = parseInt(req.params.id, 10);
+      const deletedProduct = await productService.deleteById(id);
+      try {
+        if (!deletedProduct) {
+          throw new HttpError("존재하지 않는 상품입니다.", 404);
+        }
+
+        res.json(deletedProduct);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
 //상품에 댓글등록, 가져오기
 productCommentController
   .route("/:id/comments")
-  .post(auth.varifyAccessToken, async (req, res, next) => {
-    const { userId } = req.auth;
-    const id = Number(req.params.id);
-    try {
-      const createdComment = await productService.createProductComment({
-        ...req.body,
-        productId: id,
-        authorId: userId,
-      });
-      return res.json(createdComment);
-    } catch (error) {
-      next(error);
+  .post(
+    auth.varifyAccessToken,
+    async (
+      req: AuthRequest,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const { userId } = req.auth;
+      const id = Number(req.params.id);
+      try {
+        const createdComment = await productService.createProductComment({
+          ...req.body,
+          productId: id,
+          authorId: userId,
+        });
+        res.json(createdComment);
+      } catch (error) {
+        next(error);
+      }
     }
-  })
-  .get(async (req, res, next) => {
-    const id = Number(req.params.id);
-    try {
-      const productComments = await productService.getAllProductComment(id);
-      return res.json(productComments);
-    } catch (error) {
-      next(error);
+  )
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const id = Number(req.params.id);
+      try {
+        const productComments = await productService.getAllProductComment(id);
+        res.json(productComments);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
 //중복 컨트롤러 병합
 productController.use("/", productCommentController);
