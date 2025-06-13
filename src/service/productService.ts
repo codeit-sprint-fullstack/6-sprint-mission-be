@@ -7,7 +7,7 @@ async function getProducts({
   pageSize = 10,
   orderBy = "latest",
   keyWord,
-  userId,
+  userId = "",
 }: {
   page?: number;
   pageSize?: number;

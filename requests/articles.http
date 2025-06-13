@@ -1,19 +1,17 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5Nzc4NTg1LCJleHAiOjE3NDk3Nzk0ODV9.dbC5nEu3XZ0d2IVvV74NVe6eEtUVX8vC0MwN3xFmky8
-
-
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5NzkyMDU0LCJleHAiOjE3NDk3OTI5NTR9.qv9dSiwEHAWnU_JmAKIUxqB8ix8juJgZBy-fRf4iE1E
 # 게시글 API
 
 ### 게시글 목록 조회
 GET http://localhost:7777/articles/?offset=0&limit=10
-Authorization: {{accessToken}}
+# Authorization: {{accessToken}}
 
 ### 게시글 조회 (인기순)
 GET http://localhost:7777/articles?offset=0&limit=10&sort=popular
-Authorization: {{accessToken}}
+# Authorization: {{accessToken}}
 
 ### 게시글 상세 조회
 GET http://localhost:7777/articles/cmbu4ek140001uproep34gk7v
-Authorization: {{accessToken}}
+# Authorization: {{accessToken}}
 
 ### 게시글 등록
 POST http://localhost:7777/articles

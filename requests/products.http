@@ -1,5 +1,4 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5Nzc4NTg1LCJleHAiOjE3NDk3Nzk0ODV9.dbC5nEu3XZ0d2IVvV74NVe6eEtUVX8vC0MwN3xFmky8
-
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5NzkxODkxLCJleHAiOjE3NDk3OTI3OTF9.6kexuksn20wMDhtgFBRMNeP71OrgNdMtKf6YXFij98o
 # 제품 API
 
 ### 제품 목록 조회
@@ -11,8 +10,8 @@ GET http://localhost:7777/products?page=0&pageSize=4&orderBy=recent&keyWord=새�
 Authorization: {{accessToken}}
 
 ### 제품 상세 조회
-GET http://localhost:7777/products/cmbu2yws60001up2417zl6bi9
-Authorization: {{accessToken}}
+GET http://localhost:7777/products/cmbu51cy40001up7cadhlsn2r
+# Authorization: {{accessToken}}
 
 ### 제품 생성
 POST http://localhost:7777/products
@@ -42,7 +41,7 @@ DELETE http://localhost:7777/products/cmbu2yws60001up2417zl6bi9
 Authorization: {{accessToken}}
 
 ### 제품 좋아요 추가
-POST http://localhost:7777/products/cmbu2yws60001up2417zl6bi9/like
+POST http://localhost:7777/products/cmbu51cy40001up7cadhlsn2r/like
 Authorization: {{accessToken}}
 
 ### 제품 좋아요 삭제

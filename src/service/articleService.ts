@@ -9,13 +9,13 @@ async function getArticles({
   limit = 10,
   search,
   sort = "latest",
-  userId = undefined,
+  userId,
 }: {
   offset: number;
   limit: number;
   search: string;
   sort: string;
-  userId: string | undefined;
+  userId?: User["id"];
 }) {
   const skip = Number(offset);
   const take = Number(limit);
@@ -95,7 +95,7 @@ async function getArticles({
 }
 
 // 특정 게시글 조회
-async function getArticleById(id: string, userId: string) {
+async function getArticleById(id: Article["id"], userId?: User["id"]) {
   const article = await articleRepository.findById(id, userId);
 
   if (!article) {
@@ -119,7 +119,7 @@ async function createArticle({
   content,
   userId,
   image,
-}: Pick<Article, "title" | "content" | "userId" | "image">) {
+}: Pick<Article, "title" | "content" | "image"> & { userId: User["id"] }) {
   return articleRepository.create({
     title,
     content,
@@ -131,7 +131,7 @@ async function createArticle({
 
 // 게시글 수정
 async function updateArticle(
-  id: string,
+  id: Article["id"],
   data: Pick<Article, "title" | "content" | "image">
 ) {
   try {
@@ -146,7 +146,7 @@ async function updateArticle(
 }
 
 // 게시글 삭제
-async function deleteArticle(id: string) {
+async function deleteArticle(id: Article["id"]) {
   try {
     return await articleRepository.remove(id);
   } catch (error) {
@@ -157,29 +157,10 @@ async function deleteArticle(id: string) {
   }
 }
 
-// // 특정 게시글 좋아요 증가
-// async function increaseLike(articleId: string) {
-//   try {
-//     // 현재 게시글 조회
-//     const article = await getArticleById(articleId);
-
-//     // 좋아요 수 증가
-//     return await articleRepository.update(articleId, {
-//       likes: (article.likes || 0) + 1,
-//     });
-//   } catch (error) {
-//     if (error instanceof NotFoundError) {
-//       throw error;
-//     }
-//     throw error;
-//   }
-// }
-
 export default {
   getArticleById,
   createArticle,
   getArticles,
   updateArticle,
   deleteArticle,
-  // increaseLike,
 };

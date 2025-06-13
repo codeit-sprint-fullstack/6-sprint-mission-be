@@ -23,7 +23,7 @@ const getArticles = async (
     const offset = parseInt(req.query.offset || "0");
     const limit = parseInt(req.query.limit || "10");
     const { search = "", sort = "latest" } = req.query;
-    const userId = req.auth!.userId;
+    const userId = req.auth?.userId;
 
     const result = await articleService.getArticles({
       offset,
@@ -51,7 +51,7 @@ const getArticleById = async (
 ) => {
   try {
     const articleId = req.params.articleId;
-    const userId = req.auth!.userId;
+    const userId = req.auth?.userId;
     const article = await articleService.getArticleById(articleId, userId);
 
     res.status(200).json({ data: article });

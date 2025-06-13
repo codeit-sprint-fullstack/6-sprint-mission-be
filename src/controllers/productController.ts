@@ -23,7 +23,7 @@ const getProducts = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.auth!.userId;
+    const userId = req.auth?.userId;
     const { page, pageSize, orderBy, keyWord } = req.query;
 
     const result = await productService.getProducts({
@@ -52,7 +52,7 @@ const getProductById = async (
 ) => {
   try {
     const productId = req.params.id;
-    const userId = req.auth!.userId;
+    const userId = req.auth?.userId;
     const product = await productService.getProductById(productId, userId);
 
     res.status(200).json({ data: product });
