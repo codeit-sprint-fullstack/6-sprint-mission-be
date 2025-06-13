@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2021", // 또는 "es2022" (최신 Node.js 환경에서)
+    "module": "commonjs", // Node.js 환경에서 가장 표준적인 모듈 시스템
+    "moduleResolution": "node", // Node.js 모듈 해석 방식
+    "esModuleInterop": true, // CommonJS 모듈을 ES 모듈처럼 임포트할 수 있도록 함
+    "forceConsistentCasingInFileNames": true, // 파일명 대소문자 일관성 유지
+    "strict": true, // 엄격한 타입 검사 활성화 (권장)
+    "skipLibCheck": true, // 선언 파일(*.d.ts) 타입 검사 건너뛰기
+    "outDir": "./dist", // 컴파일된 JS 파일 출력 경로
+    "rootDir": "./src", // 소스 코드의 루트 디렉토리
+    "resolveJsonModule": true, // JSON 파일을 모듈처럼 임포트할 수 있도록 함
+    "sourceMap": true, // 디버깅을 위한 소스맵 생성
+    "allowJs": true
+  },
+  "include": ["src/**/*.ts"], // 컴파일에 포함할 파일
+  "exclude": ["node_modules", "dist"] // 컴파일에서 제외할 파일/폴더
+}
