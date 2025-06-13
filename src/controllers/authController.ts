@@ -6,7 +6,8 @@ import {
   generateRefreshToken,
 } from "../middlewares/utils.js";
 import jwt from "jsonwebtoken";
-import { HttpError } from "../middlewares/erroHandler.js";
+import { AuthenticationError, NotFoundError } from "../types/errors.js";
+import auth from "../middlewares/auth.js";
 
 const authController = express.Router();
 
@@ -162,7 +163,7 @@ authController.post(
       const user = await authService.getByEmail(req.body);
 
       if (!user) {
-        throw new HttpError("Not Found, 존재하지 않는 사용자입니다.", 404);
+        throw new NotFoundError("Not Found, 존재하지 않는 사용자입니다.");
       }
 
       const accessToken = authService.createAccessToken(user);
@@ -186,20 +187,16 @@ authController.post(
 //리프레쉬 토큰 발급
 authController.post(
   "/refresh",
+  auth.verifyAccessToken,
   (req: Request, res: Response, next: NextFunction): void => {
     try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken)
         res.status(401).json({ message: "리프레쉬 토큰이 없습니다." });
 
-      const payload = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET_KEY as string
-      ) as {
-        userId: number;
-        email: string;
-        nickname: string;
-      };
+      const payload = req.auth;
+
+      if (!payload) throw new AuthenticationError("접근 권한이 없습니다.");
 
       const user = {
         id: payload.userId,

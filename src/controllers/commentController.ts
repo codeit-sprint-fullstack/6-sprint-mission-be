@@ -68,7 +68,7 @@ const commentController = express.Router();
 
 commentController
   .route("/:id")
-  .all(auth.varifyAccessToken, auth.verifyCommentAuth)
+  .all(auth.verifyAccessToken, auth.verifyCommentAuth)
 
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {

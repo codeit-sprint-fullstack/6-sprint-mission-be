@@ -2,30 +2,12 @@ import express, { NextFunction, Request, Response } from "express";
 import productService from "../services/productService.js";
 import varify from "../middlewares/varify.js";
 import auth from "../middlewares/auth.js";
-import upload from "../middlewares/images.js";
-import { authenticate } from "../middlewares/utils.js";
+import upload from "../middlewares/images";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { HttpError } from "../middlewares/erroHandler.js";
+import { AuthenticationError, NotFoundError } from "../types/errors.js";
 
 const productController = express.Router();
 const productCommentController = express.Router();
-
-interface AuthRequest extends Request {
-  auth?: {
-    userId: number;
-  };
-  user?: {
-    id: number;
-  };
-  file?: Express.Multer.File;
-  body: {
-    name: string;
-    description: string;
-    price: string | number;
-    tags: string;
-    content?: string;
-  };
-}
 
 /**
  * @swagger
@@ -218,22 +200,37 @@ interface AuthRequest extends Request {
  *         description: 댓글 목록 반환
  */
 
+interface CreateProduct {
+  id: number;
+  name: string;
+  description: String;
+  price: number;
+  tags: string[];
+  imageUrl?: string;
+}
 // 상품 등록, 전체 상품 조회
 productController
   .route("/")
   .post(
-    auth.varifyAccessToken,
+    auth.verifyAccessToken,
     upload.single("image"),
     async (
-      req: AuthRequest,
+      req: Request<{}, {}, CreateProduct>,
       res: Response,
       next: NextFunction
     ): Promise<void> => {
       try {
-        const parsedTags = (() => {
+        const parsedTags: string[] = (() => {
           try {
-            const tags = JSON.parse(req.body.tags);
-            return Array.isArray(tags) ? tags : [tags];
+            const { tags } = req.body;
+            if (Array.isArray(tags)) {
+              // 2차원 배열인지 확인 후 flatten
+              if (Array.isArray(tags[0])) {
+                return (tags as string[][]).flat();
+              }
+              return tags as string[];
+            }
+            return [tags];
           } catch (e) {
             return [req.body.tags];
           }
@@ -246,7 +243,7 @@ productController
         ) as JwtPayload & { userId: number };
         const userId = decoded.userId;
 
-        const data = {
+        const data: CreateProduct = {
           name: req.body.name,
           description: req.body.description,
           price: Number(req.body.price),
@@ -308,12 +305,8 @@ productController
 //상품 상세 조회
 productController.get(
   "/:id",
-  authenticate,
-  async (
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  auth.verifyAccessToken,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const id = Number(req.params.id);
     const userId = req.user?.id;
 
@@ -334,13 +327,9 @@ productController.get(
 //상품 수정, 삭제하기
 productController
   .route("/:id")
-  .all(auth.varifyAccessToken)
+  .all(auth.verifyAccessToken)
   .patch(
-    async (
-      req: AuthRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const id = Number(req.params.id);
       const accessToken = req.headers.authorization?.split(" ")[1];
       const decoded = jwt.verify(
@@ -365,7 +354,7 @@ productController
       const deletedProduct = await productService.deleteById(id);
       try {
         if (!deletedProduct) {
-          throw new HttpError("존재하지 않는 상품입니다.", 404);
+          throw new NotFoundError("존재하지 않는 상품입니다.", 404);
         }
 
         res.json(deletedProduct);
@@ -379,12 +368,9 @@ productController
 productCommentController
   .route("/:id/comments")
   .post(
-    auth.varifyAccessToken,
-    async (
-      req: AuthRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
+    auth.verifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      if (!req.auth) throw new AuthenticationError("사용자가 아닙니다.");
       const { userId } = req.auth;
       const id = Number(req.params.id);
       try {

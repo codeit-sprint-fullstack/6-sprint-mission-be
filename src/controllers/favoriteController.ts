@@ -1,14 +1,9 @@
 import express, { NextFunction, Response, Request } from "express";
 import favoriteService from "../services/favoriteService.js";
 import auth from "../middlewares/auth.js";
+import { AuthenticationError } from "../types/errors.js";
 
 const favoriteController = express.Router();
-
-interface AuthRequest extends Request {
-  auth: {
-    userId: number;
-  };
-}
 
 /**
  * @swagger
@@ -63,13 +58,10 @@ interface AuthRequest extends Request {
 
 favoriteController
   .route("/product/:id")
-  .all(auth.varifyAccessToken)
+  .all(auth.verifyAccessToken)
   .post(
-    async (
-      req: AuthRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
       const userId = Number(req.auth.userId);
       const productId = Number(req.params.id);
 
@@ -81,7 +73,8 @@ favoriteController
       }
     }
   )
-  .delete(async (req: AuthRequest, res: Response, next: NextFunction) => {
+  .delete(async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
     const userId = Number(req.auth.userId);
     const productId = Number(req.params.id);
 

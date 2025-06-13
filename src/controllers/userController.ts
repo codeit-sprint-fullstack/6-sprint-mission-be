@@ -2,14 +2,9 @@ import express, { NextFunction, Response, Request } from "express";
 import userService from "../services/userService.js";
 import auth from "../middlewares/auth.js";
 import { generateAccessToken } from "../middlewares/utils.js";
+import { AuthenticationError } from "../types/errors.js";
 
 const userController = express.Router();
-
-interface AuthRequest extends Request {
-  auth?: {
-    userId: number;
-  };
-}
 
 /**
  * @swagger
@@ -56,12 +51,9 @@ interface AuthRequest extends Request {
 //사용자 정보 가져오기
 userController.get(
   "/",
-  auth.varifyAccessToken,
-  async (
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  auth.verifyAccessToken,
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
     const userId = req.auth.userId;
 
     try {

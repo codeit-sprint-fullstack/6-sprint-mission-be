@@ -2,19 +2,10 @@ import express, { NextFunction, Request, Response } from "express";
 import auth from "../middlewares/auth.js";
 import articleService from "../services/articleService.js";
 import varify from "../middlewares/varify.js";
-import { authenticate } from "../middlewares/utils.js";
+import { AuthenticationError } from "../types/errors.js";
 
 const articleController = express.Router();
 const articleCommentController = express.Router();
-
-interface AuthRequest extends Request {
-  auth?: {
-    userId: number;
-  };
-  user?: {
-    id: string | number;
-  };
-}
 
 /**
  * @swagger
@@ -60,12 +51,13 @@ interface AuthRequest extends Request {
 articleController
   .route("/")
   .post(
-    auth.varifyAccessToken,
-    async (
-      req: AuthRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
+    auth.verifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      if (!req.auth || typeof req.auth.userId !== "number") {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+
       const { userId } = req.auth;
 
       if (!userId) {
@@ -157,12 +149,8 @@ articleController
 articleController
   .route("/:id")
   .get(
-    authenticate,
-    async (
-      req: AuthRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
+    auth.verifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const userId = Number(req.user?.id);
       const articleId = Number(req.params.id);
 
@@ -182,7 +170,7 @@ articleController
     }
   )
   .patch(
-    auth.varifyAccessToken,
+    auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const id = Number(req.params.id);
       try {
@@ -194,7 +182,7 @@ articleController
     }
   )
   .delete(
-    auth.varifyAccessToken,
+    auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const id = Number(req.params.id);
       try {
@@ -254,12 +242,9 @@ articleController
 articleCommentController
   .route("/:id/comments")
   .post(
-    auth.varifyAccessToken,
-    async (
-      req: AuthRequest,
-      res: Response,
-      next: NextFunction
-    ): Promise<void> => {
+    auth.verifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
       const { userId } = req.auth;
       const id = Number(req.params.id);
       try {
