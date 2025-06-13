@@ -79,7 +79,7 @@ const createArticle = (
 const updateArticle = async (
   userId: User["id"],
   articleId: Article["id"],
-  body: Partial<Pick<Article, "title" | "content">>
+  body: Pick<Article, "title" | "content">
 ) => {
   const { title, content } = body;
 

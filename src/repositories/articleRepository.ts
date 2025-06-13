@@ -79,7 +79,7 @@ const createArticle = (
 
 const updateArticle = (
   articleId: Article["id"],
-  body: Partial<Pick<Article, "title" | "content">>,
+  body: Pick<Article, "title" | "content">,
   options: TOptions = {}
 ) => {
   const { tx } = options;
