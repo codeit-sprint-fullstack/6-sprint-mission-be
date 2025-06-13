@@ -1,4 +1,7 @@
-import articleRepository from "../repositories/articleRepository.js";
+import { Article, Prisma, User } from "@prisma/client";
+import articleRepository from "../repositories/articleRepository";
+import { P2025Error } from "../types/dbError";
+import { NotFoundError } from "../types/commonError";
 
 // 게시글 목록 조회 (검색 및 페이지네이션)
 async function getArticles({
@@ -6,12 +9,18 @@ async function getArticles({
   limit = 10,
   search,
   sort = "latest",
-  userId = null,
+  userId = undefined,
+}: {
+  offset: number;
+  limit: number;
+  search: string;
+  sort: string;
+  userId: string | undefined;
 }) {
   const skip = Number(offset);
   const take = Number(limit);
 
-  const options = {
+  const options: Prisma.ArticleFindManyArgs = {
     skip,
     take,
     select: {
@@ -22,6 +31,7 @@ async function getArticles({
       likes: true,
       createdAt: true,
       updatedAt: true,
+      user: true,
     },
   };
 
@@ -44,11 +54,11 @@ async function getArticles({
   // 전체 게시글 및 페이지네이션 데이터 fetch
   const [articles, total] = await Promise.all([
     articleRepository.findAll(options),
-    articleRepository.count(options.where),
+    articleRepository.count(options.where || {}),
   ]);
 
   // ✅ 유저가 좋아요 누른 상품 ID 목록 조회
-  let likedArticleIds = [];
+  let likedArticleIds: string[] = [];
   if (userId) {
     const likes = await articleRepository.findLikedArticleIdsByUser(
       userId,
@@ -61,7 +71,9 @@ async function getArticles({
   // ✅ products에 isLiked 필드 추가
   const articlesWithLike = articles.map((article) => {
     // user 객체 분리 (user 필드는 include에서 가져옴)
-    const { user, ...articleData } = article;
+    const { user, ...articleData } = article as Article & {
+      user: Pick<User, "id" | "nickname" | "image">;
+    };
 
     return {
       ...articleData,
@@ -83,13 +95,11 @@ async function getArticles({
 }
 
 // 특정 게시글 조회
-async function getArticleById(id, userId) {
+async function getArticleById(id: string, userId: string) {
   const article = await articleRepository.findById(id, userId);
 
   if (!article) {
-    const error = new Error("게시글을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("게시글을 찾을 수 없습니다.");
   }
 
   const isLiked = userId ? article.ArticleLike.length > 0 : false;
@@ -104,24 +114,31 @@ async function getArticleById(id, userId) {
 }
 
 // 새 게시글 작성
-async function createArticle({ title, content, userId, image }) {
+async function createArticle({
+  title,
+  content,
+  userId,
+  image,
+}: Pick<Article, "title" | "content" | "userId" | "image">) {
   return articleRepository.create({
     title,
     content,
-    likes: 0,
-    userId,
     image,
+    userId,
+    likes: 0,
   });
 }
 
 // 게시글 수정
-async function updateArticle(id, { title, content, image }) {
+async function updateArticle(
+  id: string,
+  data: Pick<Article, "title" | "content" | "image">
+) {
   try {
-    return await articleRepository.update(id, { title, content, image });
+    return await articleRepository.update(id, data);
   } catch (error) {
-    if (error.code === "P2025") {
-      const notFoundError = new Error("게시글을 찾을 수 없습니다.");
-      notFoundError.status = 404;
+    if (error instanceof P2025Error) {
+      const notFoundError = new NotFoundError("게시글을 찾을 수 없습니다.");
       throw notFoundError;
     }
     throw error;
@@ -129,36 +146,34 @@ async function updateArticle(id, { title, content, image }) {
 }
 
 // 게시글 삭제
-async function deleteArticle(id) {
+async function deleteArticle(id: string) {
   try {
     return await articleRepository.remove(id);
   } catch (error) {
-    if (error.code === "P2025") {
-      const notFoundError = new Error("게시글을 찾을 수 없습니다.");
-      notFoundError.status = 404;
-      throw notFoundError;
+    if (error instanceof P2025Error) {
+      throw new NotFoundError("게시글을 찾을 수 없습니다.");
     }
     throw error;
   }
 }
 
-// 특정 게시글 좋아요 증가
-async function increaseLike(articleId) {
-  try {
-    // 현재 게시글 조회
-    const article = await getArticleById(articleId);
+// // 특정 게시글 좋아요 증가
+// async function increaseLike(articleId: string) {
+//   try {
+//     // 현재 게시글 조회
+//     const article = await getArticleById(articleId);
 
-    // 좋아요 수 증가
-    return await articleRepository.update(articleId, {
-      likes: (article.likes || 0) + 1,
-    });
-  } catch (error) {
-    if (error.status === 404) {
-      throw error;
-    }
-    throw error;
-  }
-}
+//     // 좋아요 수 증가
+//     return await articleRepository.update(articleId, {
+//       likes: (article.likes || 0) + 1,
+//     });
+//   } catch (error) {
+//     if (error instanceof NotFoundError) {
+//       throw error;
+//     }
+//     throw error;
+//   }
+// }
 
 export default {
   getArticleById,
@@ -166,5 +181,5 @@ export default {
   getArticles,
   updateArticle,
   deleteArticle,
-  increaseLike,
+  // increaseLike,
 };

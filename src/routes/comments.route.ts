@@ -1,7 +1,7 @@
 import express from "express";
-import auth from "../middlewares/users/auth.js";
-import commentController from "../controllers/commentController.js";
-import authErrorHandler from "../middlewares/errors/authErrorHandler.js";
+import auth from "../middlewares/users/auth";
+import commentController from "../controllers/commentController";
+import authErrorHandler from "../middlewares/errors/authErrorHandler";
 
 const commentsRouter = express.Router();
 

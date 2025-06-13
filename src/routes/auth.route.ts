@@ -1,7 +1,7 @@
 import express from "express";
-import authController from "../controllers/authController.js";
-import auth from "../middlewares/users/auth.js";
-import authErrorHandler from "../middlewares/errors/authErrorHandler.js";
+import authController from "../controllers/authController";
+import auth from "../middlewares/users/auth";
+import authErrorHandler from "../middlewares/errors/authErrorHandler";
 
 const authRouter = express.Router();
 
@@ -252,7 +252,7 @@ authRouter.post(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-authRouter.post("/logout", auth.verifyOptionalAuth, authController.logOut);
+authRouter.post("/logout", auth.verifyAccessToken, authController.logOut);
 
 /**
  * 인증 관련 에러를 처리하는 미들웨어

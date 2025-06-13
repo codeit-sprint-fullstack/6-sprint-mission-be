@@ -1,6 +1,8 @@
-import { prisma } from "../db/prisma/client.prisma.js";
+import { Article, User } from "@prisma/client";
+import { prisma } from "../db/prisma/client.prisma";
+import { P2002Error } from "../types/dbError";
 
-const likeArticle = async (userId, articleId) => {
+const likeArticle = async (userId: User["id"], articleId: Article["id"]) => {
   try {
     const liked = await prisma.$transaction([
       prisma.articleLike.create({
@@ -14,7 +16,7 @@ const likeArticle = async (userId, articleId) => {
 
     return { message: "좋아요 완료", liked };
   } catch (error) {
-    if (error.code === "P2002") {
+    if (error instanceof P2002Error) {
       // Prisma unique constraint violation
       return { message: "이미 좋아요를 눌렀습니다." };
     }
@@ -22,7 +24,7 @@ const likeArticle = async (userId, articleId) => {
   }
 };
 
-const unlikeArticle = async (userId, articleId) => {
+const unlikeArticle = async (userId: User["id"], articleId: Article["id"]) => {
   try {
     await prisma.$transaction([
       prisma.articleLike.delete({

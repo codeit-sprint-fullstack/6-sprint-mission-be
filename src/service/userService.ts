@@ -1,49 +1,60 @@
 import bcrypt from "bcrypt";
-import userRepository from "../repositories/userRepository.js";
-import authService from "./authService.js";
+import userRepository from "../repositories/userRepository";
+import authService from "./authService";
+import { User } from "@prisma/client";
+import {
+  DatabaseError,
+  NotFoundError,
+  ValidationError,
+} from "../types/commonError";
 
 // 패스워드 암호화
-function hashPassword(password) {
+function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
 }
 
 // 회원가입
-async function createUser(user) {
+async function createUser(user: {
+  nickname: string;
+  email: string;
+  password: string;
+}) {
   try {
     // 중복 유저 체크
     const existedUser = await userRepository.findByEmail(user.email);
     if (existedUser) {
-      const error = new Error("User already exists");
-      error.code = 422;
-      error.data = { email: user.email };
+      const error = new ValidationError("User already exists", {
+        email: user.email,
+      });
       throw error;
     }
 
     const hashedPassword = await hashPassword(user.password);
     const createdUser = await userRepository.save({
-      ...user,
+      nickname: user.nickname,
+      email: user.email,
       encryptedPassword: hashedPassword,
     });
 
     return authService.filterSensitiveUserData(createdUser);
   } catch (error) {
     console.error("🔥 실제 Prisma 에러:", error);
-    if (error.code === 422) throw error;
+    if (error instanceof ValidationError) throw error;
 
     // Prisma 에러를 애플리케이션에 맞는 형식으로 변환
-    const customError = new Error("데이터베이스 작업 중 오류가 발생했습니다");
-    customError.code = 500;
+    const customError = new DatabaseError(
+      "데이터베이스 작업 중 오류가 발생했습니다"
+    );
     throw customError;
   }
 }
 
 // 유저 id로 조회
-async function getUserById(id) {
+async function getUserById(id: string) {
   const user = await userRepository.findById(id);
 
   if (!user) {
-    const error = new Error("Not Found");
-    error.code = 404;
+    const error = new NotFoundError("Not Found");
     throw error;
   }
 
@@ -51,7 +62,12 @@ async function getUserById(id) {
 }
 
 // 유저 정보 업데이트
-async function updateUser(id, data) {
+async function updateUser(
+  id: string,
+  data: Partial<
+    Pick<User, "nickname" | "email" | "encryptedPassword" | "refreshToken">
+  >
+) {
   const updatedUser = await userRepository.update(id, data);
   return authService.filterSensitiveUserData(updatedUser);
 }

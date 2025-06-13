@@ -1,12 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import indexRouter from "./src/routes/index.route.js";
+import indexRouter from "./routes/index.route";
 import cookieParser from "cookie-parser";
 import path from "path";
 
 import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./src/config/swagger.js";
+import swaggerSpec from "./config/swagger";
+import commonError from "./middlewares/errors/commonError";
 
 dotenv.config();
 
@@ -35,7 +36,7 @@ app.use(
   cors({
     origin: function (origin, callback) {
       // 요청하는 origin이 허용된 origin 목록에 있는지 확인
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      if (allowedOrigins.indexOf(origin || "") !== -1 || !origin) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -54,26 +55,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(indexRouter);
 
-app.use((err, req, res, next) => {
-  console.log(err);
-
-  switch (err.name) {
-    case "ValidationError":
-      res
-        .status(400)
-        .send({ message: "ValidationError : body의 내용이 빠졌습니다!" });
-      break;
-    case "CastError":
-      res.status(400).send({ message: "Invalid product ID" });
-      break;
-    case "UnauthorizedError":
-      return res
-        .status(401)
-        .json({ message: "인증에 실패했습니다. 다시 로그인해주세요." });
-    default:
-      res.status(500).send({ message: err.message });
-  }
-});
+app.use(commonError);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

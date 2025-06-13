@@ -1,12 +1,19 @@
-import productRepository from "../repositories/productRepository.js";
+import { Product, User, Prisma } from "@prisma/client";
+import productRepository from "../repositories/productRepository";
 
 // 상품조회
 async function getProducts({
   page = 0,
   pageSize = 10,
-  orderBy = "recent", // ✅ orderBy → sort 로 변경
-  keyWord = "",
-  userId = null,
+  orderBy = "latest",
+  keyWord,
+  userId,
+}: {
+  page?: number;
+  pageSize?: number;
+  orderBy?: string;
+  keyWord?: string;
+  userId?: string;
 }) {
   const skip = Number(page) * Number(pageSize);
   const take = Number(pageSize);
@@ -15,7 +22,7 @@ async function getProducts({
     ? {
         name: {
           contains: keyWord,
-          mode: "insensitive",
+          mode: Prisma.QueryMode.insensitive,
         },
       }
     : {};
@@ -23,8 +30,8 @@ async function getProducts({
   // ✅ 정렬 조건 분기
   const orderByOption =
     orderBy === "likes"
-      ? { likes: "desc" } // likes 컬럼 기준
-      : { createdAt: "desc" };
+      ? { likes: Prisma.SortOrder.desc }
+      : { createdAt: Prisma.SortOrder.desc };
 
   // ✅ 전체 상품과 총 개수 fetch
   const [products, total] = await Promise.all([
@@ -38,7 +45,7 @@ async function getProducts({
   ]);
 
   // ✅ 유저가 좋아요 누른 상품 ID 목록 조회
-  let likedProductIds = [];
+  let likedProductIds: string[] = [];
   if (userId) {
     const likes = await productRepository.findLikedProductIdsByUser(
       userId,
@@ -72,7 +79,7 @@ async function getProducts({
 }
 
 // 특정 상품 조회
-async function getProductById(productId, userId = null) {
+async function getProductById(productId: Product["id"], userId?: User["id"]) {
   const product = await productRepository.findById(productId, userId);
 
   if (!product) throw { code: "P2025" };
@@ -97,7 +104,18 @@ async function createProduct({
   tags = [],
   userId,
   image,
+}: {
+  name: string | undefined;
+  description: string | undefined;
+  price: number | string | undefined;
+  tags?: string[];
+  userId: string;
+  image: string[];
 }) {
+  if (!name || !description || !price) {
+    throw new Error("이름, 설명, 가격은 필수입니다.");
+  }
+
   const productData = {
     name,
     description,
@@ -111,11 +129,11 @@ async function createProduct({
   return productRepository.create(productData);
 }
 
-async function updateProduct(id, data) {
+async function updateProduct(id: Product["id"], data: Partial<Product>) {
   return productRepository.update(id, data);
 }
 
-async function deleteProduct(id) {
+async function deleteProduct(id: Product["id"]) {
   return productRepository.remove(id);
 }
 

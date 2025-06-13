@@ -1,9 +1,9 @@
 import express from "express";
 import multer from "multer";
-import productController from "../controllers/productController.js";
-import commentController from "../controllers/commentController.js";
-import { validateProduct } from "../middlewares/products/validateProduct.js";
-import auth from "../middlewares/users/auth.js";
+import productController from "../controllers/productController";
+import commentController from "../controllers/commentController";
+import { validateProduct } from "../middlewares/products/validateProduct";
+import auth from "../middlewares/users/auth";
 
 const productsRouter = express.Router();
 

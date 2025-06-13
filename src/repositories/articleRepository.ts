@@ -1,7 +1,8 @@
-import { prisma } from "../db/prisma/client.prisma.js";
+import { Article, Prisma, User } from "@prisma/client";
+import { prisma } from "../db/prisma/client.prisma";
 
 // 전체 조회
-async function findAll(options) {
+async function findAll(options: Prisma.ArticleFindManyArgs) {
   // select와 include를 동시에 사용할 수 없으므로 분기 처리
   if (options.select) {
     // select를 사용하는 경우에는 select 내부에 user 객체를 넣어야 함
@@ -37,7 +38,7 @@ async function findAll(options) {
 }
 
 // 단일 조회
-async function findById(id, userId) {
+async function findById(id: Article["id"], userId?: Partial<User["id"]>) {
   return prisma.article.findUnique({
     where: {
       id,
@@ -61,7 +62,10 @@ async function findById(id, userId) {
 }
 
 // 현재 좋아요한 컬럼만 추출
-async function findLikedArticleIdsByUser(userId, articleIds) {
+async function findLikedArticleIdsByUser(
+  userId: User["id"],
+  articleIds: Article["id"][]
+) {
   return prisma.articleLike.findMany({
     where: {
       userId,
@@ -75,26 +79,31 @@ async function findLikedArticleIdsByUser(userId, articleIds) {
   });
 }
 
-async function create(articleData) {
+async function create(
+  articleData: Omit<Article, "id" | "createdAt" | "updatedAt">
+) {
   return prisma.article.create({
     data: articleData,
   });
 }
 
-async function count(where) {
+async function count(where: Prisma.ArticleWhereInput) {
   return prisma.article.count({
     where,
   });
 }
 
-async function update(id, data) {
+async function update(
+  id: Article["id"],
+  data: Pick<Article, "title" | "content" | "image">
+) {
   return prisma.article.update({
     where: { id },
     data,
   });
 }
 
-async function remove(id) {
+async function remove(id: Article["id"]) {
   return prisma.article.delete({
     where: { id },
   });

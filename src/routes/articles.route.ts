@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
-import articleController from "../controllers/articleController.js";
-import auth from "../middlewares/users/auth.js";
+import articleController from "../controllers/articleController";
+import auth from "../middlewares/users/auth";
 
 const articlesRouter = express.Router();
 
@@ -545,11 +545,11 @@ articlesRouter.delete(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-articlesRouter.patch(
-  "/:articleId/like",
-  auth.verifyAccessToken,
-  articleController.increaseLike
-);
+// articlesRouter.patch(
+//   "/:articleId/like",
+//   auth.verifyAccessToken,
+//   articleController.increaseLike
+// );
 
 // 좋아요
 articlesRouter.post(

@@ -1,7 +1,8 @@
-import commentService from "../service/commentService.js";
+import { RequestHandler } from "express";
+import commentService from "../service/commentService";
 
 // 게시글 댓글 목록 조회
-const getCommentsByArticleId = async (req, res, next) => {
+const getCommentsByArticleId: RequestHandler = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const comments = await commentService.getCommentsByArticleId(articleId);
@@ -12,16 +13,16 @@ const getCommentsByArticleId = async (req, res, next) => {
 };
 
 // 게시글 댓글 생성
-const createArticleComment = async (req, res, next) => {
+const createArticleComment: RequestHandler = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
-    const userId = req.auth.userId;
-    const { content } = req.body;
+    const userId = req.auth!.userId;
+    const content = req.body.content;
 
     const comment = await commentService.createArticleComment(
       articleId,
-      userId,
-      { content }
+      content,
+      userId
     );
 
     res.status(201).json({
@@ -34,7 +35,7 @@ const createArticleComment = async (req, res, next) => {
 };
 
 // 상품 댓글 목록 조회
-const getCommentsByProductId = async (req, res, next) => {
+const getCommentsByProductId: RequestHandler = async (req, res, next) => {
   try {
     const productId = req.params.productId;
     const comments = await commentService.getCommentsByProductId(productId);
@@ -45,16 +46,16 @@ const getCommentsByProductId = async (req, res, next) => {
 };
 
 // 상품 댓글 생성
-const createProductComment = async (req, res, next) => {
+const createProductComment: RequestHandler = async (req, res, next) => {
   try {
     const productId = req.params.productId;
-    const userId = req.auth.userId;
-    const { content } = req.body;
+    const userId = req.auth!.userId;
+    const content = req.body.content;
 
     const comment = await commentService.createProductComment(
       productId,
       userId,
-      { content }
+      content
     );
 
     res.status(201).json({
@@ -67,15 +68,17 @@ const createProductComment = async (req, res, next) => {
 };
 
 // 댓글 수정
-const updateComment = async (req, res, next) => {
+const updateComment: RequestHandler = async (req, res, next) => {
   try {
     const commentId = req.params.commentId;
-    const userId = req.auth.userId;
+    const userId = req.auth!.userId;
     const { content } = req.body;
 
-    const comment = await commentService.updateComment(commentId, userId, {
-      content,
-    });
+    const comment = await commentService.updateComment(
+      commentId,
+      userId,
+      content
+    );
 
     res.status(200).json({
       message: "댓글이 성공적으로 수정되었습니다.",
@@ -87,10 +90,10 @@ const updateComment = async (req, res, next) => {
 };
 
 // 댓글 삭제
-const deleteComment = async (req, res, next) => {
+const deleteComment: RequestHandler = async (req, res, next) => {
   try {
     const commentId = req.params.commentId;
-    const userId = req.auth.userId;
+    const userId = req.auth!.userId;
 
     await commentService.deleteComment(commentId, userId);
 

@@ -1,11 +1,30 @@
-import { prisma } from "../db/prisma/client.prisma.js";
-import productService from "../service/productService.js";
+import { NextFunction, Request, RequestHandler, Response } from "express";
+import { prisma } from "../db/prisma/client.prisma";
+import productService from "../service/productService";
+import { Product } from "@prisma/client";
+import { NotFoundError } from "../types/commonError";
 
 // 전체 상품 목록 조회
-const getProducts = async (req, res, next) => {
+const getProducts = async (
+  req: Request<
+    {
+      id: Product["id"];
+    },
+    {},
+    {},
+    {
+      page?: number;
+      pageSize?: number;
+      orderBy?: string;
+      keyWord?: string;
+    }
+  >,
+  res: Response,
+  next: NextFunction
+) => {
   try {
+    const userId = req.auth!.userId;
     const { page, pageSize, orderBy, keyWord } = req.query;
-    const userId = req.auth?.userId || null;
 
     const result = await productService.getProducts({
       page,
@@ -18,7 +37,7 @@ const getProducts = async (req, res, next) => {
     res.status(200).json({
       data: result.products,
       pagination: result.pagination,
-      orderBy: result.orderBy,
+      sort: result.sort,
     });
   } catch (err) {
     next(err);
@@ -26,18 +45,23 @@ const getProducts = async (req, res, next) => {
 };
 
 // 단일 상품 조회
-const getProductById = async (req, res, next) => {
+const getProductById = async (
+  req: Request<{ id: Product["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const productId = req.params.id;
-    const userId = req.auth?.userId || null;
+    const userId = req.auth!.userId;
     const product = await productService.getProductById(productId, userId);
 
     res.status(200).json({ data: product });
   } catch (err) {
-    if (err.code === "P2025") {
-      return res.status(404).json({
+    if (err instanceof NotFoundError) {
+      res.status(404).json({
         message: "상품을 찾을 수 없습니다.",
       });
+      return;
     }
     next(err);
   }
@@ -46,13 +70,26 @@ const getProductById = async (req, res, next) => {
 // TODO : 토큰확인 하는지 아래 컨트롤러들 확인하기
 
 // 상품 생성
-const createProduct = async (req, res, next) => {
+const createProduct = async (
+  req: Request<
+    { id: Product["id"] },
+    {},
+    {
+      name?: string;
+      description?: string;
+      price?: number | string;
+      tags?: string | string[];
+    }
+  >,
+  res: Response,
+  next: NextFunction
+) => {
   try {
+    const userId = req.auth!.userId;
     const { name, description, price, tags } = req.body;
-    const userId = req.auth.userId;
 
     // tags 데이터 처리: 문자열로 전송된 경우 배열로 변환
-    let processedTags = tags;
+    let processedTags: string[] = Array.isArray(tags) ? tags : [];
     if (typeof tags === "string") {
       try {
         // JSON 문자열로 전송된 경우 파싱
@@ -70,14 +107,14 @@ const createProduct = async (req, res, next) => {
 
     // 여러 이미지 파일 처리
     const imagePaths =
-      req.files && req.files.length > 0
+      req.files && Array.isArray(req.files) && req.files.length > 0
         ? req.files.map((file) => `/uploads/${file.filename}`)
         : [];
 
     const product = await productService.createProduct({
       name,
       description,
-      price,
+      price: Number(price),
       tags: processedTags || [],
       userId,
       image: imagePaths,
@@ -93,14 +130,28 @@ const createProduct = async (req, res, next) => {
 };
 
 // 상품 수정
-const updateProduct = async (req, res, next) => {
+const updateProduct = async (
+  req: Request<
+    { id: Product["id"] },
+    {},
+    {
+      name?: string;
+      description?: string;
+      price?: number;
+      existingImages?: string;
+      tags?: string | string[];
+    }
+  >,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const productId = req.params.id;
     const { existingImages, tags, ...otherData } = req.body;
 
     // 여러 이미지 파일 처리
     const newImagePaths =
-      req.files && req.files.length > 0
+      req.files && Array.isArray(req.files) && req.files.length > 0
         ? req.files.map((file) => `/uploads/${file.filename}`)
         : [];
 
@@ -121,7 +172,7 @@ const updateProduct = async (req, res, next) => {
     const finalImagePaths = [...existingImagePaths, ...newImagePaths];
 
     // tags 데이터 처리: 문자열로 전송된 경우 배열로 변환
-    let processedTags = tags;
+    let processedTags: string[] = Array.isArray(tags) ? tags : [];
     if (typeof tags === "string") {
       try {
         // JSON 문자열로 전송된 경우 파싱
@@ -133,14 +184,15 @@ const updateProduct = async (req, res, next) => {
         }
       } catch (e) {
         // 파싱 실패 시 기존 태그 유지
-        processedTags = undefined;
+        processedTags = [];
       }
     }
 
     const existingProduct = await productService.getProductById(productId);
 
-    if (existingProduct.userId !== req.auth.userId) {
-      return res.status(403).json({ message: "수정 권한이 없습니다." });
+    if (existingProduct.userId !== req.auth!.userId) {
+      res.status(403).json({ message: "수정 권한이 없습니다." });
+      return;
     }
 
     // Prisma 모델에 맞는 데이터 구성
@@ -158,24 +210,30 @@ const updateProduct = async (req, res, next) => {
     });
   } catch (err) {
     console.error("Update error:", err);
-    if (err.code === "P2025") {
-      return res.status(404).json({
+    if (err instanceof NotFoundError) {
+      res.status(404).json({
         message: "상품을 찾을 수 없습니다.",
       });
+      return;
     }
     next(err);
   }
 };
 
 // 상품 삭제
-const deleteProduct = async (req, res, next) => {
+const deleteProduct = async (
+  req: Request<{ id: Product["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const productId = req.params.id;
 
     const existingProduct = await productService.getProductById(productId);
 
-    if (existingProduct.userId !== req.auth.userId) {
-      return res.status(403).json({ message: "삭제 권한이 없습니다." });
+    if (existingProduct.userId !== req.auth!.userId) {
+      res.status(403).json({ message: "삭제 권한이 없습니다." });
+      return;
     }
 
     await productService.deleteProduct(productId);
@@ -189,10 +247,17 @@ const deleteProduct = async (req, res, next) => {
 };
 
 // 좋아요 누르기
-const likeProduct = async (req, res, next) => {
+const likeProduct = async (
+  req: Request<{ productId: Product["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { productId } = req.params;
-    const userId = req.auth.userId;
+    const productId = req.params.productId;
+    const userId = req.auth!.userId;
+
+    console.log("userId", userId);
+    console.log("productId", productId);
 
     const liked = await prisma.$transaction([
       prisma.productLike.create({
@@ -211,10 +276,14 @@ const likeProduct = async (req, res, next) => {
 };
 
 // 좋아요 취소
-const unlikeProduct = async (req, res, next) => {
+const unlikeProduct = async (
+  req: Request<{ productId: Product["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { productId } = req.params;
-    const userId = req.auth.userId;
+    const productId = req.params.productId;
+    const userId = req.auth!.userId;
 
     await prisma.$transaction([
       prisma.productLike.delete({

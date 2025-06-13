@@ -1,17 +1,17 @@
-import commentRepository from "../repositories/commentRepository.js";
-import articleRepository from "../repositories/articleRepository.js";
-import productRepository from "../repositories/productRepository.js";
+import commentRepository from "../repositories/commentRepository";
+import articleRepository from "../repositories/articleRepository";
+import productRepository from "../repositories/productRepository";
+import { Article, Comment, Product, User } from "@prisma/client";
+import { ForbiddenError, NotFoundError } from "../types/commonError";
 
 /**
  * 특정 게시글의 댓글 목록 조회
  */
-async function getCommentsByArticleId(articleId) {
+async function getCommentsByArticleId(articleId: Article["id"]) {
   // 게시글이 존재하는지 확인
   const article = await articleRepository.findById(articleId);
   if (!article) {
-    const error = new Error("게시글을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("게시글을 찾을 수 없습니다.");
   }
 
   return commentRepository.findByArticleId(articleId);
@@ -20,13 +20,11 @@ async function getCommentsByArticleId(articleId) {
 /**
  * 특정 상품의 댓글 목록 조회
  */
-async function getCommentsByProductId(productId) {
+async function getCommentsByProductId(productId: Product["id"]) {
   // 상품이 존재하는지 확인
   const product = await productRepository.findById(productId);
   if (!product) {
-    const error = new Error("상품을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("상품을 찾을 수 없습니다.");
   }
 
   return commentRepository.findByProductId(productId);
@@ -35,13 +33,16 @@ async function getCommentsByProductId(productId) {
 /**
  * 게시글에 새 댓글 작성
  */
-async function createArticleComment(articleId, userId, { content }) {
+async function createArticleComment(
+  articleId: Article["id"],
+  content: Comment["content"],
+  userId: User["id"]
+) {
   // 게시글이 존재하는지 확인
+
   const article = await articleRepository.findById(articleId);
   if (!article) {
-    const error = new Error("게시글을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("게시글을 찾을 수 없습니다.");
   }
 
   return commentRepository.create({
@@ -54,13 +55,15 @@ async function createArticleComment(articleId, userId, { content }) {
 /**
  * 상품에 새 댓글 작성
  */
-async function createProductComment(productId, userId, { content }) {
+async function createProductComment(
+  productId: Product["id"],
+  userId: User["id"],
+  content: Comment["content"]
+) {
   // 상품이 존재하는지 확인
   const product = await productRepository.findById(productId);
   if (!product) {
-    const error = new Error("상품을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("상품을 찾을 수 없습니다.");
   }
 
   return commentRepository.create({
@@ -73,20 +76,20 @@ async function createProductComment(productId, userId, { content }) {
 /**
  * 댓글 수정
  */
-async function updateComment(commentId, userId, { content }) {
+async function updateComment(
+  commentId: Comment["id"],
+  userId: User["id"],
+  content: Comment["content"]
+) {
   // 댓글이 존재하는지 확인
   const comment = await commentRepository.findById(commentId);
   if (!comment) {
-    const error = new Error("댓글을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("댓글을 찾을 수 없습니다.");
   }
 
   // 작성자만 수정 가능
   if (comment.userId !== userId) {
-    const error = new Error("댓글을 수정할 권한이 없습니다.");
-    error.status = 403;
-    throw error;
+    throw new ForbiddenError("댓글을 수정할 권한이 없습니다.");
   }
 
   return commentRepository.update(commentId, { content });
@@ -95,20 +98,16 @@ async function updateComment(commentId, userId, { content }) {
 /**
  * 댓글 삭제
  */
-async function deleteComment(commentId, userId) {
+async function deleteComment(commentId: Comment["id"], userId: User["id"]) {
   // 댓글이 존재하는지 확인
   const comment = await commentRepository.findById(commentId);
   if (!comment) {
-    const error = new Error("댓글을 찾을 수 없습니다.");
-    error.status = 404;
-    throw error;
+    throw new NotFoundError("댓글을 찾을 수 없습니다.");
   }
 
   // 작성자만 삭제 가능
   if (comment.userId !== userId) {
-    const error = new Error("댓글을 삭제할 권한이 없습니다.");
-    error.status = 403;
-    throw error;
+    throw new ForbiddenError("댓글을 삭제할 권한이 없습니다.");
   }
 
   return commentRepository.remove(commentId);

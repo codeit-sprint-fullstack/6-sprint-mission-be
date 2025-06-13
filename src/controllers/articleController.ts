@@ -1,11 +1,29 @@
-import articleService from "../service/articleService.js";
-import articleLikeService from "../service/articleLikeService.js";
+import articleService from "../service/articleService";
+import articleLikeService from "../service/articleLikeService";
+import { NextFunction, Request, Response, RequestHandler } from "express";
+import { Article } from "@prisma/client";
 
 // 게시글 목록 조회
-const getArticles = async (req, res, next) => {
+const getArticles = async (
+  req: Request<
+    {},
+    {},
+    {},
+    {
+      offset?: string;
+      limit?: string;
+      search?: string;
+      sort?: string;
+    }
+  >,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { offset, limit, search, sort } = req.query;
-    const userId = req.auth?.userId || null;
+    const offset = parseInt(req.query.offset || "0");
+    const limit = parseInt(req.query.limit || "10");
+    const { search = "", sort = "latest" } = req.query;
+    const userId = req.auth!.userId;
 
     const result = await articleService.getArticles({
       offset,
@@ -26,25 +44,29 @@ const getArticles = async (req, res, next) => {
 };
 
 // 게시글 상세 조회
-const getArticleById = async (req, res, next) => {
+const getArticleById = async (
+  req: Request<{ articleId: Article["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const articleId = req.params.articleId;
-    const userId = req.auth?.userId || null;
+    const userId = req.auth!.userId;
     const article = await articleService.getArticleById(articleId, userId);
 
     res.status(200).json({ data: article });
   } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
+    next(error);
   }
 };
 
 // 게시글 생성
-const createArticle = async (req, res, next) => {
+const createArticle: RequestHandler = async (req, res, next) => {
   try {
     const { title, content } = req.body;
-    const userId = req.auth.userId;
-    const imagePaths =
-      req.files?.map((file) => `/uploads/${file.filename}`) || [];
+    const userId = req.auth!.userId;
+    const files = req.files as Express.Multer.File[];
+    const imagePaths = files?.map((file) => `/uploads/${file.filename}`) || [];
 
     const article = await articleService.createArticle({
       title,
@@ -61,14 +83,15 @@ const createArticle = async (req, res, next) => {
 };
 
 // 게시글 수정
-const updateArticle = async (req, res, next) => {
+const updateArticle: RequestHandler = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const { title, content, existingImages } = req.body;
+    const files = req.files as Express.Multer.File[];
 
     // 새 이미지 경로 처리
     const newImagePaths =
-      req.files?.map((file) => `/uploads/${file.filename}`) || [];
+      files?.map((file) => `/uploads/${file.filename}`) || [];
 
     // 기존 이미지 처리
     let existingImagePaths = [];
@@ -89,7 +112,7 @@ const updateArticle = async (req, res, next) => {
     const data = {
       title,
       content,
-      ...(finalImagePaths.length > 0 && { image: finalImagePaths }),
+      image: finalImagePaths,
     };
 
     const article = await articleService.updateArticle(articleId, data);
@@ -99,12 +122,16 @@ const updateArticle = async (req, res, next) => {
       data: article,
     });
   } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
+    next(error);
   }
 };
 
 // 게시글 삭제
-const deleteArticle = async (req, res, next) => {
+const deleteArticle = async (
+  req: Request<{ articleId: Article["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const articleId = req.params.articleId;
     await articleService.deleteArticle(articleId);
@@ -113,30 +140,38 @@ const deleteArticle = async (req, res, next) => {
       message: "게시글이 성공적으로 삭제되었습니다.",
     });
   } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
+    next(error);
   }
 };
 
 // 좋아요 증가
-const increaseLike = async (req, res, next) => {
-  try {
-    const articleId = req.params.articleId;
-    const updatedArticle = await articleService.increaseLike(articleId);
+// const increaseLike = async (
+//   req: Request<{ articleId: Article["id"] }>,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const articleId = req.params.articleId;
+//     const updatedArticle = await articleService.increaseLike(articleId);
 
-    res.status(200).json({
-      message: "게시글에 좋아요를 눌렀습니다.",
-      data: updatedArticle,
-    });
-  } catch (error) {
-    res.status(error.status || 500).json({ message: error.message });
-  }
-};
+//     res.status(200).json({
+//       message: "게시글에 좋아요를 눌렀습니다.",
+//       data: updatedArticle,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // 좋아요 누르기
-const likeArticle = async (req, res, next) => {
+const likeArticle = async (
+  req: Request<{ articleId: Article["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { articleId } = req.params;
-    const userId = req.auth.userId;
+    const userId = req.auth!.userId;
 
     const result = await articleLikeService.likeArticle(userId, articleId);
 
@@ -147,10 +182,14 @@ const likeArticle = async (req, res, next) => {
 };
 
 // 좋아요 취소
-const unlikeArticle = async (req, res, next) => {
+const unlikeArticle = async (
+  req: Request<{ articleId: Article["id"] }>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { articleId } = req.params;
-    const userId = req.auth.userId;
+    const userId = req.auth!.userId;
 
     const result = await articleLikeService.unlikeArticle(userId, articleId);
 
@@ -166,7 +205,7 @@ export default {
   getArticles,
   updateArticle,
   deleteArticle,
-  increaseLike,
+  // increaseLike,
   likeArticle,
   unlikeArticle,
 };

@@ -1,12 +1,13 @@
-import { prisma } from "../db/prisma/client.prisma.js";
+import { Article, User } from "@prisma/client";
+import { prisma } from "../db/prisma/client.prisma";
 
-const create = (userId, articleId) => {
+const create = (userId: User["id"], articleId: Article["id"]) => {
   return prisma.articleLike.create({
     data: { userId, articleId },
   });
 };
 
-const deleteLike = (userId, articleId) => {
+const deleteLike = (userId: User["id"], articleId: Article["id"]) => {
   return prisma.articleLike.delete({
     where: {
       userId_articleId: { userId, articleId },

@@ -1,6 +1,17 @@
-import { prisma } from "../db/prisma/client.prisma.js";
+import { Prisma, Product, User } from "@prisma/client";
+import { prisma } from "../db/prisma/client.prisma";
 
-async function findAll({ skip, take, where, orderBy }) {
+async function findAll({
+  skip,
+  take,
+  where,
+  orderBy,
+}: {
+  skip: number;
+  take: number;
+  where: Prisma.ProductWhereInput;
+  orderBy: Prisma.ProductOrderByWithRelationInput;
+}) {
   return prisma.product.findMany({
     where,
     skip,
@@ -18,11 +29,11 @@ async function findAll({ skip, take, where, orderBy }) {
   });
 }
 
-async function countAll(where) {
+async function countAll(where: Prisma.ProductWhereInput) {
   return prisma.product.count({ where });
 }
 
-async function findById(id, userId) {
+async function findById(id: Product["id"], userId?: User["id"]) {
   return prisma.product.findUnique({
     where: { id },
     include: {
@@ -43,7 +54,10 @@ async function findById(id, userId) {
   });
 }
 
-async function findLikedProductIdsByUser(userId, productIds) {
+async function findLikedProductIdsByUser(
+  userId: User["id"],
+  productIds: Product["id"][]
+) {
   return prisma.productLike.findMany({
     where: {
       userId,
@@ -57,20 +71,22 @@ async function findLikedProductIdsByUser(userId, productIds) {
   });
 }
 
-async function create(productData) {
+async function create(
+  productData: Omit<Product, "id" | "createdAt" | "updatedAt">
+) {
   return prisma.product.create({
     data: productData,
   });
 }
 
-async function update(id, data) {
+async function update(id: Product["id"], data: Partial<Product>) {
   return prisma.product.update({
     where: { id },
     data,
   });
 }
 
-async function remove(id) {
+async function remove(id: Product["id"]) {
   return prisma.product.delete({
     where: { id },
   });
