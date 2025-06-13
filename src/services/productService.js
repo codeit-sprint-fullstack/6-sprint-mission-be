@@ -26,7 +26,7 @@ async function getAllProducts({ page = 1, pageSize = 10, orderBy = "recent" }) {
 }
 
 // 상품 상세 조회
-async function getProductById(id) {
+async function getProductById(id, userId) {
   const product = await productRepository.findById(id, userId);
   if (!product) {
     const error = new Error("상품을 찾을 수 없습니다.");

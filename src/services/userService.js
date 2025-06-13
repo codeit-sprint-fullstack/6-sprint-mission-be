@@ -9,13 +9,13 @@ function hashPassword(password) {
 
 // 비번 제외 필터 함수
 function filterSensitiveUserData(user) {
-  const { password, ...rest } = user;
+  const { password, refreshToken, ...rest } = user;
   return rest;
 }
 
 // 로그인 - 비번 일치 에러 함수
-async function verifyPassword(inputPassword, password) {
-  const isMatch = await bcrypt.compare(inputPassword, password);
+async function verifyPassword(inputPassword, hashedPassword) {
+  const isMatch = await bcrypt.compare(inputPassword, hashedPassword);
   if (!isMatch) {
     const error = new Error("비밀번호가 일치하지 않습니다.");
     error.code = 401;
@@ -33,7 +33,6 @@ async function createdUser(user) {
     if (existedUser) {
       const error = new Error("User already exists");
       error.code = 422;
-      error.data = { email: user.email };
       throw error;
     }
 
@@ -74,24 +73,33 @@ async function getUser(email, password) {
 }
 
 // 토큰 생성 함수
-function createToken(user, type) {
+function createToken(user, type = "access") {
   const payload = { userId: user.id };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: type === "refresh" ? "2w" : "1h",
-  });
-  return token;
+  const expiresIn = type === "refresh" ? "2w" : "1h";
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 }
 
 // 로큰 재발급 함수
-async function refreshToken(userId, refreshToken) {
+async function refreshToken(userId, incomingRefreshToken) {
   const user = await userRepository.findById(userId);
-  if (!user || user.refreshToken !== refreshToken) {
-    const error = new Error("Unauthorized");
+  if (!user) {
+    const error = new Error("Unauthorized - user not found");
     error.code = 401;
     throw error;
   }
+
+  if (!user.refreshToken || user.refreshToken !== incomingRefreshToken) {
+    const error = new Error("Unauthorized - invalid refresh token");
+    error.code = 401;
+    throw error;
+  }
+
   const newAccessToken = createToken(user);
   const newRefreshToken = createToken(user, "refresh");
+
+  // 새 리프레쉬 토큰 DB에 저장
+  await userRepository.update(userId, { refreshToken: newRefreshToken });
+
   return { newAccessToken, newRefreshToken };
 }
 

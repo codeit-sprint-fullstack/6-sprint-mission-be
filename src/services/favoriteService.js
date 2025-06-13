@@ -1,5 +1,5 @@
-import favoriteRepository from "../repositories/favoriteRepository";
-import productRepository from "../repositories/productRepository";
+import favoriteRepository from "../repositories/favoriteRepository.js";
+import productRepository from "../repositories/productRepository.js";
 
 async function toggleFavorite(userId, productId) {
   const existing = await favoriteRepository.isFavorite(userId, productId);
