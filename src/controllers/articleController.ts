@@ -1,10 +1,38 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import articleService from "../services/articleService.js";
+import { Article } from "@prisma/client";
+import { AuthenticationError } from "../types/errors";
+
+type TGetArticlesQuery = {
+  offset: string;
+  limit: string;
+  orderBy: string;
+  keyword: string;
+};
+
+type TGetArticlesResult = [
+  {
+    likeCount: number;
+    author: {
+      nickname: string;
+    };
+    id: number;
+    title: string;
+    content: string;
+    createdAt: Date;
+  }[],
+  number
+];
 
 // 게시글 목록 불러오기
-const getArticles: RequestHandler<{}, {}, {}> = async (req, res, next) => {
+const getArticles: RequestHandler<{}, {}, {}, TGetArticlesQuery> = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const [articles, totalCount] = await articleService.getArticles(req.query);
+    const [articles, totalCount]: TGetArticlesResult =
+      await articleService.getArticles(req.query);
 
     res.status(200).json({ list: articles, totalCount });
   } catch (e) {
@@ -18,6 +46,10 @@ const getArticle = async (
   res: Response,
   next: NextFunction
 ) => {
+  if (!req.auth) {
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  }
+
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
@@ -31,7 +63,15 @@ const getArticle = async (
 };
 
 // 게시글 작성
-const createArticle: RequestHandler<{}, {}> = async (req, res, next) => {
+const createArticle: RequestHandler<
+  {},
+  {},
+  Pick<Article, "title" | "content">
+> = async (req, res, next) => {
+  if (!req.auth) {
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  }
+
   const userId = req.auth.id;
 
   try {
@@ -44,15 +84,21 @@ const createArticle: RequestHandler<{}, {}> = async (req, res, next) => {
 };
 
 // 게시글 수정
-const updateArticle: RequestHandler<{ articleId: string }> = async (
-  req,
-  res,
-  next
-) => {
+const updateArticle: RequestHandler<
+  { articleId: string },
+  {},
+  Pick<Article, "title" | "content">
+> = async (req, res, next) => {
+  if (!req.auth) {
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  }
+
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {
     const updatedArticle = await articleService.updateArticle(
+      userId,
       articleId,
       req.body
     );
@@ -69,10 +115,15 @@ const deleteArticle: RequestHandler<{ articleId: string }> = async (
   res,
   next
 ) => {
+  if (!req.auth) {
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  }
+
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {
-    await articleService.deleteArticle(articleId);
+    await articleService.deleteArticle(userId, articleId);
 
     res.sendStatus(204);
   } catch (e) {
@@ -86,6 +137,10 @@ const addlikeArticle: RequestHandler<{ articleId: string }> = async (
   res,
   next
 ) => {
+  if (!req.auth) {
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  }
+
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
@@ -104,6 +159,10 @@ const cancelLikeArticle: RequestHandler<{ articleId: string }> = async (
   res,
   next
 ) => {
+  if (!req.auth) {
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  }
+
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
