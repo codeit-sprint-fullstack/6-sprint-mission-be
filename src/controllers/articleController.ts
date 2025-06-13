@@ -87,7 +87,7 @@ const createArticle: RequestHandler<
 const updateArticle: RequestHandler<
   { articleId: string },
   {},
-  Pick<Article, "title" | "content">
+  Partial<Pick<Article, "title" | "content">>
 > = async (req, res, next) => {
   if (!req.auth) {
     throw new AuthenticationError("유효하지 않은 토큰입니다.");
