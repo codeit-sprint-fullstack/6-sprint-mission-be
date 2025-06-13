@@ -1,6 +1,6 @@
 import { Article, User } from "@prisma/client";
 import prisma from "../config/client.prisma";
-import articleRepository from "../repositories/articleRepository.js";
+import articleRepository from "../repositories/articleRepository";
 import { BadRequestError, NotFoundError } from "../types/errors";
 
 type TGetArticlesQuery = {

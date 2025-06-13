@@ -1,5 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import articleService from "../services/articleService.js";
+import articleService from "../services/articleService";
 import { Article } from "@prisma/client";
 import { AuthenticationError } from "../types/errors";
 
