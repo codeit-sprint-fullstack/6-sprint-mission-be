@@ -1,9 +1,12 @@
-// src/utils/apiError.js
 class ApiError extends Error {
-  constructor(statusCode, message, stack = "") {
+  public statusCode: number;
+  public isOperational: boolean;
+
+  constructor(statusCode: number, message: string, stack: string = "") {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = true;
+
     if (stack) {
       this.stack = stack;
     } else {
@@ -12,4 +15,4 @@ class ApiError extends Error {
   }
 }
 
-module.exports = ApiError;
+export default ApiError;
