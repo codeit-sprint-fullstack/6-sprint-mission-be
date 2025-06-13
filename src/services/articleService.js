@@ -1,4 +1,4 @@
-import prisma from "../../prisma/client.prisma.js";
+import prisma from "../config/client.prisma";
 import articleRepository from "../repositories/articleRepository.js";
 
 // 게시글 목록 불러오기

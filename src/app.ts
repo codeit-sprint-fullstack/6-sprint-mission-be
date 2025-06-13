@@ -1,16 +1,18 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import errorHandler from "./middlewares/errorHandler.js";
-import router from "./routes/indexRoutes.js";
+import errorHandler from "./middlewares/errorHandler";
+import router from "./routes/indexRoutes";
 
 const PORT = process.env.PORT || 3000;
 
-// 1. 서버 객체 생성
+// 서버 객체 생성
 const app = express();
 
-// 2. 미들웨어 등록
+// JSON 파싱
 app.use(express.json()); // json 데이터를 parsing.
+
+// CORS 허용
 app.use(
   cors({
     origin: [
@@ -24,15 +26,17 @@ app.use(
     ],
   })
 );
+
+// 서버 파일 제공
 app.use("/images", express.static("uploads"));
 
-// 3. routes 등록
+// router 등록
 app.use(router);
 
-// 4. 에러 미들웨어 등록
+// 에러 핸들러
 app.use(errorHandler);
 
-// 5. 서버 연결
+// 서버 연결
 app.listen(PORT, () => {
   console.log(`Server Started ${PORT}`);
 });

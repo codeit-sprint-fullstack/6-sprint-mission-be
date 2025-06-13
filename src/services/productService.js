@@ -1,4 +1,4 @@
-import prisma from "../../prisma/client.prisma.js";
+import prisma from "../config/client.prisma";
 import productRepository from "../repositories/productRepository.js";
 
 // 상품 목록 불러오기

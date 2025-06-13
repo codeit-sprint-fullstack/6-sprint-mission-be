@@ -1,6 +1,6 @@
 import express from "express";
-import prisma from "../../prisma/client.prisma.js";
-import auth from "../middlewares/auth.js";
+import prisma from "../config/client.prisma";
+import auth from "../middlewares/auth";
 
 const commentRouter = express.Router();
 

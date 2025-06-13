@@ -1,4 +1,4 @@
-import prisma from "../../prisma/client.prisma.js";
+import prisma from "../config/client.prisma";
 
 const findAll = (query) => {
   const { offset, limit, orderBy, keyword } = query;

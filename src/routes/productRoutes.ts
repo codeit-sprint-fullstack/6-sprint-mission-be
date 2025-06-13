@@ -1,8 +1,8 @@
 import express from "express";
-import requiredDataValidate from "../middlewares/requiredDataValidate.js";
+import requiredDataValidate from "../middlewares/requiredDataValidate";
 import productController from "../controllers/productController.js";
 import multer from "multer";
-import auth from "../middlewares/auth.js";
+import auth from "../middlewares/auth";
 
 const productRouter = express.Router();
 
@@ -44,10 +44,18 @@ productRouter.delete(
   productController.deleteProduct
 );
 
-// 상품 좋아요 & 좋아요 취소
-productRouter
-  .route("/:productId/like")
-  .post(auth.verifyAccessToken, productController.addlikeProduct)
-  .delete(auth.verifyAccessToken, productController.cancelLikeProduct);
+// 상품 좋아요
+productRouter.post(
+  "/:productId/like",
+  auth.verifyAccessToken,
+  productController.addlikeProduct
+);
+
+// 상품 좋아요 취소
+productRouter.delete(
+  "/:productId/like",
+  auth.verifyAccessToken,
+  productController.cancelLikeProduct
+);
 
 export default productRouter;

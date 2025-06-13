@@ -1,8 +1,8 @@
 import express from "express";
-import prisma from "../../prisma/client.prisma.js";
+import prisma from "../config/client.prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import auth from "../middlewares/auth.js";
+import auth from "../middlewares/auth";
 
 const userRouter = express.Router();
 

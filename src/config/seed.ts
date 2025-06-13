@@ -12,13 +12,13 @@ import {
   ARTICLE_MOCK,
   ARTICLE_COMMENT_MOCK,
   ARTICLE_LIKE_MOCK,
-} from "./mock/articleMock.js";
+} from "./mock/articleMock";
 import {
   PRODUCT_MOCK,
   PRODUCT_COMMENT_MOCK,
   PRODUCT_LIKE_MOCK,
-} from "./mock/productMock.js";
-import { USER_MOCK } from "./mock/userMock.js";
+} from "./mock/productMock";
+import { USER_MOCK } from "./mock/userMock";
 
 type TUser = {
   data: Pick<User, "email" | "password" | "nickname">[];
