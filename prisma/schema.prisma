@@ -15,9 +15,9 @@ model Article {
   likeCount        Int               @default(0)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  writerId         Int
-  articleComment   Comment[]
+  writerId         String
   writer           User              @relation(fields: [writerId], references: [id], onDelete: Cascade)
+  articleComments  Comment[]
   articleFavorites ArticleFavorite[]
 }
 
@@ -28,12 +28,12 @@ model Product {
   price           Int
   tags            String[]
   images          String[]
-  ownerId         Int
+  ownerId         String
   favoriteCount   Int               @default(0)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  productComment  Comment[]
   owner           User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  productComments Comment[]
   productFavorits ProductFavorite[]
 }
 
@@ -44,14 +44,14 @@ model Comment {
   articleId Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  writerId  Int
+  writerId  String
   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   writer    User     @relation(fields: [writerId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id               Int               @id @default(autoincrement())
+  id               String            @id @default(uuid())
   email            String            @unique
   nickname         String            @unique
   image            String?
@@ -71,7 +71,7 @@ model User {
 model ProductFavorite {
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  userId    Int
+  userId    String
   productId Int
 
   @@id([userId, productId])
@@ -80,7 +80,7 @@ model ProductFavorite {
 model ArticleFavorite {
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  userId    Int
+  userId    String
   articleId Int
 
   @@id([userId, articleId])

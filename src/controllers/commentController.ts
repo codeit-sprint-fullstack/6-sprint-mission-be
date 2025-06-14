@@ -58,7 +58,7 @@ export async function createComment(
 ) {
   try {
     const { content } = req.body;
-    const userId = Number(req.auth.userId);
+    const userId = req.auth.userId;
 
     const articleId = req.params.articleId
       ? Number(req.params.articleId)
@@ -68,10 +68,10 @@ export async function createComment(
       : null;
 
     const comment = await commentService.createComment(
-      articleId,
-      productId,
       content,
-      userId
+      userId,
+      articleId,
+      productId
     );
 
     const {
@@ -97,11 +97,11 @@ export async function updateComment(
   next: NextFunction
 ) {
   try {
-    const userId = Number(req.auth.userId);
+    const userId = req.auth.userId;
     const commentId = Number(req.params.commentId);
     const { content } = req.body;
     const comment = await commentService.updateComment(commentId, content);
-    if (userId !== comment.writer.id) {
+    if (userId !== comment.writerId) {
       throw new ForbiddenError("댓글 작성자만 수정할 수 있습니다.");
     }
     const { articleId, productId, writerId, ...rest } = comment;
@@ -118,7 +118,7 @@ export async function deleteComment(
   next: NextFunction
 ) {
   try {
-    const userId = Number(req.auth.userId);
+    const userId = req.auth.userId;
     const commentId = Number(req.params.commentId);
     const comment = await commentService.deleteComment(commentId);
     if (userId !== comment.writerId) {

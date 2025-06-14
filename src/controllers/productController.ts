@@ -37,7 +37,7 @@ export async function createProduct(
 ) {
   try {
     const data = req.body;
-    const ownerId = Number(req.auth.userId);
+    const ownerId = req.auth.userId;
     const product = await productService.createProduct(data, ownerId);
     res.status(201).json(product);
   } catch (e) {
@@ -53,7 +53,7 @@ export async function getProduct(
 ) {
   try {
     const productId = Number(req.params.productId);
-    const userId = Number(req.auth.userId);
+    const userId = req.auth.userId;
     const [favorite, product] = await productService.getProduct(
       productId,
       userId
@@ -111,7 +111,7 @@ export async function likeProduct(
 ) {
   try {
     const productId = Number(req.params.productId);
-    const userId = Number(req.auth.userId);
+    const userId = req.auth.userId;
     const product = await productService.likeProduct(productId, userId);
     res.json({ ...product, isFavorite: true });
   } catch (e) {
@@ -127,7 +127,7 @@ export async function unlikeProduct(
 ) {
   try {
     const productId = Number(req.params.productId);
-    const userId = Number(req.auth.userId);
+    const userId = req.auth.userId;
     const product = await productService.unlikeProduct(productId, userId);
     res.json({ ...product, isFavorite: false });
   } catch (e) {

@@ -38,7 +38,7 @@ export async function createArticle(
   try {
     const data = req.body;
     const { userId } = req.auth;
-    const article = await articleService.createArticle(data, Number(userId));
+    const article = await articleService.createArticle(data, userId);
     const { writerId, ...rest } = article;
     res.status(201).json(rest);
   } catch (e) {
@@ -55,10 +55,7 @@ export async function getArticle(
   try {
     const articleId = Number(req.params.articleId);
     const { userId } = req.auth;
-    const [like, article] = await articleService.getArticle(
-      articleId,
-      Number(userId)
-    );
+    const [like, article] = await articleService.getArticle(articleId, userId);
     if (!article) {
       throw new NotFoundError(ExceptionMessage.ARTICLE_NOT_FOUND);
     }
@@ -110,7 +107,7 @@ export async function likeArticle(
   try {
     const articleId = +req.params.articleId;
     const userId = req.auth.userId;
-    const article = await articleService.likeArticle(articleId, Number(userId));
+    const article = await articleService.likeArticle(articleId, userId);
     const { writerId, ...rest } = article;
     res.json({ ...rest, isLiked: true });
   } catch (e) {
@@ -127,10 +124,7 @@ export async function unlikeArticle(
   try {
     const articleId = +req.params.articleId;
     const userId = req.auth.userId;
-    const article = await articleService.unlikeArticle(
-      articleId,
-      Number(userId)
-    );
+    const article = await articleService.unlikeArticle(articleId, userId);
     const { writerId, ...rest } = article;
     res.json({ ...rest, isLiked: false });
   } catch (e) {
