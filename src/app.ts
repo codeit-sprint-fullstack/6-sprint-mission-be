@@ -13,7 +13,7 @@ import passport from "passport";
 import "./config/passport";
 
 const app = express();
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT || 8080;
 
 app.set("trust proxy", 1);
 app.use(passport.initialize());

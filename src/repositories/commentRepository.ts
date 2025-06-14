@@ -25,10 +25,10 @@ async function findById(id: Comment["id"]) {
 }
 
 async function save(
-  articleId: Comment["articleId"],
-  productId: Comment["productId"],
   content: Comment["content"],
-  userId: User["id"]
+  userId: User["id"],
+  articleId?: Comment["articleId"],
+  productId?: Comment["productId"]
 ) {
   return prisma.comment.create({
     data: {

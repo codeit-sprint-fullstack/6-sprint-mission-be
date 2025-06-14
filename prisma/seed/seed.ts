@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const { mockArticles, mockProducts, mockComments } = require("./mock");
+import { Comment, PrismaClient } from "@prisma/client";
+import { mockArticles, mockProducts, mockComments } from "./mock";
 
 const prisma = new PrismaClient();
 
@@ -29,10 +29,16 @@ async function main() {
   const articles = await prisma.article.findMany({ select: { id: true } });
   const products = await prisma.product.findMany({ select: { id: true } });
 
-  const commentData = [];
+  interface CommentData {
+    content: Comment["content"];
+    articleId?: Comment["articleId"];
+    productId?: Comment["productId"];
+  }
+
+  const commentData: CommentData[] = [];
 
   for (const article of articles) {
-    mockComments.forEach((comment) => {
+    mockComments.forEach((comment: Comment) => {
       commentData.push({
         content: comment.content,
         articleId: article.id,
@@ -41,7 +47,7 @@ async function main() {
   }
 
   for (const product of products) {
-    mockComments.forEach((comment) => {
+    mockComments.forEach((comment: Comment) => {
       commentData.push({
         content: comment.content,
         productId: product.id,

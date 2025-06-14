@@ -24,12 +24,12 @@ async function getComments({
 }
 
 async function createComment(
-  articleId: Comment["articleId"],
-  productId: Comment["productId"],
   content: Comment["content"],
-  userId: User["id"]
+  userId: User["id"],
+  articleId?: Comment["articleId"],
+  productId?: Comment["productId"]
 ) {
-  return commentRepository.save(articleId, productId, content, userId);
+  return commentRepository.save(content, userId, articleId, productId);
 }
 
 async function updateComment(

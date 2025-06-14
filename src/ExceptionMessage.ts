@@ -12,8 +12,8 @@ export const ExceptionMessage = {
   PASSWORD_CONFIRMATION_NOT_MATCH: "비밀번호 확인이 일치하지 않습니다.",
 
   // Already Exist
-  ALREADY_EXISTED_EMAIL: "이미 사용중인 이메일입니다.",
-  ALREADY_EXISTED_NICKNAME: "이미 사용중인 닉네임입니다.",
+  ALREADY_EXIST_EMAIL: "이미 사용중인 이메일입니다.",
+  ALREADY_EXIST_NICKNAME: "이미 사용중인 닉네임입니다.",
 
   // Invalid
   INVALID_EMAIL: "잘못된 이메일입니다.",

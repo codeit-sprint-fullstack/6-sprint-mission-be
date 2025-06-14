@@ -1,31 +1,31 @@
 import express from "express";
-import auth from "../middlewares/auth";
 import {
   createComment,
   deleteComment,
   getComments,
   updateComment,
 } from "../controllers/commentController";
-import { commentValidator } from "../middlewares/validator";
+import { commentValidator, validator } from "../middlewares/validator";
+import { verifyAccessToken } from "../middlewares/verifyToken";
 
 // 중첩 라우터 설정
 const commentRouter = express.Router({ mergeParams: true });
 
 commentRouter.post(
   "/",
-  auth.verifyAccessToken,
+  verifyAccessToken,
   commentValidator,
-
+  validator,
   createComment
 );
 commentRouter.get("/", getComments);
 commentRouter.patch(
   "/:commentId",
-  auth.verifyAccessToken,
+  verifyAccessToken,
   commentValidator,
-
+  validator,
   updateComment
 );
-commentRouter.delete("/:commentId", auth.verifyAccessToken, deleteComment);
+commentRouter.delete("/:commentId", verifyAccessToken, deleteComment);
 
 export default commentRouter;

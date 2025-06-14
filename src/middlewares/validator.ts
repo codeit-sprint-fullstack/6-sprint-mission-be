@@ -1,27 +1,30 @@
-import { body, validationResult } from "express-validator";
-// import { BadRequestError } from "../types/exceptions.js";
-// import { NextFunction, Request, Response } from "express";
+import { body, ValidationError, validationResult } from "express-validator";
+import { BadRequestError } from "../types/exceptions";
+import { NextFunction, Request, Response } from "express";
 
-// export function validate(req: Request, res: Response, next: NextFunction) {
-//   const errors = validationResult(req);
+export function validator(req: Request, res: Response, next: NextFunction) {
+  const errors = validationResult(req);
 
-//   if (!errors.isEmpty()) {
-//     const errorArr = errors.array()
+  if (!errors.isEmpty()) {
+    const errorArr = errors.array() as ValidationError[];
 
-//     const validationErrors: Record<string, {message: string, value: any}> = {};
-//     errorArr.forEach((err) => {
-//       validationErrors[`body.${err.path}`] = {
-//         message: err.msg,
-//         value: err.value,
-//       };
-//     });
-//     const errorMsg = errorArr[0]?.msg || "Validation Failed";
+    const validationErrors: Record<string, { message: string; value: any }> =
+      {};
+    errorArr.forEach((err) => {
+      if (err.type === "field") {
+        validationErrors[`body.${err.path}`] = {
+          message: err.msg,
+          value: err.value,
+        };
+      }
+    });
+    const errorMsg = "Validation Failed";
 
-//     return next(new BadRequestError(errorMsg, validationErrors));
-//   }
+    return next(new BadRequestError(errorMsg, validationErrors));
+  }
 
-//   next();
-// }
+  next();
+}
 
 // 회원가입 유효성 검사
 export const signUpValidator = [

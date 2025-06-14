@@ -1,5 +1,5 @@
 import express from "express";
-import auth from "../middlewares/auth";
+
 import {
   getUser,
   refreshToken,
@@ -7,15 +7,23 @@ import {
   signUp,
   socialLogin,
 } from "../controllers/userController";
-import { signInValidator, signUpValidator } from "../middlewares/validator";
+import {
+  signInValidator,
+  signUpValidator,
+  validator,
+} from "../middlewares/validator";
 import passport from "passport";
+import {
+  verifyAccessToken,
+  verifyRefreshToken,
+} from "../middlewares/verifyToken";
 
 const userRouter = express.Router();
 
-userRouter.get("/users/me", auth.verifyAccessToken, getUser);
-userRouter.post("/auth/signUp", signUpValidator, signUp);
-userRouter.post("/auth/signIn", signInValidator, signIn);
-userRouter.post("/auth/refresh-token", auth.verifyRefreshToken, refreshToken);
+userRouter.get("/users/me", verifyAccessToken, getUser);
+userRouter.post("/auth/signUp", signUpValidator, validator, signUp);
+userRouter.post("/auth/signIn", signInValidator, validator, signIn);
+userRouter.post("/auth/refresh-token", verifyRefreshToken, refreshToken);
 userRouter.get(
   "/auth/google/callback",
   passport.authenticate("google", {
