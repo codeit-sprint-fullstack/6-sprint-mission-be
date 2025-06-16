@@ -35,7 +35,7 @@ const getProducts = async (
     });
 
     res.status(200).json({
-      data: result.products,
+      products: result.products,
       pagination: result.pagination,
       sort: result.sort,
     });
@@ -55,7 +55,7 @@ const getProductById = async (
     const userId = req.auth?.userId;
     const product = await productService.getProductById(productId, userId);
 
-    res.status(200).json({ data: product });
+    res.status(200).json(product);
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).json({
@@ -122,7 +122,7 @@ const createProduct = async (
 
     res.status(201).json({
       message: "상품이 성공적으로 등록되었습니다.",
-      data: product,
+      product,
     });
   } catch (err) {
     next(err);
@@ -206,7 +206,7 @@ const updateProduct = async (
 
     res.status(200).json({
       message: "상품이 성공적으로 수정되었습니다.",
-      data: updatedProduct,
+      product: updatedProduct,
     });
   } catch (err) {
     console.error("Update error:", err);
