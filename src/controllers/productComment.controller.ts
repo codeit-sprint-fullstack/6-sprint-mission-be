@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import productCommentService from "../services/productCommentService";
+import productCommentService from "../services/productComment.service";
 import { AuthenticationError } from "../types/errors";
 import {
   ProductCommentDto,

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import userService from "../services/userService";
+import userService from "../services/user.service";
 import { User } from "@prisma/client";
 import { AuthenticationError } from "../types/errors";
 

@@ -1,6 +1,6 @@
 import { Product, User } from "@prisma/client";
 import prisma from "../config/client.prisma";
-import productRepository from "../repositories/productRepository";
+import productRepository from "../repositories/product.repository";
 import { NotFoundError } from "../types/errors";
 
 type TGetProductsQuery = {

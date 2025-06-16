@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import productService from "../services/productService";
+import productService from "../services/product.service";
 import { AuthenticationError, BadRequestError } from "../types/errors";
 import { Product } from "@prisma/client";
 

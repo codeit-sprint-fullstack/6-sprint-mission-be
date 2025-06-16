@@ -1,5 +1,5 @@
 import express from "express";
-import articleController from "../controllers/articleController";
+import articleController from "../controllers/article.controller";
 import auth from "../middlewares/auth";
 
 const articleRouter = express.Router();

@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "../middlewares/auth";
-import productCommentController from "../controllers/productCommentController";
+import productCommentController from "../controllers/productComment.controller";
 
 const productCommentRouter = express.Router();
 

@@ -1,6 +1,6 @@
 import { Product, ProductComment, User } from "@prisma/client";
 import prisma from "../config/client.prisma";
-import productCommentRepository from "../repositories/productCommentRepository";
+import productCommentRepository from "../repositories/productComment.repository";
 import { NotFoundError } from "../types/errors";
 
 type TGetCommentsQuery = {

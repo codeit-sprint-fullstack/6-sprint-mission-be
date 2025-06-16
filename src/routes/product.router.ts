@@ -1,6 +1,6 @@
 import express from "express";
 import requiredDataValidate from "../middlewares/requiredDataValidate";
-import productController from "../controllers/productController";
+import productController from "../controllers/product.controller";
 import multer from "multer";
 import auth from "../middlewares/auth";
 

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import articleCommentService from "../services/articleCommentService";
+import articleCommentService from "../services/articleComment.service";
 import { AuthenticationError } from "../types/errors";
 import {
   ArticleCommentDto,
