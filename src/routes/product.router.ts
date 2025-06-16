@@ -1,13 +1,10 @@
 import express from "express";
 import requiredDataValidate from "../middlewares/requiredDataValidate";
 import productController from "../controllers/product.controller";
-import multer from "multer";
 import auth from "../middlewares/auth";
+import { upload } from "../utils/multer.util";
 
 const productRouter = express.Router();
-
-// 이미지 업로드
-const upload = multer({ dest: "uploads/" });
 
 // 상품 목록 불러오기
 productRouter.get("/", auth.verifyAccessToken, productController.getProducts);

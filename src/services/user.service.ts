@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
 import userRepository from "../repositories/user.repository";
-import { createToken, filterPassword } from "../utils/auth.utils";
 import { AuthenticationError, BadRequestError } from "../types/errors";
 import prisma from "../config/client.prisma";
 import { User } from "@prisma/client";
+import { createToken } from "../utils/token.util";
+import { filterPassword } from "../utils/user.util";
 
 type TAuth = Promise<{
   accessToken: string;
