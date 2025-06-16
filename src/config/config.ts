@@ -1,7 +1,13 @@
 import "dotenv/config";
 
-const config = {
-  port: process.env.PORT || 5050,
+interface Config {
+  port: number;
+  jwtSecret: string;
+  jwtExpiration: string;
+}
+
+const config: Config = {
+  port: parseInt(process.env.PORT || '5050', 10),
   jwtSecret: process.env.JWT_SECRET || "your-secret-key",
   jwtExpiration: process.env.JWT_EXPIRATION || "1h",
 };

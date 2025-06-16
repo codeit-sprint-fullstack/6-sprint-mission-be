@@ -1,13 +1,14 @@
+// src/app.ts
 import express, { Application, Request, Response } from "express";
 import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./swagger";
-import userRouter from "./routes/user.route";
-import productRouter from "./routes/product.route";
-import commentRouter from "./routes/comment.route";
-import authRouter from "./routes/auth.route";
-import articleRouter from "./routes/article.route";
-import imageRouter from "./routes/image.route";
-import { errorConverter, errorHandler } from "./middlewares/error.middleware";
+import swaggerSpec from "./swagger"; // './swagger.js'로 확장자 추가 필요 (CommonJS 환경이면 불필요)
+import userRouter from "./routes/user.route"; // './routes/user.route.js'
+import productRouter from "./routes/product.route"; // './routes/product.route.js'
+import commentRouter from "./routes/comment.route"; // './routes/comment.route.js'
+import authRouter from "./routes/auth.route"; // './routes/auth.route.js'
+import articleRouter from "./routes/article.route"; // './routes/article.route.js'
+import imageRouter from "./routes/image.route"; // './routes/image.route.js'
+import { errorConverter, errorHandler } from "./middlewares/error.middleware"; // './middlewares/error.middleware.js'
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -61,4 +62,4 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(errorConverter);
 app.use(errorHandler);
 
-export default app;
+export default app; // 앱 객체를 내보냅니다.
