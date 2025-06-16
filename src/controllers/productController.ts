@@ -1,10 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
-import productService from "../services/productService.js";
-import varify from "../middlewares/varify.js";
-import auth from "../middlewares/auth.js";
+import productService from "../services/productService";
+import varify from "../middlewares/verify";
+import auth from "../middlewares/auth";
 import upload from "../middlewares/images";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AuthenticationError, NotFoundError } from "../types/errors.js";
+import { AuthenticationError, NotFoundError } from "../types/errors";
+import { strict } from "assert";
+import { string } from "superstruct";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -201,13 +203,14 @@ const productCommentController = express.Router();
  */
 
 interface CreateProduct {
-  id: number;
   name: string;
-  description: String;
+  description: string;
   price: number;
   tags: string[];
-  imageUrl?: string;
+  imageUrl: string;
+  authorId: number;
 }
+
 // 상품 등록, 전체 상품 조회
 productController
   .route("/")
@@ -226,13 +229,13 @@ productController
             if (Array.isArray(tags)) {
               // 2차원 배열인지 확인 후 flatten
               if (Array.isArray(tags[0])) {
-                return (tags as string[][]).flat();
+                return (tags as string[]).flat();
               }
               return tags as string[];
             }
             return [tags];
           } catch (e) {
-            return [req.body.tags];
+            return req.body.tags;
           }
         })();
 
@@ -248,9 +251,7 @@ productController
           description: req.body.description,
           price: Number(req.body.price),
           tags: parsedTags,
-          imageUrl: req.file
-            ? `http://localhost:3000/uploads/${req.file.filename}`
-            : null,
+          imageUrl: `http://localhost:3000/uploads/${req.file?.filename}`,
           authorId: userId,
         };
 
@@ -286,6 +287,11 @@ productController
           res.status(400).json({ message: "잘못된  요청입니다." });
         }
 
+        if (typeof keyword !== "string") {
+          res.status(400).json({ message: "잘못된 요청입니다." });
+          return;
+        }
+
         const product = await productService.getAll({
           order: orderField,
           skip,
@@ -311,7 +317,7 @@ productController.get(
     const userId = req.user?.id;
 
     try {
-      const product = await productService.getById(id, userId);
+      const product = await productService.getById(id, userId!);
 
       if (!product) varify.throwNotFoundError();
 

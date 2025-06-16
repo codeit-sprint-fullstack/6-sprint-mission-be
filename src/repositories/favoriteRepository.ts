@@ -1,5 +1,5 @@
 import { Favorite } from "@prisma/client";
-import prisma from "../config/client.prisma.js";
+import prisma from "../config/client.prisma";
 
 async function addFavorite(
   productId: Favorite["productId"],

@@ -1,6 +1,6 @@
 import express, { NextFunction, Response, Request } from "express";
-import auth from "../middlewares/auth.js";
-import commentService from "../services/commentService.js";
+import auth from "../middlewares/auth";
+import commentService from "../services/commentService";
 
 const commentController = express.Router();
 

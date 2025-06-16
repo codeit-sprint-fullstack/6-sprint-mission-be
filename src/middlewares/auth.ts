@@ -1,7 +1,7 @@
 import { expressjwt } from "express-jwt";
-import commentRepository from "../repositories/commentRepository.js";
+import commentRepository from "../repositories/commentRepository";
 import { NextFunction, Response, Request } from "express";
-import { ForbiddenError, NotFoundError } from "../types/errors.js";
+import { ForbiddenError, NotFoundError } from "../types/errors";
 
 //인증된 사용자인지 검증
 const verifyAccessToken = expressjwt({
@@ -11,7 +11,7 @@ const verifyAccessToken = expressjwt({
 
 //작성자만 UD 가능
 async function verifyCommentAuth(
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ) {

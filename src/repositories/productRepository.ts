@@ -1,8 +1,8 @@
 import { Product, User, Comment, Prisma } from "@prisma/client";
-import prisma from "../config/client.prisma.js";
-import { NotFoundError } from "../types/errors.js";
+import prisma from "../config/client.prisma";
+import { NotFoundError } from "../types/errors";
 
-async function save(product: Product) {
+async function save(product: Omit<Product, "id" | "createdAt" | "updatedAt">) {
   return await prisma.product.create({
     data: {
       name: product.name,

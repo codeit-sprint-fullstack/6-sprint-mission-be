@@ -1,4 +1,4 @@
-import commentRepository from "../repositories/commentRepository.js";
+import commentRepository from "../repositories/commentRepository";
 import { Comment } from "@prisma/client";
 
 async function update(id: Comment["id"], comment: Comment) {

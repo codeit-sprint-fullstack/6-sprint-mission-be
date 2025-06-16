@@ -44,3 +44,17 @@ export class ForbiddenError extends HttpError {
     this.name = "ForbiddenError";
   }
 }
+
+export class RequestError extends HttpError {
+  constructor(message: string, data?: any) {
+    super(message, 400, data); // 400은 기본값
+    this.name = "BadRequest";
+  }
+}
+
+export class ExistError extends HttpError {
+  constructor(message: string, data?: any) {
+    super(message, 409, data); // 409은 기본값
+    this.name = "AlreadyExist";
+  }
+}

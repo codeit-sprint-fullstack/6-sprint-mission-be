@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import prisma from "../config/client.prisma.js";
+import prisma from "../config/client.prisma";
 import bcrypt from "bcrypt";
 
 async function save(user: User) {

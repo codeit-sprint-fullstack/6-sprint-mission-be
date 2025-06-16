@@ -1,7 +1,9 @@
 import { Product, User, Comment } from "@prisma/client";
-import productRepository from "../repositories/productRepository.js";
+import productRepository from "../repositories/productRepository";
 
-async function create(product: Product) {
+async function create(
+  product: Omit<Product, "id" | "createdAt" | "updatedAt">
+) {
   return await productRepository.save(product);
 }
 

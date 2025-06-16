@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
-import auth from "../middlewares/auth.js";
-import articleService from "../services/articleService.js";
-import varify from "../middlewares/varify.js";
-import { AuthenticationError } from "../types/errors.js";
+import auth from "../middlewares/auth";
+import articleService from "../services/articleService";
+import varify from "../middlewares/verify";
+import { AuthenticationError } from "../types/errors";
 
 const articleController = express.Router();
 const articleCommentController = express.Router();

@@ -1,7 +1,7 @@
 import express, { NextFunction, Response, Request } from "express";
-import favoriteService from "../services/favoriteService.js";
-import auth from "../middlewares/auth.js";
-import { AuthenticationError } from "../types/errors.js";
+import favoriteService from "../services/favoriteService";
+import auth from "../middlewares/auth";
+import { AuthenticationError } from "../types/errors";
 
 const favoriteController = express.Router();
 

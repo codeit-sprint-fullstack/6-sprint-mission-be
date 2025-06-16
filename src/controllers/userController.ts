@@ -1,8 +1,8 @@
 import express, { NextFunction, Response, Request } from "express";
-import userService from "../services/userService.js";
-import auth from "../middlewares/auth.js";
-import { generateAccessToken } from "../middlewares/utils.js";
-import { AuthenticationError } from "../types/errors.js";
+import userService from "../services/userService";
+import auth from "../middlewares/auth";
+import { generateAccessToken } from "../middlewares/utils";
+import { AuthenticationError } from "../types/errors";
 
 const userController = express.Router();
 

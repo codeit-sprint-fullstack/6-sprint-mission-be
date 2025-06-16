@@ -1,4 +1,4 @@
-import prisma from "../config/client.prisma.js";
+import prisma from "../config/client.prisma";
 import { Comment } from "@prisma/client";
 
 async function getById(commentId: Comment["id"]) {

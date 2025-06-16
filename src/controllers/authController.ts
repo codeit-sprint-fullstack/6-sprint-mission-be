@@ -1,13 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
-import varify from "../middlewares/varify.js";
-import authService from "../services/authService.js";
+import authService from "../services/authService";
 import {
   generateAccessToken,
   generateRefreshToken,
-} from "../middlewares/utils.js";
-import jwt from "jsonwebtoken";
-import { AuthenticationError, NotFoundError } from "../types/errors.js";
-import auth from "../middlewares/auth.js";
+} from "../middlewares/utils";
+import { AuthenticationError, NotFoundError } from "../types/errors";
+import auth from "../middlewares/auth";
+import verify from "../middlewares/verify";
 
 const authController = express.Router();
 
@@ -134,8 +133,8 @@ const authController = express.Router();
 // 회원가입
 authController.post(
   "/signUp",
-  varify.signUpRequestStructure,
-  varify.checkExistedEmail,
+  verify.signUpRequestStructure,
+  verify.checkExistedEmail,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const createUser = await authService.create(req.body);

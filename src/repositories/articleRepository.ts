@@ -1,5 +1,5 @@
 import { Article, User, Comment } from "@prisma/client";
-import prisma from "../config/client.prisma.js";
+import prisma from "../config/client.prisma";
 
 async function save(article: Article): Promise<Article> {
   const createArticle = await prisma.article.create({

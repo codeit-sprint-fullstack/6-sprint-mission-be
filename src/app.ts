@@ -6,8 +6,8 @@ import commentController from "./controllers/commentController";
 import productController from "./controllers/productController";
 import cors from "cors";
 import dotenv from "dotenv";
-import favoriteController from "./controllers/favoriteController.js";
-import { swaggerSpec } from "./swagger.js";
+import favoriteController from "./controllers/favoriteController";
+import { swaggerSpec } from "./swagger";
 import swaggerUi from "swagger-ui-express";
 import { errorHandler } from "./middlewares/erroHandler";
 

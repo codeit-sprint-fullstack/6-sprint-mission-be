@@ -1,5 +1,5 @@
 import { Favorite } from "@prisma/client";
-import favoriteRepository from "../repositories/favoriteRepository.js";
+import favoriteRepository from "../repositories/favoriteRepository";
 
 async function likeProduct(
   productId: Favorite["productId"],
