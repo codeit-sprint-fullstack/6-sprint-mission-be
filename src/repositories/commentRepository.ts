@@ -12,6 +12,15 @@ const findByArticleId = async (articleId: Article["id"]) => {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          image: true,
+        },
+      },
+    },
   });
 };
 
@@ -25,6 +34,15 @@ const findByProductId = async (productId: Product["id"]) => {
     },
     orderBy: {
       createdAt: "desc",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          image: true,
+        },
+      },
     },
   });
 };
@@ -48,6 +66,15 @@ const findById = async (id: Comment["id"]) => {
   return prisma.comment.findUnique({
     where: {
       id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          image: true,
+        },
+      },
     },
   });
 };
