@@ -30,9 +30,8 @@ type TGetProductsResult = Promise<
 const getProducts = async (query: TGetProductsQuery): TGetProductsResult => {
   const [products, totalCount] = await productRepository.findAll(query);
 
-  if (!products || products.length === 0) {
+  if (!products || products.length === 0)
     throw new NotFoundError("상품이 없습니다.");
-  }
 
   const productWithLikeCount = await Promise.all(
     products.map(async (product) => {
@@ -53,9 +52,7 @@ const getProduct = async (userId: User["id"], productId: Product["id"]) => {
     const [product, images, likeCount, isLiked] =
       await productRepository.findById(userId, productId);
 
-    if (!product) {
-      throw new NotFoundError("존재하지 않는 상품입니다.");
-    }
+    if (!product) throw new NotFoundError("존재하지 않는 상품입니다.");
 
     const productTags = await productRepository.findProductTagById(productId);
 
@@ -172,9 +169,7 @@ const deleteProduct = async (userId: User["id"], productId: Product["id"]) => {
   return await prisma.$transaction(async (tx) => {
     const product = await productRepository.findById(userId, productId);
 
-    if (!product) {
-      throw new NotFoundError("이미 삭제된 상품입니다.");
-    }
+    if (!product) throw new NotFoundError("이미 삭제된 상품입니다.");
 
     return productRepository.deleteProduct(productId, { tx });
   });

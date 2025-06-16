@@ -35,9 +35,7 @@ const login: RequestHandler<{}, {}, Pick<User, "email" | "password">> = async (
 
 // 내 정보 불러오기
 const getMe: RequestHandler = async (req, res, next) => {
-  if (!req.auth) {
-    throw new AuthenticationError("유효하지 않은 토큰입니다.");
-  }
+  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
 
   const userId = req.auth.id;
 
@@ -52,9 +50,7 @@ const getMe: RequestHandler = async (req, res, next) => {
 
 // 액세스 토큰 재발급
 const refreshAccessToken: RequestHandler = async (req, res, next) => {
-  if (!req.auth) {
-    throw new AuthenticationError("유효하지 않은 토큰입니다.");
-  }
+  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
 
   const userId = req.auth.id;
 

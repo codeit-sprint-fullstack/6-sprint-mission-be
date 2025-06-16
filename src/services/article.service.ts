@@ -30,9 +30,8 @@ type TGetArticlesResult = Promise<
 const getArticles = async (query: TGetArticlesQuery): TGetArticlesResult => {
   const [articles, totalCount] = await articleRepository.findAll(query);
 
-  if (!articles || articles.length === 0) {
+  if (!articles || articles.length === 0)
     throw new NotFoundError("게시글이 없습니다.");
-  }
 
   const articletWithLikeCount = await Promise.all(
     articles.map(async (article) => {
@@ -54,9 +53,7 @@ const getArticle = async (userId: User["id"], articleId: Article["id"]) => {
     articleId
   );
 
-  if (!article) {
-    throw new NotFoundError("해당 게시글을 찾을 수 없습니다.");
-  }
+  if (!article) throw new NotFoundError("해당 게시글을 찾을 수 없습니다.");
 
   return { ...article, likeCount, isLiked: !!isLiked };
 };
@@ -68,9 +65,8 @@ const createArticle = (
 ) => {
   const { title, content } = body;
 
-  if (!title || !content) {
+  if (!title || !content)
     throw new BadRequestError("필수 항목을 모두 입력해주세요.");
-  }
 
   return articleRepository.createArticle(userId, body);
 };
@@ -83,16 +79,13 @@ const updateArticle = async (
 ) => {
   const { title, content } = body;
 
-  if (!(title || content)) {
+  if (!(title || content))
     throw new BadRequestError("수정할 내용을 입력해주세요.");
-  }
 
   return await prisma.$transaction(async (tx) => {
     const article = await articleRepository.findById(userId, articleId);
 
-    if (!article) {
-      throw new NotFoundError("해당 게시글을 찾을 수 없습니다.");
-    }
+    if (!article) throw new NotFoundError("해당 게시글을 찾을 수 없습니다.");
 
     return articleRepository.updateArticle(articleId, body, { tx });
   });
@@ -103,9 +96,7 @@ const deleteArticle = async (userId: User["id"], articleId: Article["id"]) => {
   return await prisma.$transaction(async (tx) => {
     const article = await articleRepository.findById(userId, articleId);
 
-    if (!article) {
-      throw new NotFoundError("이미 삭제된 게시글입니다.");
-    }
+    if (!article) throw new NotFoundError("이미 삭제된 게시글입니다.");
 
     return articleRepository.deleteArticle(articleId, { tx });
   });
