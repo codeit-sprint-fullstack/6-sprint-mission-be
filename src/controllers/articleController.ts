@@ -54,7 +54,7 @@ const getArticleById = async (
     const userId = req.auth?.userId;
     const article = await articleService.getArticleById(articleId, userId);
 
-    res.status(200).json({ article });
+    res.status(200).json({ data: article });
   } catch (error) {
     next(error);
   }
@@ -76,7 +76,7 @@ const createArticle: RequestHandler = async (req, res, next) => {
     });
     res
       .status(201)
-      .json({ message: "게시글이 성공적으로 등록되었습니다.", article });
+      .json({ message: "게시글이 성공적으로 등록되었습니다.", data: article });
   } catch (error) {
     next(error);
   }
@@ -119,7 +119,7 @@ const updateArticle: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({
       message: "게시글이 성공적으로 수정되었습니다.",
-      article,
+      data: article,
     });
   } catch (error) {
     next(error);
