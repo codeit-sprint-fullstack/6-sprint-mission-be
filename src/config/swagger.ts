@@ -48,6 +48,12 @@ const swaggerDefinition = {
         in: "cookie",
         name: "refreshToken",
       },
+      accessToken: {
+        type: "apiKey",
+        in: "header",
+        name: "Authorization",
+        description: "액세스 토큰을 입력하세요 (Bearer 없이)",
+      },
     },
   },
 };

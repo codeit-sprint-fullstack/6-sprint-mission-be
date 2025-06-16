@@ -31,7 +31,7 @@ const upload = multer({ storage });
  *     summary: 게시글 목록 조회
  *     tags: [Article]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     description: 게시글 목록을 조회합니다. 액세스 토큰은 선택 사항이며, 토큰을 제공할 경우 사용자의 좋아요 여부(isLiked)를 함께 반환합니다.
  *     parameters:
  *       - name: offset
@@ -126,7 +126,7 @@ articlesRouter.get("/", auth.verifyOptionalAuth, articleController.getArticles);
  *     summary: 게시글 상세 조회
  *     tags: [Article]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     description: 특정 게시글의 상세 정보를 조회합니다. 액세스 토큰은 선택 사항이며, 토큰을 제공할 경우 사용자의 좋아요 여부(isLiked)를 함께 반환합니다.
  *     parameters:
  *       - name: articleId
@@ -194,7 +194,7 @@ articlesRouter.get(
  *     summary: 게시글 생성
  *     tags: [Article]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     requestBody:
  *       required: true
  *       content:
@@ -288,7 +288,7 @@ articlesRouter.post(
  *     summary: 게시글 수정
  *     tags: [Article]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: articleId
  *         in: path
@@ -393,7 +393,7 @@ articlesRouter.patch(
  *     summary: 게시글 삭제
  *     tags: [Article]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: articleId
  *         in: path
@@ -436,7 +436,7 @@ articlesRouter.delete(
  *     summary: 게시글 좋아요 증가
  *     tags: [Article]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: articleId
  *         in: path

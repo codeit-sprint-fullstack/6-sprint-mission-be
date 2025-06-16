@@ -33,7 +33,7 @@ const upload = multer({ storage });
  *     summary: 상품 목록 조회
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     description: 상품 목록을 조회합니다. 액세스 토큰은 선택 사항이며, 토큰을 제공할 경우 사용자의 좋아요 여부(isLiked)를 함께 반환합니다.
  *     parameters:
  *       - name: page
@@ -106,7 +106,7 @@ productsRouter.get("/", auth.verifyOptionalAuth, productController.getProducts);
  *     summary: 특정 상품 조회
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     description: 특정 상품의 상세 정보를 조회합니다. 액세스 토큰은 선택 사항이며, 토큰을 제공할 경우 사용자의 좋아요 여부를 함께 반환합니다.
  *     parameters:
  *       - name: productId
@@ -172,7 +172,7 @@ productsRouter.get(
  *     summary: 상품 등록
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     requestBody:
  *       required: true
  *       content:
@@ -219,7 +219,7 @@ productsRouter.post(
  *     summary: 상품 수정
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: productId
  *         in: path
@@ -271,7 +271,7 @@ productsRouter.patch(
  *     summary: 상품 삭제
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: productId
  *         in: path
@@ -300,7 +300,7 @@ productsRouter.delete(
  *     summary: 상품 좋아요 추가
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: productId
  *         in: path
@@ -327,7 +327,7 @@ productsRouter.post(
  *     summary: 상품 좋아요 취소
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: productId
  *         in: path
@@ -354,7 +354,7 @@ productsRouter.delete(
  *     summary: 상품의 댓글 목록 조회
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     description: 상품에 작성된 댓글 목록을 조회합니다. 액세스 토큰은 선택 사항이며, 제공할 경우 댓글 작성자 정보가 더 자세히 표시됩니다.
  *     parameters:
  *       - name: productId
@@ -382,7 +382,7 @@ productsRouter.get(
  *     summary: 상품에 댓글 작성
  *     tags: [Product]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: productId
  *         in: path

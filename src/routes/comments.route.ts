@@ -19,7 +19,7 @@ const commentsRouter = express.Router();
  *     summary: 게시글 댓글 목록 조회
  *     tags: [Comment]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: articleId
  *         in: path
@@ -76,7 +76,7 @@ commentsRouter.get(
  *     summary: 게시글에 댓글 작성
  *     tags: [Comment]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: articleId
  *         in: path
@@ -154,7 +154,7 @@ commentsRouter.post(
  *     summary: 상품 댓글 목록 조회
  *     tags: [Comment]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     description: 상품에 작성된 댓글 목록을 조회합니다. 액세스 토큰은 선택 사항이며, 제공할 경우 댓글 작성자 정보가 더 자세히 표시됩니다.
  *     parameters:
  *       - name: productId
@@ -212,7 +212,7 @@ commentsRouter.get(
  *     summary: 상품에 댓글 작성
  *     tags: [Comment]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: productId
  *         in: path
@@ -290,7 +290,7 @@ commentsRouter.post(
  *     summary: 댓글 수정
  *     tags: [Comment]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: commentId
  *         in: path
@@ -360,7 +360,7 @@ commentsRouter.patch(
  *     summary: 댓글 삭제
  *     tags: [Comment]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     parameters:
  *       - name: commentId
  *         in: path

@@ -66,13 +66,13 @@ const upload = multer({ storage });
  *           schema:
  *             $ref: '#/components/schemas/ErrorWithData'
  *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
+ *     accessToken:
+ *       type: apiKey
+ *       in: header
+ *       name: Authorization
  *
  * security:
- *   - bearerAuth: []
+ *   - accessToken: []
  *
  * tags:
  *   name: User
@@ -86,7 +86,7 @@ const upload = multer({ storage });
  *     summary: 현재 로그인한 유저 정보 조회
  *     tags: [User]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     responses:
  *       200:
  *         description: 유저 정보 조회 성공
@@ -133,7 +133,7 @@ usersRouter.get("/me", auth.verifyAccessToken, userController.getProfile);
  *     summary: 유저 정보 수정
  *     tags: [User]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     requestBody:
  *       required: true
  *       content:
@@ -204,7 +204,7 @@ usersRouter.patch(
  *     summary: 비밀번호 변경
  *     tags: [User]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     requestBody:
  *       required: true
  *       content:

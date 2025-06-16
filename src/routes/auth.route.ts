@@ -223,7 +223,7 @@ authRouter.post(
  *     summary: 로그아웃
  *     tags: [Auth]
  *     security:
- *       - bearerAuth: []
+ *       - accessToken: []
  *     responses:
  *       200:
  *         description: 로그아웃 성공
