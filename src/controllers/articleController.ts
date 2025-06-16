@@ -54,7 +54,7 @@ const getArticleById = async (
     const userId = req.auth?.userId;
     const article = await articleService.getArticleById(articleId, userId);
 
-    res.status(200).json({ data: article });
+    res.status(200).json({ article });
   } catch (error) {
     next(error);
   }
@@ -76,7 +76,7 @@ const createArticle: RequestHandler = async (req, res, next) => {
     });
     res
       .status(201)
-      .json({ message: "게시글이 성공적으로 등록되었습니다.", data: article });
+      .json({ message: "게시글이 성공적으로 등록되었습니다.", article });
   } catch (error) {
     next(error);
   }
@@ -119,7 +119,7 @@ const updateArticle: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({
       message: "게시글이 성공적으로 수정되었습니다.",
-      data: article,
+      article,
     });
   } catch (error) {
     next(error);
@@ -143,25 +143,6 @@ const deleteArticle = async (
     next(error);
   }
 };
-
-// 좋아요 증가
-// const increaseLike = async (
-//   req: Request<{ articleId: Article["id"] }>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const articleId = req.params.articleId;
-//     const updatedArticle = await articleService.increaseLike(articleId);
-
-//     res.status(200).json({
-//       message: "게시글에 좋아요를 눌렀습니다.",
-//       data: updatedArticle,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 // 좋아요 누르기
 const likeArticle = async (
@@ -205,7 +186,6 @@ export default {
   getArticles,
   updateArticle,
   deleteArticle,
-  // increaseLike,
   likeArticle,
   unlikeArticle,
 };
