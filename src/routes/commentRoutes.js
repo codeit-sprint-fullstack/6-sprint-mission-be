@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "../config/client.prisma";
 import auth from "../middlewares/auth";
+import commentController from "../controllers/commentController";
 
 const commentRouter = express.Router();
 
@@ -11,33 +12,7 @@ const PRODUCT_COMMENT = "/products/:productId/comments";
 commentRouter.get(
   `${ARTICLE_COMMENT}`,
   auth.verifyAccessToken,
-  async (req, res, next) => {
-    try {
-      const articleId = Number(req.params.articleId);
-      const { limit, cursor } = req.query;
-
-      await prisma.$transaction(async (tx) => {
-        const articleCommentId =
-          cursor &&
-          (await tx.articleComment.findFirst({
-            where: { articleId, id: Number(cursor) },
-          }));
-
-        const articleComment = await tx.articleComment.findMany({
-          where: { articleId },
-          skip: articleCommentId ? 1 : undefined,
-          take: Number(limit) || 10,
-          cursor: articleCommentId ? { id: Number(cursor) } : undefined,
-          omit: { articleId: true, authorId: true },
-          include: { author: { select: { id: true, nickname: true } } },
-        });
-
-        res.json(articleComment);
-      });
-    } catch (e) {
-      next(e);
-    }
-  }
+  commentController.getComments
 );
 
 // 게시글 댓글 작성
