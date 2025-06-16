@@ -6,7 +6,7 @@ const getCommentsByArticleId: RequestHandler = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const comments = await commentService.getCommentsByArticleId(articleId);
-    res.status(200).json({ data: comments });
+    res.status(200).json(comments);
   } catch (error) {
     next(error);
   }
@@ -27,7 +27,7 @@ const createArticleComment: RequestHandler = async (req, res, next) => {
 
     res.status(201).json({
       message: "댓글이 성공적으로 등록되었습니다.",
-      data: comment,
+      comment,
     });
   } catch (error) {
     next(error);
@@ -39,7 +39,7 @@ const getCommentsByProductId: RequestHandler = async (req, res, next) => {
   try {
     const productId = req.params.productId;
     const comments = await commentService.getCommentsByProductId(productId);
-    res.status(200).json({ data: comments });
+    res.status(200).json({ comments });
   } catch (error) {
     next(error);
   }
@@ -60,7 +60,7 @@ const createProductComment: RequestHandler = async (req, res, next) => {
 
     res.status(201).json({
       message: "댓글이 성공적으로 등록되었습니다.",
-      data: comment,
+      comment,
     });
   } catch (error) {
     next(error);
@@ -82,7 +82,7 @@ const updateComment: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({
       message: "댓글이 성공적으로 수정되었습니다.",
-      data: comment,
+      comment,
     });
   } catch (error) {
     next(error);
