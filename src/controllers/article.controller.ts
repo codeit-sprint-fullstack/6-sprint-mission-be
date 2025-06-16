@@ -46,7 +46,7 @@ const getArticle = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
@@ -66,7 +66,7 @@ const createArticle: RequestHandler<
   {},
   Pick<Article, "title" | "content">
 > = async (req, res, next) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
 
@@ -85,7 +85,7 @@ const updateArticle: RequestHandler<
   {},
   Pick<Article, "title" | "content">
 > = async (req, res, next) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
@@ -109,7 +109,7 @@ const deleteArticle: RequestHandler<{ articleId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
@@ -129,7 +129,7 @@ const addlikeArticle: RequestHandler<{ articleId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
@@ -149,7 +149,7 @@ const cancelLikeArticle: RequestHandler<{ articleId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);

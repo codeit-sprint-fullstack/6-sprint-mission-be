@@ -54,7 +54,7 @@ const getProduct: RequestHandler<{ productId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
@@ -79,7 +79,7 @@ const createProduct: RequestHandler<
   {},
   Pick<Product, "name" | "description" | "price"> & { tags: string }
 > = async (req, res, next) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   if (!req.files) throw new BadRequestError("이미지를 등록해주세요.");
 
@@ -110,7 +110,7 @@ const updateProduct: RequestHandler<
   {},
   Pick<Product, "name" | "description" | "price"> & { tags: string }
 > = async (req, res, next) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   if (!req.files) throw new BadRequestError("이미지를 등록해주세요.");
 
@@ -143,7 +143,7 @@ const deleteProduct: RequestHandler<{ productId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
@@ -163,7 +163,7 @@ const addlikeProduct: RequestHandler<{ productId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
@@ -183,7 +183,7 @@ const cancelLikeProduct: RequestHandler<{ productId: string }> = async (
   res,
   next
 ) => {
-  if (!req.auth) throw new AuthenticationError("유효하지 않은 토큰입니다.");
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
