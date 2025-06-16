@@ -10,24 +10,8 @@ type TGetArticlesQuery = {
   keyword: string;
 };
 
-type TGetArticlesResult = Promise<
-  [
-    {
-      likeCount: number;
-      author: {
-        nickname: string;
-      };
-      id: number;
-      title: string;
-      content: string;
-      createdAt: Date;
-    }[],
-    number
-  ]
->;
-
 // 게시글 목록 불러오기
-const getArticles = async (query: TGetArticlesQuery): TGetArticlesResult => {
+const getArticles = async (query: TGetArticlesQuery) => {
   const [articles, totalCount] = await articleRepository.findAll(query);
 
   if (!articles || articles.length === 0)
@@ -43,7 +27,7 @@ const getArticles = async (query: TGetArticlesQuery): TGetArticlesResult => {
     })
   );
 
-  return [articletWithLikeCount, totalCount];
+  return [articletWithLikeCount, totalCount] as const;
 };
 
 // 게시글 상세조회

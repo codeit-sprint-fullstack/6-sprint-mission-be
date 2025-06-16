@@ -1,14 +1,10 @@
 import { RequestHandler } from "express";
 import userService from "../services/user.service";
-import { User } from "@prisma/client";
 import { AuthenticationError } from "../types/errors";
+import { userDto } from "../dtos/user.dto";
 
 // 회원가입
-const signUp: RequestHandler<
-  {},
-  {},
-  Pick<User, "email" | "password" | "nickname">
-> = async (req, res, next) => {
+const signUp: RequestHandler<{}, {}, userDto> = async (req, res, next) => {
   try {
     const signUp = await userService.signUp(req.body);
 
@@ -19,11 +15,7 @@ const signUp: RequestHandler<
 };
 
 // 로그인
-const login: RequestHandler<{}, {}, Pick<User, "email" | "password">> = async (
-  req,
-  res,
-  next
-) => {
+const login: RequestHandler<{}, {}, userDto> = async (req, res, next) => {
   try {
     const login = await userService.login(req.body);
 

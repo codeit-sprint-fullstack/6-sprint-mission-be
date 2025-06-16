@@ -10,24 +10,8 @@ type TGetProductsQuery = {
   keyword: string;
 };
 
-type TGetProductsResult = Promise<
-  [
-    {
-      likeCount: number;
-      productImages: {
-        imageUrl: string;
-      }[];
-      name: string;
-      id: number;
-      price: number;
-      createdAt: Date;
-    }[],
-    number
-  ]
->;
-
 // 상품 목록 불러오기
-const getProducts = async (query: TGetProductsQuery): TGetProductsResult => {
+const getProducts = async (query: TGetProductsQuery) => {
   const [products, totalCount] = await productRepository.findAll(query);
 
   if (!products || products.length === 0)
@@ -43,7 +27,7 @@ const getProducts = async (query: TGetProductsQuery): TGetProductsResult => {
     })
   );
 
-  return [productWithLikeCount, totalCount];
+  return [productWithLikeCount, totalCount] as const;
 };
 
 // 상품 상세조회

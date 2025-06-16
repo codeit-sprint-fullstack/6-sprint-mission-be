@@ -1,31 +1,15 @@
 import { RequestHandler } from "express";
 import productService from "../services/product.service";
 import { AuthenticationError, BadRequestError } from "../types/errors";
-import { Product } from "@prisma/client";
-
-type TGetProductsQuery = {
-  offset: string;
-  limit: string;
-  orderBy: string;
-  keyword: string;
-};
-
-type TGetProductsResult = [
-  {
-    likeCount: number;
-    productImages: {
-      imageUrl: string;
-    }[];
-    name: string;
-    id: number;
-    price: number;
-    createdAt: Date;
-  }[],
-  number
-];
+import {
+  productDto,
+  productParamsDto,
+  productQueryDto,
+} from "../dtos/product.dto";
+import { parseProductDto } from "../parsers/product.parser";
 
 // 상품 목록 불러오기
-const getProducts: RequestHandler<{}, {}, {}, TGetProductsQuery> = async (
+const getProducts: RequestHandler<{}, {}, {}, productQueryDto> = async (
   req,
   res,
   next
@@ -33,8 +17,7 @@ const getProducts: RequestHandler<{}, {}, {}, TGetProductsQuery> = async (
   const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
 
   try {
-    const [products, totalCount]: TGetProductsResult =
-      await productService.getProducts(req.query);
+    const [products, totalCount] = await productService.getProducts(req.query);
 
     const productsWithImages = products.map((product) => ({
       ...product,
@@ -49,11 +32,7 @@ const getProducts: RequestHandler<{}, {}, {}, TGetProductsQuery> = async (
 };
 
 // 상품 상세조회
-const getProduct: RequestHandler<{ productId: string }> = async (
-  req,
-  res,
-  next
-) => {
+const getProduct: RequestHandler<productParamsDto> = async (req, res, next) => {
   if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
@@ -74,11 +53,11 @@ const getProduct: RequestHandler<{ productId: string }> = async (
 };
 
 // 상품 등록
-const createProduct: RequestHandler<
-  {},
-  {},
-  Pick<Product, "name" | "description" | "price"> & { tags: string }
-> = async (req, res, next) => {
+const createProduct: RequestHandler<{}, {}, productDto> = async (
+  req,
+  res,
+  next
+) => {
   if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   if (!req.files) throw new BadRequestError("이미지를 등록해주세요.");
@@ -86,11 +65,12 @@ const createProduct: RequestHandler<
   const userId = req.auth.id;
   const images = req.files;
   const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  const body = parseProductDto(req.body);
 
   try {
     const newProduct = await productService.createProduct(
       userId,
-      req.body,
+      body,
       images as Express.Multer.File[]
     );
 
@@ -105,11 +85,11 @@ const createProduct: RequestHandler<
 };
 
 // 상품 수정
-const updateProduct: RequestHandler<
-  { productId: string },
-  {},
-  Pick<Product, "name" | "description" | "price"> & { tags: string }
-> = async (req, res, next) => {
+const updateProduct: RequestHandler<productParamsDto, {}, productDto> = async (
+  req,
+  res,
+  next
+) => {
   if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   if (!req.files) throw new BadRequestError("이미지를 등록해주세요.");
@@ -118,12 +98,13 @@ const updateProduct: RequestHandler<
   const productId = Number(req.params.productId);
   const images = req.files;
   const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  const body = parseProductDto(req.body);
 
   try {
     const updatedProduct = await productService.updateProduct(
       userId,
       productId,
-      req.body,
+      body,
       images as Express.Multer.File[]
     );
 
@@ -138,7 +119,7 @@ const updateProduct: RequestHandler<
 };
 
 // 상품 삭제
-const deleteProduct: RequestHandler<{ productId: string }> = async (
+const deleteProduct: RequestHandler<productParamsDto> = async (
   req,
   res,
   next
@@ -158,7 +139,7 @@ const deleteProduct: RequestHandler<{ productId: string }> = async (
 };
 
 // 상품 좋아요
-const addlikeProduct: RequestHandler<{ productId: string }> = async (
+const addlikeProduct: RequestHandler<productParamsDto> = async (
   req,
   res,
   next
@@ -178,7 +159,7 @@ const addlikeProduct: RequestHandler<{ productId: string }> = async (
 };
 
 // 상품 좋아요 취소
-const cancelLikeProduct: RequestHandler<{ productId: string }> = async (
+const cancelLikeProduct: RequestHandler<productParamsDto> = async (
   req,
   res,
   next

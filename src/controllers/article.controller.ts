@@ -1,38 +1,20 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import articleService from "../services/article.service";
-import { Article } from "@prisma/client";
 import { AuthenticationError } from "../types/errors";
-
-type TGetArticlesQuery = {
-  offset: string;
-  limit: string;
-  orderBy: string;
-  keyword: string;
-};
-
-type TGetArticlesResult = [
-  {
-    likeCount: number;
-    author: {
-      nickname: string;
-    };
-    id: number;
-    title: string;
-    content: string;
-    createdAt: Date;
-  }[],
-  number
-];
+import {
+  articleDto,
+  articleParamsDto,
+  articleQueryDto,
+} from "../dtos/article.dto";
 
 // 게시글 목록 불러오기
-const getArticles: RequestHandler<{}, {}, {}, TGetArticlesQuery> = async (
+const getArticles: RequestHandler<{}, {}, {}, articleQueryDto> = async (
   req,
   res,
   next
 ) => {
   try {
-    const [articles, totalCount]: TGetArticlesResult =
-      await articleService.getArticles(req.query);
+    const [articles, totalCount] = await articleService.getArticles(req.query);
 
     res.status(200).json({ list: articles, totalCount });
   } catch (e) {
@@ -41,11 +23,7 @@ const getArticles: RequestHandler<{}, {}, {}, TGetArticlesQuery> = async (
 };
 
 // 게시글 상세조회
-const getArticle = async (
-  req: Request<{ articleId: string }>,
-  res: Response,
-  next: NextFunction
-) => {
+const getArticle: RequestHandler<articleParamsDto> = async (req, res, next) => {
   if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
@@ -61,11 +39,11 @@ const getArticle = async (
 };
 
 // 게시글 작성
-const createArticle: RequestHandler<
-  {},
-  {},
-  Pick<Article, "title" | "content">
-> = async (req, res, next) => {
+const createArticle: RequestHandler<{}, {}, articleDto> = async (
+  req,
+  res,
+  next
+) => {
   if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
@@ -80,11 +58,11 @@ const createArticle: RequestHandler<
 };
 
 // 게시글 수정
-const updateArticle: RequestHandler<
-  { articleId: string },
-  {},
-  Pick<Article, "title" | "content">
-> = async (req, res, next) => {
+const updateArticle: RequestHandler<articleParamsDto, {}, articleDto> = async (
+  req,
+  res,
+  next
+) => {
   if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
 
   const userId = req.auth.id;
@@ -104,7 +82,7 @@ const updateArticle: RequestHandler<
 };
 
 // 게시글 삭제
-const deleteArticle: RequestHandler<{ articleId: string }> = async (
+const deleteArticle: RequestHandler<articleParamsDto> = async (
   req,
   res,
   next
@@ -124,7 +102,7 @@ const deleteArticle: RequestHandler<{ articleId: string }> = async (
 };
 
 // 게시글 좋아요
-const addlikeArticle: RequestHandler<{ articleId: string }> = async (
+const addlikeArticle: RequestHandler<articleParamsDto> = async (
   req,
   res,
   next
@@ -144,7 +122,7 @@ const addlikeArticle: RequestHandler<{ articleId: string }> = async (
 };
 
 // 게시글 좋아요 취소
-const cancelLikeArticle: RequestHandler<{ articleId: string }> = async (
+const cancelLikeArticle: RequestHandler<articleParamsDto> = async (
   req,
   res,
   next
