@@ -1,0 +1,163 @@
+Post http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "email": "a01072669755@gmail.com",
+  "nickname": "김숲안",
+  "password": "tnqls9755@",
+  "passwordConfirmation": "tnqls9755@"
+}
+###
+
+Post http://localhost:5000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "a01072669755@gmail.com",  
+  "password": "tnqls9755@"  
+}
+
+###
+POST http://localhost:5000/articles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlckVtYWlsIjoiYTAxMDcyNjY5NzU1QGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6Iuq5gOyIsuyViCIsImlhdCI6MTc0NzAyMzQ4MywiZXhwIjoxNzQ3MDI3MDgzfQ.RWM6XIzuJ2fqy79a4oXbKMN0JcR0-5K4fveC1c_CTJs
+
+{
+  "image": "https://example.com/image.png",
+  "content": "ㅌㅅㅌ 테스트게시글.",
+  "title": "ㅌㅅㅌㅌ."
+}
+### 게시글 목록 조회 (페이지네이션 + 정렬 + 검색 키워드)
+GET http://localhost:5000/articles?page=1&pageSize=10&orderBy=recent
+
+### 게시글 조회 
+GET http://localhost:5000/articles/182
+
+
+### 게시글 수정 
+PATCH  http://localhost:5000/articles/182
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwiaWF0IjoxNzQ3MDE2Njg3LCJleHAiOjE3NDcwMjAyODd9.xG5DWVRSle8SsR_c2opY8gJr31jXzDJri4FATAuhvK4
+
+{
+  "image": "https://example.com/image.png",
+  "content": "수정된 게시글 내용입니다.",
+  "title": "수정된 게시글 제목입니다."
+}
+
+### 게시글 삭제
+DELETE http://localhost:5000/articles/182
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwiaWF0IjoxNzQ3MDE2Njg3LCJleHAiOjE3NDcwMjAyODd9.xG5DWVRSle8SsR_c2opY8gJr31jXzDJri4FATAuhvK4
+
+###  상품 등록
+POST http://localhost:5000/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlckVtYWlsIjoiYTAxMDcyNjY5NzU1QGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6Iuq5gOyIsuyViCIsImlhdCI6MTc0NzAyMzQ4MywiZXhwIjoxNzQ3MDI3MDgzfQ.RWM6XIzuJ2fqy79a4oXbKMN0JcR0-5K4fveC1c_CTJs
+
+{
+  "images": [
+    "https://example.com/..."
+  ],
+  "tags": [
+    "전자제품"
+  ],
+  "price": 0,
+  "description": "string",
+  "name": "상품 이름"
+}
+###  상품 목록 조회
+GET http://localhost:5000/products?page=1&pageSize=10&orderBy=recent&keyword=노트북
+
+
+###  상품 상세 조회
+GET http://localhost:5000/products/181
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlckVtYWlsIjoiYTAxMDcyNjY5NzU1QGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6Iuq5gOyIsuyViCIsImlhdCI6MTc0NzAyMzQ4MywiZXhwIjoxNzQ3MDI3MDgzfQ.RWM6XIzuJ2fqy79a4oXbKMN0JcR0-5K4fveC1c_CTJs
+
+###  상품 수정
+PATCH http://localhost:5000/products/181
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlckVtYWlsIjoiYTAxMDcyNjY5NzU1QGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6Iuq5gOyIsuyViCIsImlhdCI6MTc0NzAyMzQ4MywiZXhwIjoxNzQ3MDI3MDgzfQ.RWM6XIzuJ2fqy79a4oXbKMN0JcR0-5K4fveC1c_CTJs
+
+{
+  "name": "ㅌㅅㅌ",
+  "description": "테스트로 작성된 상품 설명입니다.",
+  "price": 2000000,
+  "images": ["https://example.com/updated_product.jpg"],
+  "tags": ["테스트"]
+}
+
+###  상품 삭제
+DELETE http://localhost:5000/products/181
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlckVtYWlsIjoiYTAxMDcyNjY5NzU1QGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6Iuq5gOyIsuyViCIsImlhdCI6MTc0NzAyMzQ4MywiZXhwIjoxNzQ3MDI3MDgzfQ.RWM6XIzuJ2fqy79a4oXbKMN0JcR0-5K4fveC1c_CTJs
+
+
+### 🔐 유저 정보 조회 (내 정보)
+GET http://localhost:5000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMiwidXNlckVtYWlsIjoiYTAxMDcyNjY5NzU1QGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6Iuq5gOyIsuyViCIsImlhdCI6MTc0NzAyMzQ4MywiZXhwIjoxNzQ3MDI3MDgzfQ.RWM6XIzuJ2fqy79a4oXbKMN0JcR0-5K4fveC1c_CTJs
+
+
+
+### 🟢 게시글 댓글 생성 (인증 필요)
+POST http://localhost:5000/comments/articles/40/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDMwMjUwLCJleHAiOjE3NDcwMzM4NTB9.WhVGI391_H1JNXt91H0kBcC_fzYQnQTy-TapmBxROeo
+
+{
+  "content": "곧 삭제할 댓글."
+}
+
+###
+
+### 🔵 게시글 댓글 목록 조회
+GET http://localhost:5000/comments/articles/40/comments
+
+###
+
+### 🟡 게시글 댓글 수정 (인증 필요)
+PATCH http://localhost:5000/comments/articles/comments/94
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDMwMjUwLCJleHAiOjE3NDcwMzM4NTB9.WhVGI391_H1JNXt91H0kBcC_fzYQnQTy-TapmBxROeo
+
+{
+  "content": "수정된 게시글 22."
+}
+
+###
+
+### 🔴 게시글 댓글 삭제 (인증 필요)
+DELETE http://localhost:5000/comments/articles/comments/94
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDMwMjUwLCJleHAiOjE3NDcwMzM4NTB9.WhVGI391_H1JNXt91H0kBcC_fzYQnQTy-TapmBxROeo
+
+###
+
+### 🟢 상품 댓글 생성 (인증 필요)
+POST http://localhost:5000/comments/products/58/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDQwOTMzLCJleHAiOjE3NDcwNDQ1MzN9.bJpWKwqtL73CXh4u6oJ6ZSmmjUfHdwTSL7cHwxCG89A
+
+{
+  "content": "곧 삭제할 댓글."
+}
+
+###
+
+### 🔵 상품 댓글 목록 조회
+GET http://localhost:5000/comments/products/58/comments
+
+###
+
+### 🟡 상품 댓글 수정 (인증 필요)
+PATCH http://localhost:5000/comments/products/comments/96
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDQwOTMzLCJleHAiOjE3NDcwNDQ1MzN9.bJpWKwqtL73CXh4u6oJ6ZSmmjUfHdwTSL7cHwxCG89A
+
+{
+  "content": "수정된 1111."
+}
+
+###
+
+### 🔴 상품 댓글 삭제 (인증 필요)
+DELETE http://localhost:5000/comments/products/comments/96
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJ1c2VyRW1haWwiOiJhMDEwNzI2Njk3NTVAZ21haWwuY29tIiwidXNlck5pY2tuYW1lIjoi6rmA7Iiy7JWIIiwiaWF0IjoxNzQ3MDMwMjUwLCJleHAiOjE3NDcwMzM4NTB9.WhVGI391_H1JNXt91H0kBcC_fzYQnQTy-TapmBxROeo
