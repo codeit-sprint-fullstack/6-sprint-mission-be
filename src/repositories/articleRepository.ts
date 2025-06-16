@@ -1,6 +1,7 @@
+import { Article } from '@prisma/client';
 import { prismaClient } from '../prismaClient.js';
 
-export const Create = async (data) => {
+export const Create = async (data: Pick<Article, 'title' | 'content'> & { authorId: number }) => {
     return prismaClient.article.create({
         data,
         include: {
@@ -14,7 +15,7 @@ export const Create = async (data) => {
     });
 };
 
-export const FindById = async (id) => {
+export const FindById = async (id: number) => {
     return prismaClient.article.findUnique({
         where: { id },
         include: {
@@ -28,7 +29,7 @@ export const FindById = async (id) => {
     });
 };
 
-export const Update = async (id, data) => {
+export const Update = async (id: number, data: Pick<Article, 'title' | 'content'>) => {
     return prismaClient.$transaction(async (tx) => {
         const exists = await tx.article.findUnique({ where: { id } });
         if (!exists) throw new Error('Article not found');
@@ -47,7 +48,7 @@ export const Update = async (id, data) => {
     });
 };
 
-export const Delete = async (id) => {
+export const Delete = async (id: number) => {
     return prismaClient.$transaction(async (tx) => {
         const exists = await tx.article.findUnique({ where: { id } });
         if (!exists) throw new Error('Article not found');
@@ -55,7 +56,17 @@ export const Delete = async (id) => {
     });
 };
 
-export const FindMany = async ({ cursor, take, orderBy, word }) => {
+export const FindMany = async ({
+    cursor,
+    take,
+    orderBy,
+    word,
+}: {
+    orderBy?: string;
+    take: number;
+    cursor?: number;
+    word?: string;
+}) => {
     return prismaClient.article.findMany({
         cursor: cursor ? { id: cursor } : undefined,
         take: take + 1,
@@ -71,7 +82,7 @@ export const FindMany = async ({ cursor, take, orderBy, word }) => {
         },
     });
 };
-export const toggleLike = async (userId, articleId) => {
+export const toggleLike = async (userId: number, articleId: number) => {
     return prismaClient.$transaction(async (tx) => {
         const existing = await tx.myLikes.findUnique({
             where: {

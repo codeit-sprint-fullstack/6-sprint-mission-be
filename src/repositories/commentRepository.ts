@@ -1,6 +1,7 @@
-import { prismaClient } from '../prismaClient.js';
+import { Comment } from '@prisma/client';
+import { prismaClient } from '../prismaClient';
 
-export async function getById(id) {
+export async function getById(id: number) {
     return prismaClient.comment.findUnique({
         where: { id },
         select: {
@@ -20,17 +21,24 @@ export async function getById(id) {
     });
 }
 
-export async function Create(data) {
+export async function Create(data: {
+    content: string;
+    articleId?: number;
+    productId?: number;
+    userId: number;
+    tableId: number;
+    type: string;
+}) {
     return prismaClient.comment.create({ data });
 }
 
-export async function Update(id, data) {
+export async function Update(id: number, data: string) {
     return prismaClient.$transaction(async (tx) => {
         const comment = await tx.comment.findUnique({ where: { id } });
         if (!comment) throw new Error('comment not found');
         return tx.comment.update({
             where: { id },
-            data,
+            data: { content: data },
             select: {
                 id: true,
                 content: true,
@@ -47,7 +55,7 @@ export async function Update(id, data) {
         });
     });
 }
-export async function Delete(id) {
+export async function Delete(id: number) {
     return prismaClient.$transaction(async (tx) => {
         const exists = await tx.comment.findUnique({ where: { id } });
         if (!exists) throw new Error('Comment not found');
@@ -57,7 +65,17 @@ export async function Delete(id) {
     });
 }
 
-export async function fetchComments({ type, tableId, cursor, limit = 10 }) {
+export async function fetchComments({
+    type,
+    tableId,
+    cursor,
+    limit = 10,
+}: {
+    type: string;
+    tableId: number;
+    cursor?: number;
+    limit?: number;
+}) {
     const comments = await prismaClient.comment.findMany({
         where: {
             type,
