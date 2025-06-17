@@ -71,7 +71,7 @@ const createArticle: RequestHandler = async (req, res, next) => {
     const article = await articleService.createArticle({
       title,
       content,
-      image: imagePaths,
+      images: imagePaths,
       userId,
       likes: 0,
     });

@@ -50,7 +50,7 @@ async function findById(
         },
       },
       ...(userId && {
-        ProductLike: {
+        productLikes: {
           where: { userId }, // 로그인한 사용자 기준 필터
           select: { id: true }, // 존재 여부만 확인하면 되므로 id만
         },
@@ -78,7 +78,10 @@ async function findLikedProductIdsByUser(
 
 async function create(productData: ProductCreateDto) {
   return prisma.product.create({
-    data: productData,
+    data: {
+      ...productData,
+      likes: productData.likes || 0,
+    },
   });
 }
 
@@ -88,7 +91,10 @@ async function update(
 ) {
   return prisma.product.update({
     where: { id },
-    data,
+    data: {
+      ...data,
+      likes: data.likes || 0,
+    },
   });
 }
 

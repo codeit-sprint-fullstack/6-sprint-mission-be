@@ -57,7 +57,7 @@ async function findById(
         },
       },
       ...(userId && {
-        ArticleLike: {
+        articleLikes: {
           where: { userId },
           select: { id: true },
         },
@@ -86,7 +86,10 @@ async function findLikedArticleIdsByUser(
 
 async function create(articleData: ArticleCreateDto) {
   return prisma.article.create({
-    data: articleData,
+    data: {
+      ...articleData,
+      likes: articleData.likes || 0,
+    },
   });
 }
 
@@ -102,7 +105,10 @@ async function update(
 ) {
   return prisma.article.update({
     where: { id },
-    data,
+    data: {
+      ...data,
+      likes: data.likes || 0,
+    },
   });
 }
 

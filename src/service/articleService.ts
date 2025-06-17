@@ -29,7 +29,7 @@ async function getArticles({
       id: true,
       title: true,
       content: true,
-      image: true,
+      images: true,
       likes: true,
       createdAt: true,
       updatedAt: true,
@@ -105,9 +105,9 @@ async function getArticleById(
     throw new NotFoundError("게시글을 찾을 수 없습니다.");
   }
 
-  const isLiked = userId ? article.ArticleLike.length > 0 : false;
+  const isLiked = userId ? article.articleLikes.length > 0 : false;
   // ArticleLike와 user 객체 분리
-  const { ArticleLike, user, ...rest } = article;
+  const { articleLikes, user, ...rest } = article;
 
   return {
     ...rest,
@@ -121,12 +121,12 @@ async function createArticle({
   title,
   content,
   userId,
-  image,
+  images,
 }: ArticleCreateDto) {
   return articleRepository.create({
     title,
     content,
-    image,
+    images,
     userId,
     likes: 0,
   });

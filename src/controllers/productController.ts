@@ -113,7 +113,7 @@ const createProduct = async (
       price: Number(price),
       tags: processedTags || [],
       userId,
-      image: imagePaths,
+      images: imagePaths,
     });
 
     res.status(201).json({

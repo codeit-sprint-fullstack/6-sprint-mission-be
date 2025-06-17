@@ -89,10 +89,10 @@ async function getProductById(
 
   if (!product) throw { code: "P2025" };
 
-  const isLiked = userId ? product.ProductLike.length > 0 : false;
+  const isLiked = userId ? product.productLikes.length > 0 : false;
 
   // ProductLike와 user 정보 추출
-  const { ProductLike, user, ...rest } = product;
+  const { productLikes, user, ...rest } = product;
 
   // ProductLike 제외
   return {
@@ -108,14 +108,14 @@ async function createProduct({
   price,
   tags = [],
   userId,
-  image,
+  images,
 }: {
   name: string | undefined;
   description: string | undefined;
   price: number | string | undefined;
   tags?: string[];
   userId: string;
-  image: string[];
+  images: string[];
 }) {
   if (!name || !description || !price) {
     throw new Error("이름, 설명, 가격은 필수입니다.");
@@ -125,7 +125,7 @@ async function createProduct({
     name,
     description,
     price: Number(price),
-    image,
+    images,
     likes: 0,
     tags,
     userId,

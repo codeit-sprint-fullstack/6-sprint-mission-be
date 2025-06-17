@@ -5,7 +5,7 @@ export type ArticleDto = {
   id: string;
   title: string;
   content: string;
-  image: string[];
+  images: string[];
   likes: number | null;
 };
 

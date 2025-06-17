@@ -6,7 +6,7 @@ export type ProductDto = {
   name: string;
   description: string;
   price: number;
-  image: string[];
+  images: string[];
   likes: number | null;
   tags: string[];
 };
