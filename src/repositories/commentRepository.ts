@@ -10,11 +10,11 @@ async function getById(commentId: Comment["id"]) {
   return comment;
 }
 
-async function update(id: Comment["id"], comment: Comment) {
+async function update(id: Comment["id"], content: Comment["content"]) {
   const updatedComment = await prisma.comment.update({
     where: { id },
     data: {
-      content: comment.content,
+      content,
     },
   });
   return updatedComment;

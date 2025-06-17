@@ -1,8 +1,9 @@
+import { CommentBodyDTO } from "../dto/comment.dto";
 import commentRepository from "../repositories/commentRepository";
 import { Comment } from "@prisma/client";
 
-async function update(id: Comment["id"], comment: Comment) {
-  return commentRepository.update(id, comment);
+async function update(id: Comment["id"], comment: CommentBodyDTO) {
+  return commentRepository.update(id, comment.content);
 }
 
 async function deleteById(id: Comment["id"]) {

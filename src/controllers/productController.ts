@@ -1,12 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
 import productService from "../services/productService";
-import varify from "../middlewares/verify";
 import auth from "../middlewares/auth";
 import upload from "../middlewares/images";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { AuthenticationError, NotFoundError } from "../types/errors";
-import { strict } from "assert";
-import { string } from "superstruct";
+import { ProductBodySchema } from "../dto/product.dto";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -202,15 +200,6 @@ const productCommentController = express.Router();
  *         description: 댓글 목록 반환
  */
 
-interface CreateProduct {
-  name: string;
-  description: string;
-  price: number;
-  tags: string[];
-  imageUrl: string;
-  authorId: number;
-}
-
 // 상품 등록, 전체 상품 조회
 productController
   .route("/")
@@ -218,14 +207,14 @@ productController
     auth.verifyAccessToken,
     upload.single("image"),
     async (
-      req: Request<{}, {}, CreateProduct>,
+      req: Request<{}, {}, ProductBodySchema>,
       res: Response,
       next: NextFunction
     ): Promise<void> => {
       try {
         const parsedTags: string[] = (() => {
           try {
-            const { tags } = req.body;
+            const { tags } = ProductBodyDTO.safeParse(req.body);
             if (Array.isArray(tags)) {
               // 2차원 배열인지 확인 후 flatten
               if (Array.isArray(tags[0])) {

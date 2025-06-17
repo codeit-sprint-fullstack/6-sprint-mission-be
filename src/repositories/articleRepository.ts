@@ -1,7 +1,10 @@
 import { Article, User, Comment } from "@prisma/client";
 import prisma from "../config/client.prisma";
+import { ArticlePatchDTO } from "../dto/article.dto";
 
-async function save(article: Article): Promise<Article> {
+async function save(
+  article: Omit<Article, "createdAt" | "updatedAt">
+): Promise<Article> {
   const createArticle = await prisma.article.create({
     data: {
       image: article.image,
@@ -32,7 +35,7 @@ async function getAll() {
   return articles;
 }
 
-async function update(id: Article["id"], article: Article) {
+async function update(id: Article["id"], article: ArticlePatchDTO) {
   const updatedArticle = await prisma.article.update({
     where: { id },
     data: {
@@ -52,7 +55,9 @@ async function deleteById(id: Article["id"]) {
   });
 }
 
-async function saveArticleComment(comment: Comment) {
+async function saveArticleComment(
+  comment: Omit<Comment, "id" | "createdAt" | "updatedAt" | "productId">
+) {
   return await prisma.comment.create({
     data: {
       content: comment.content,

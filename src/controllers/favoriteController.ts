@@ -1,7 +1,12 @@
 import express, { NextFunction, Response, Request } from "express";
 import favoriteService from "../services/favoriteService";
 import auth from "../middlewares/auth";
-import { AuthenticationError } from "../types/errors";
+import { AuthenticationError, ValidationError } from "../types/errors";
+import {
+  FavoriteParamSchema,
+  FavoriteResponseDTO,
+  FavoriteResponseSchema,
+} from "../dto/favorite.dto";
 
 const favoriteController = express.Router();
 
@@ -62,12 +67,22 @@ favoriteController
   .post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
-      const userId = Number(req.auth.userId);
-      const productId = Number(req.params.id);
 
       try {
+        const userId = req.auth.userId;
+
+        const parsed = FavoriteParamSchema.safeParse(req.params);
+        if (!parsed.success)
+          throw new ValidationError("잘못된 요청 파라미터입니다.");
+
+        const productId = parsed.data.id;
+
         await favoriteService.likeProduct(productId, userId);
-        res.status(201).json({ message: "상품 좋아요 완료" });
+
+        const response: FavoriteResponseDTO = { message: "상품 좋아요 완료" };
+        const validatedResponse = FavoriteResponseSchema.parse(response);
+
+        res.status(201).json(validatedResponse);
       } catch (error) {
         next(error);
       }
@@ -75,12 +90,24 @@ favoriteController
   )
   .delete(async (req: Request, res: Response, next: NextFunction) => {
     if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
-    const userId = Number(req.auth.userId);
-    const productId = Number(req.params.id);
 
     try {
+      const userId = Number(req.auth.userId);
+
+      const parsed = FavoriteParamSchema.safeParse(req.params);
+      if (!parsed.success)
+        throw new ValidationError("잘못된 요청 파라미터입니다.");
+
+      const productId = parsed.data.id;
+
       await favoriteService.unlikeProduct(productId, userId);
-      res.status(200).json({ message: "상품 좋아요 취소 완료" });
+
+      const response: FavoriteResponseDTO = {
+        message: "상품 좋아요 취소 완료",
+      };
+      const validatedResponse = FavoriteResponseSchema.parse(response);
+
+      res.status(200).json(validatedResponse);
     } catch (error) {
       next(error);
     }

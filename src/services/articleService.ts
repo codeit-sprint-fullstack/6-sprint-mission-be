@@ -1,7 +1,9 @@
 import { Article, User, Comment } from "@prisma/client";
 import articleRepository from "../repositories/articleRepository";
+import { ArticleBodyDTO, ArticlePatchDTO } from "../dto/article.dto";
+import { CommentBody, CommentBodyDTO } from "../dto/comment.dto";
 
-async function create(article: Article) {
+async function create(article: ArticleBodyDTO) {
   return articleRepository.save(article);
 }
 
@@ -13,7 +15,7 @@ async function getAll() {
   return articleRepository.getAll();
 }
 
-async function update(id: Article["id"], review: Article) {
+async function update(id: Article["id"], review: ArticlePatchDTO) {
   return articleRepository.update(id, review);
 }
 
@@ -21,7 +23,9 @@ async function deleteById(id: Article["id"]) {
   return articleRepository.deleteById(id);
 }
 
-async function createArticleComment(comment: Comment) {
+async function createArticleComment(
+  comment: CommentBodyDTO & { articleId: number; authorId: number }
+) {
   return articleRepository.saveArticleComment(comment);
 }
 

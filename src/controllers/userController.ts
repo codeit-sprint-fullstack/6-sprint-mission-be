@@ -3,6 +3,7 @@ import userService from "../services/userService";
 import auth from "../middlewares/auth";
 import { generateAccessToken } from "../middlewares/utils";
 import { AuthenticationError } from "../types/errors";
+import { UserWithTokenDTO, UserWithTokenSchema } from "../dto/user.dto";
 
 const userController = express.Router();
 
@@ -53,21 +54,30 @@ userController.get(
   "/",
   auth.verifyAccessToken,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
-    const userId = req.auth.userId;
-
     try {
-      const user = await userService.getById(userId);
+      if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
 
-      const accessToken = generateAccessToken(user);
-      res.json({
-        accessToken,
+      const user = await userService.getById(req.auth.userId);
+
+      const responsePayload: UserWithTokenDTO = {
+        accessToken: generateAccessToken(user),
         user: {
           id: user.id,
           email: user.email,
           nickname: user.nickname,
         },
-      });
+      };
+
+      const parsed = UserWithTokenSchema.safeParse(responsePayload);
+      if (!parsed.success) {
+        res.status(500).json({
+          error: "Internal response structure invalid",
+          detail: parsed.error,
+        });
+        return;
+      }
+
+      res.status(200).json(responsePayload);
     } catch (error) {
       next(error);
     }

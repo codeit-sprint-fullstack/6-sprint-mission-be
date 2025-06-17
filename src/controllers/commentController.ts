@@ -1,6 +1,9 @@
 import express, { NextFunction, Response, Request } from "express";
 import auth from "../middlewares/auth";
 import commentService from "../services/commentService";
+import { CommentBodyDTO, CommentBodySchema } from "../dto/comment.dto";
+import { parse } from "path";
+import { ValidationError } from "../types/errors";
 
 const commentController = express.Router();
 
@@ -71,10 +74,22 @@ commentController
   .all(auth.verifyAccessToken, auth.verifyCommentAuth)
 
   .patch(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = Number(req.params.id);
+    async (
+      req: Request<{ id: number }, {}, CommentBodyDTO>,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const id = req.params.id;
+
       try {
-        const updatedComment = await commentService.update(id, req.body);
+        const parsed = CommentBodySchema.safeParse(req.body);
+        if (!parsed.success)
+          throw new ValidationError("요청 형식이 유효하지 않습니다");
+
+        const updatedComment = await commentService.update(
+          id,
+          parsed.data.content
+        );
         res.json(updatedComment);
       } catch (error) {
         next(error);
@@ -83,8 +98,12 @@ commentController
   )
 
   .delete(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = Number(req.params.id);
+    async (
+      req: Request<{ id: number }>,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const { id } = req.params;
       try {
         const deletedComment = await commentService.deleteById(id);
         res.json(deletedComment);

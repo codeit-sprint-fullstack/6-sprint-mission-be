@@ -4,9 +4,13 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../middlewares/utils";
-import { AuthenticationError, NotFoundError } from "../types/errors";
+import {
+  AuthenticationError,
+  NotFoundError,
+  ValidationError,
+} from "../types/errors";
 import auth from "../middlewares/auth";
-import verify from "../middlewares/verify";
+import { SignInBodySchema, SignUpBodySchema } from "../dto/auth.dto";
 
 const authController = express.Router();
 
@@ -133,14 +137,18 @@ const authController = express.Router();
 // 회원가입
 authController.post(
   "/signUp",
-  verify.signUpRequestStructure,
-  verify.checkExistedEmail,
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const createUser = await authService.create(req.body);
+      const parsed = SignUpBodySchema.safeParse(req.body);
+      if (!parsed.success)
+        throw new ValidationError("요청 형식을 올바르게 작성해주세요");
 
+      const existedUser = await authService.getByEmail(parsed.data.email);
+      if (existedUser) throw new ValidationError("이미 사용중인 이메일입니다.");
+
+      const createUser = await authService.create(parsed.data);
       const accessToken = generateAccessToken(createUser);
-      res.json({
+      res.status(200).json({
         accessToken,
         user: {
           id: createUser.id,
@@ -159,14 +167,15 @@ authController.post(
   "/signIn",
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = await authService.getByEmail(req.body);
+      const parsed = SignInBodySchema.safeParse(req.body);
+      if (!parsed.success)
+        throw new ValidationError("요청 형식이 올바르지 않습니다.");
 
-      if (!user) {
-        throw new NotFoundError("Not Found, 존재하지 않는 사용자입니다.");
-      }
+      const user = await authService.getByEmail(parsed.data.email);
+      if (!user) throw new NotFoundError("존재하지 않는 사용자입니다.");
 
-      const accessToken = authService.createAccessToken(user);
-      const refreshToken = authService.createRefreshToken(user);
+      const accessToken = authService.createAccessToken(user.id);
+      const refreshToken = authService.createRefreshToken(user.id);
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -194,7 +203,6 @@ authController.post(
         res.status(401).json({ message: "리프레쉬 토큰이 없습니다." });
 
       const payload = req.auth;
-
       if (!payload) throw new AuthenticationError("접근 권한이 없습니다.");
 
       const user = {

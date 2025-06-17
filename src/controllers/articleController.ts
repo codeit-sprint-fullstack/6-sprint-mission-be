@@ -1,8 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
 import auth from "../middlewares/auth";
 import articleService from "../services/articleService";
-import varify from "../middlewares/verify";
-import { AuthenticationError } from "../types/errors";
+import {
+  AuthenticationError,
+  NotFoundError,
+  ValidationError,
+} from "../types/errors";
+import {
+  ArticleBodySchema,
+  ArticlePatchSchema,
+  IdParamSchema,
+} from "../dto/article.dto";
+import { CommentBodySchema } from "../dto/comment.dto";
 
 const articleController = express.Router();
 const articleCommentController = express.Router();
@@ -53,24 +62,20 @@ articleController
   .post(
     auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      if (!req.auth || typeof req.auth.userId !== "number") {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-      }
-
-      const { userId } = req.auth;
-
-      if (!userId) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-      }
-
       try {
+        if (!req.auth?.userId)
+          throw new AuthenticationError("인증된 유저가 아닙니다.");
+
+        const parsedBody = ArticleBodySchema.safeParse(req.body);
+        if (!parsedBody.success)
+          throw new ValidationError("잘못된 요청입니다.");
+
         const createdArticle = await articleService.create({
-          ...req.body,
-          authorId: userId,
+          ...parsedBody.data,
+          authorId: req.auth.userId,
         });
-        res.json(createdArticle);
+
+        res.status(200).json(createdArticle);
       } catch (error) {
         next(error);
       }
@@ -80,7 +85,7 @@ articleController
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       try {
         const articles = await articleService.getAll();
-        res.json(articles);
+        res.status(200).json(articles);
       } catch (error) {
         next(error);
       }
@@ -151,13 +156,15 @@ articleController
   .get(
     auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const userId = Number(req.user?.id);
-      const articleId = Number(req.params.id);
-
       try {
-        const article = await articleService.getById(articleId, userId);
+        const { id: articleId } = IdParamSchema.parse(req.params);
 
-        if (!article) varify.throwNotFoundError();
+        const userId = req.user?.id;
+        if (!userId) throw new AuthenticationError("인증된 사용자가 아닙니다.");
+
+        const article = await articleService.getById(articleId, userId);
+        if (!article)
+          throw new NotFoundError("해당 게시글을 찾을 수 없습니다.");
 
         const articleComments = await articleService.getAllArticleComment(
           articleId
@@ -172,9 +179,13 @@ articleController
   .patch(
     auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = Number(req.params.id);
       try {
-        const patchedArticle = await articleService.update(id, req.body);
+        const { id } = IdParamSchema.parse(req.params);
+        const parsed = ArticlePatchSchema.safeParse(req.body);
+
+        if (!parsed.success) throw new ValidationError("잘못된 요청입니다.");
+
+        const patchedArticle = await articleService.update(id, parsed.data);
         res.json(patchedArticle);
       } catch (error) {
         next(error);
@@ -184,8 +195,9 @@ articleController
   .delete(
     auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = Number(req.params.id);
       try {
+        const { id } = IdParamSchema.parse(req.params);
+
         const deletedArticle = await articleService.deleteById(id);
         res.json(deletedArticle);
       } catch (error) {
@@ -244,16 +256,22 @@ articleCommentController
   .post(
     auth.verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
-      const { userId } = req.auth;
-      const id = Number(req.params.id);
       try {
-        const articleComment = await articleService.createArticleComment({
-          ...req.body,
-          articleId: id,
+        const { id: articleId } = IdParamSchema.parse(req.params);
+
+        if (!req.auth) throw new AuthenticationError("작성자가 아닙니다");
+        const { userId } = req.auth;
+
+        const parsed = CommentBodySchema.safeParse(req.body);
+        if (!parsed.success) throw new ValidationError("잘못된 요청입니다.");
+
+        const comment = await articleService.createArticleComment({
+          ...parsed.data,
+          articleId,
           authorId: userId,
         });
-        res.json(articleComment);
+
+        res.json(comment);
       } catch (error) {
         next(error);
       }
@@ -261,8 +279,9 @@ articleCommentController
   )
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = Number(req.params.id);
       try {
+        const { id } = IdParamSchema.parse(req.params);
+
         const articleComments = await articleService.getAllArticleComment(id);
         res.json(articleComments);
       } catch (error) {
