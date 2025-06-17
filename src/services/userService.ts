@@ -1,7 +1,7 @@
 //import * as productRepository from '../repositories/productRepository.js';
 import jwt from 'jsonwebtoken';
-import * as userRepository from '../repositories/userRepository.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as userRepository from '../repositories/userRepository';
+import { HttpError } from '../middlewares/HttpError';
 import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 

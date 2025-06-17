@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { HttpError } from './HttpError.js';
+import { HttpError } from './HttpError';
 import { NextFunction, Request, Response } from 'express';
 import 'express';
 

@@ -1,5 +1,5 @@
 import { Article } from '@prisma/client';
-import { prismaClient } from '../prismaClient.js';
+import { prismaClient } from '../prismaClient';
 
 export const Create = async (data: Pick<Article, 'title' | 'content'> & { authorId: number }) => {
     return prismaClient.article.create({

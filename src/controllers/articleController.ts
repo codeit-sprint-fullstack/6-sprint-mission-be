@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as articleService from '../services/articleService.js';
+import * as articleService from '../services/articleService';
 
 export const createArticle = async (req: Request, res: Response) => {
     const { title, content } = req.body;

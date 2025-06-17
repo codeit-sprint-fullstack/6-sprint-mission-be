@@ -1,5 +1,5 @@
-import * as productService from '../services/productService.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as productService from '../services/productService';
+import { HttpError } from '../middlewares/HttpError';
 import { NextFunction, Request, Response } from 'express';
 
 function validateProductData(data: {

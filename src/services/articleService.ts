@@ -1,7 +1,6 @@
 import { Article } from '@prisma/client';
-import { HttpError } from '../middlewares/HttpError.js';
-import * as articleRepository from '../repositories/articleRepository.js';
-import * as commentRepository from '../repositories/commentRepository.js';
+import { HttpError } from '../middlewares/HttpError';
+import * as articleRepository from '../repositories/articleRepository';
 
 export const createArticle = async (data: Pick<Article, 'title' | 'content'>, userId: number) => {
     const entity = await articleRepository.Create({

@@ -1,6 +1,6 @@
 import { Product, User } from '@prisma/client';
-import { HttpError } from '../middlewares/HttpError.js';
-import * as productRepository from '../repositories/productRepository.js';
+import { HttpError } from '../middlewares/HttpError';
+import * as productRepository from '../repositories/productRepository';
 
 export const getProducts = async ({
     page,

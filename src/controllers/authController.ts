@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import * as authService from '../services/authService.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as authService from '../services/authService';
+import { HttpError } from '../middlewares/HttpError';
 
 export const signUp = async (req: Request, res: Response) => {
     const { email, nickname, password, passwordConfirmation: repeatpassowrd } = req.body;

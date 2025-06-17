@@ -1,9 +1,9 @@
 //import * as productRepository from '../repositories/productRepository.js';
 import jwt from 'jsonwebtoken';
-import * as authRepository from '../repositories/authRepository.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as authRepository from '../repositories/authRepository';
+import { HttpError } from '../middlewares/HttpError';
 import bcrypt from 'bcrypt';
-import { CreateUserDto, LoginUserDto } from '../Dtos/UserDto.js';
+import { CreateUserDto, LoginUserDto } from '../Dtos/UserDto';
 export const signUp = async (data: CreateUserDto) => {
     if (data.password !== data.repeatpassowrd) {
         throw new HttpError(401, '비밀번호가 일치하지 않습니다.');

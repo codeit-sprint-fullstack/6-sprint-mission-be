@@ -1,5 +1,5 @@
-import * as commentRepository from '../repositories/commentRepository.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as commentRepository from '../repositories/commentRepository';
+import { HttpError } from '../middlewares/HttpError';
 
 // 게시글 댓글 생성
 export async function createArticleComment(userId: number, articleId: number, content: string) {

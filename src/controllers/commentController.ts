@@ -1,5 +1,5 @@
-import * as commentService from '../services/commentService.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as commentService from '../services/commentService';
+import { HttpError } from '../middlewares/HttpError';
 import { NextFunction, Request, Response } from 'express';
 
 // 게시글 댓글 생성
