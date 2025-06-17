@@ -1,3 +1,5 @@
+import { TProductParam } from "@/types/product";
+
 export class Product {
     /** ID */
     _id;
@@ -29,7 +31,7 @@ export class Product {
     /** 좋아요 목록 */
     _likes;
 
-    constructor(param) {
+    constructor(param : TProductParam) {
         this._id = param.id;
         this._ownerId = param.ownerId;
         this._name = param.name;
@@ -78,7 +80,7 @@ export class Product {
         return this._updatedAt;
     }
 
-    getIsFavorite(userId) {
+    getIsFavorite(userId: number) {
         if (!userId) return false;
 
         return this._likes.some((like) => like.userId === userId);

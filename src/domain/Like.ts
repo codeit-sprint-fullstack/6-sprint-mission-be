@@ -1,3 +1,5 @@
+import { TLikeParam } from "@/types/like";
+
 export class Like {
     /** ID */
     _id;
@@ -14,7 +16,7 @@ export class Like {
     /** 생성시각 */
     _createdAt;
 
-    constructor(param) {
+    constructor(param: TLikeParam) {
         this._id = param.id;
         this._userId = param.userId;
         this._productId = param.productId;

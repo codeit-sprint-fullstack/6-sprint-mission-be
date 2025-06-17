@@ -6,7 +6,7 @@ import { ExceptionMessage } from '../../constant/ExceptionMessage';
 
 import { Article } from '../../domain/Article';
 import { User } from '../../domain/User';
-import { TArticle, TArticleUser } from '@/types/article';
+import { TArticleUser } from '@/types/article';
 
 type TUpdateArticle = {
     articleId: number;
@@ -60,6 +60,9 @@ export class UpdateArticleHandler {
             },
         });
 
+        if(!writerEntity) {
+            throw new Error('User Not Found')
+        }
         const writer = new User(writerEntity);
 
         return {

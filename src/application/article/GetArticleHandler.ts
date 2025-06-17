@@ -40,6 +40,9 @@ export class GetArticleHandler {
             },
         });
 
+        if(!writerEntity) {
+            throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND)
+        }
         const writer = new User(writerEntity);
 
         return {

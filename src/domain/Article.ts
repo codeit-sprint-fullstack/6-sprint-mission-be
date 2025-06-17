@@ -1,3 +1,6 @@
+import { TArticleParam } from "@/types/article";
+import { TLikeParam } from "@/types/like";
+
 export class Article {
     /** ID */
     _id;
@@ -20,7 +23,10 @@ export class Article {
     /** 마지막 수정시각 */
     _updatedAt;
 
-    constructor(param) {
+    /** 좋아요 수 **/
+    _likes: TLikeParam[];
+
+    constructor(param: TArticleParam) {
         this._id = param.id;
         this._writerId = param.writerId;
         this._title = param.title;
@@ -28,7 +34,7 @@ export class Article {
         this._image = param.image;
         this._createdAt = param.createdAt;
         this._updatedAt = param.updatedAt;
-        this._likes = params.likes;
+        this._likes = param.likes ?? [];
     }
 
     getId() {
@@ -59,7 +65,7 @@ export class Article {
         return this._updatedAt;
     }
 
-    getIsFavorite(userId) {
+    getIsFavorite(userId: number) {
         if (!userId) return false;
 
         return this._likes.some((like) => like.userId === userId);

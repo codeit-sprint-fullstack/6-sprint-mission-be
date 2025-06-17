@@ -52,6 +52,11 @@ export class CreateArticleLikeHandler {
                 id: articleEntity.writerId,
             },
         });
+
+        if(!writerEntity) {
+            throw new Error('User Not Found')
+        }
+        
         const writer = new User(writerEntity);
 
         return {

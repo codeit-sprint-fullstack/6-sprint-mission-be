@@ -1,3 +1,5 @@
+import { TCommentParam } from "@/types/comment";
+
 export class Comment {
     /** ID */
     _id;
@@ -20,7 +22,7 @@ export class Comment {
     /** 마지막 수정시각 */
     _updatedAt;
 
-    constructor(param) {
+    constructor(param: TCommentParam) {
         this._id = param.id;
         this._writerId = param.writerId;
         this._articleId = param.articleId;

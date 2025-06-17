@@ -38,6 +38,7 @@ export class GetArticleCommentListHandler {
             });
         });
 
+
         const comments = commentEntities.map((commentEntity) => new Comment(commentEntity));
 
         const writerEntities = await prismaClient.user.findMany({

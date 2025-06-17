@@ -60,7 +60,13 @@ export class GetArticleListHandler {
             },
         });
 
-        const likes = likeEntities.map((likeEntity) => new Like(likeEntity));
+        const likes = likeEntities.map((likeEntity) => new Like({
+            id: likeEntity.id,
+            userId: likeEntity.userId,
+            productId: likeEntity.productId ?? 0,
+            articleId: likeEntity.articleId ?? 0,
+            createdAt: likeEntity.createdAt ?? new Date(),
+        }));
 
         const hasNext = articles.length === Number(limit) + 1;
 

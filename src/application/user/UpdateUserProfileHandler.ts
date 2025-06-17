@@ -10,7 +10,7 @@ type TUpdateUserProfileUser = {
 }
 
 export class UpdateUserProfileHandler {
-    static async handle(requester: TUpdateUserProfileUser, { image }: { image: string | null }) {
+    static async handle(requester: TUpdateUserProfileUser, { image }: { image?: string | null }) {
         const userEntity = await prismaClient.user.findUnique({
             where: {
                 id: requester.userId,
@@ -22,6 +22,7 @@ export class UpdateUserProfileHandler {
 
         const user = new User(userEntity);
         user.setImage(image);
+        
         await prismaClient.user.update({
             where: {
                 id: user.getId(),

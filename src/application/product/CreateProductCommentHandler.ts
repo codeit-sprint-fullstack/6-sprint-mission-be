@@ -45,6 +45,10 @@ export class CreateProductCommentHandler {
             },
         });
 
+        if(!writerEntity) {
+            throw new Error('User Not Found')
+        }
+        
         const writer = new User(writerEntity);
 
         return {

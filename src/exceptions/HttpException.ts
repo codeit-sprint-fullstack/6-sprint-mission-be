@@ -6,11 +6,19 @@
  *
  * @see asyncErrorHandler
  */
+
+type HttpExceptionParam = {
+    status: number;
+    name: string;
+    message: string;
+};
+
+
 export class HttpException extends Error {
     status;
     name;
 
-    constructor(param) {
+    constructor(param: HttpExceptionParam) {
         const { status, name, message } = param;
         super(message);
         this.status = status;

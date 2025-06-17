@@ -1,3 +1,5 @@
+import { TUserParam } from "@/types/user";
+
 export class User {
     /** ID */
     _id;
@@ -20,7 +22,7 @@ export class User {
     /** 마지막 수정시각 */
     _updatedAt;
 
-    constructor(param) {
+    constructor(param: TUserParam) {
         this._id = param.id;
         this._email = param.email;
         this._password = param.password;
@@ -54,15 +56,15 @@ export class User {
         return this._updatedAt;
     }
 
-    setImage(image) {
+    setImage(image?: string | null) {
         this._image = image;
     }
 
-    setPassword(password) {
+    setPassword(password: string) {
         this._password = password;
     }
 
-    checkPassword(password) {
+    checkPassword(password: string) {
         return this._password === password;
     }
 }
