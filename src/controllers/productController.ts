@@ -3,8 +3,17 @@ import productService from "../services/productService";
 import auth from "../middlewares/auth";
 import upload from "../middlewares/images";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AuthenticationError, NotFoundError } from "../types/errors";
-import { ProductBodySchema } from "../dto/product.dto";
+import {
+  AuthenticationError,
+  NotFoundError,
+  ValidationError,
+} from "../types/errors";
+import {
+  ProductBodyDTO,
+  ProductBodySchema,
+  ProductQuerySchema,
+  ProductUpdateSchema,
+} from "../dto/product.dto";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -207,44 +216,36 @@ productController
     auth.verifyAccessToken,
     upload.single("image"),
     async (
-      req: Request<{}, {}, ProductBodySchema>,
+      req: Request<{}, {}, ProductBodyDTO>,
       res: Response,
       next: NextFunction
     ): Promise<void> => {
       try {
         const parsedTags: string[] = (() => {
-          try {
-            const { tags } = ProductBodyDTO.safeParse(req.body);
-            if (Array.isArray(tags)) {
-              // 2차원 배열인지 확인 후 flatten
-              if (Array.isArray(tags[0])) {
-                return (tags as string[]).flat();
-              }
-              return tags as string[];
-            }
-            return [tags];
-          } catch (e) {
-            return req.body.tags;
-          }
+          // const parsed = ProductBodySchema.safeParse(req.body);
+          const tags = req.body.tags;
+
+          if (Array.isArray(tags)) return tags.flat();
+          return typeof tags === "string" ? [tags] : [];
         })();
 
-        const accessToken = req.headers.authorization?.split(" ")[1];
+        const accessToken = req.headers.authorization?.split(" ")[1]!;
         const decoded = jwt.verify(
-          accessToken!,
+          accessToken,
           process.env.JWT_SECRET_KEY!
         ) as JwtPayload & { userId: number };
-        const userId = decoded.userId;
 
-        const data: CreateProduct = {
-          name: req.body.name,
-          description: req.body.description,
+        const parsed = ProductBodySchema.safeParse({
+          ...req.body,
           price: Number(req.body.price),
           tags: parsedTags,
           imageUrl: `http://localhost:3000/uploads/${req.file?.filename}`,
-          authorId: userId,
-        };
+          authorId: decoded.userId,
+        });
+        if (!parsed.success)
+          throw new ValidationError("상품 데이터가 유효하지 않습니다.");
 
-        const createProduct = await productService.create(data);
+        const createProduct = await productService.create(parsed.data);
 
         res.json(createProduct);
       } catch (error) {
@@ -255,15 +256,19 @@ productController
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       try {
+        const parsedQuery = ProductQuerySchema.safeParse(req.query);
+        if (!parsedQuery.success)
+          throw new ValidationError("유효한 형식으로 작성해주세요");
+
         const {
           page = 1,
           pageSize = 10,
           orderBy = "recent",
           keyword = "",
-        } = req.query;
+        } = parsedQuery.data;
 
-        const take = parseInt(pageSize as string);
-        const skip = (parseInt(page as string) - 1) * take;
+        const take = pageSize;
+        const skip = (page - 1) * take;
         const orderField =
           orderBy === "recent"
             ? "createdAt"
@@ -288,7 +293,7 @@ productController
           keyword,
         });
 
-        if (!product) varify.throwNotFoundError();
+        if (!product) throw new NotFoundError("해당 상품을 찾을 수 없습니다.");
 
         res.json(product);
       } catch (error) {
@@ -308,7 +313,7 @@ productController.get(
     try {
       const product = await productService.getById(id, userId!);
 
-      if (!product) varify.throwNotFoundError();
+      if (!product) throw new NotFoundError("제품을 찾을 수 없습니다.");
 
       const productCommets = await productService.getAllProductComment(id);
 
@@ -324,8 +329,16 @@ productController
   .route("/:id")
   .all(auth.verifyAccessToken)
   .patch(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = Number(req.params.id);
+    async (
+      req: Request<{ id: number }>,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const parsedBody = ProductUpdateSchema.safeParse(req.body);
+      if (!parsedBody.success)
+        throw new ValidationError("유효한 형식이 아닙니다");
+
+      const id = req.params.id;
       const accessToken = req.headers.authorization?.split(" ")[1];
       const decoded = jwt.verify(
         accessToken!,
@@ -335,7 +348,7 @@ productController
       try {
         const updatedProduct = await productService.update(id, req.body);
 
-        if (!updatedProduct) varify.throwNotFoundError();
+        if (!updatedProduct) throw new NotFoundError("업데이트할 수 없습니다.");
 
         res.json(updatedProduct);
       } catch (error) {
@@ -344,9 +357,14 @@ productController
     }
   )
   .delete(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const id = parseInt(req.params.id, 10);
+    async (
+      req: Request<{ id: number }>,
+      res: Response,
+      next: NextFunction
+    ): Promise<void> => {
+      const id = req.params.id;
       const deletedProduct = await productService.deleteById(id);
+
       try {
         if (!deletedProduct) {
           throw new NotFoundError("존재하지 않는 상품입니다.", 404);
