@@ -3,7 +3,12 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const commentRepository = {
-  createComment: async (userId, content, articleId = null, productId = null) => {
+  createComment: async (
+    userId: string,
+    content: string,
+    articleId: number | null = null,
+    productId: number | null = null
+  ) => {
     return prisma.comment.create({
       data: {
         userId,
@@ -22,7 +27,7 @@ const commentRepository = {
     });
   },
 
-  findAllCommentsByArticleId: async (articleId) => {
+  findAllCommentsByArticleId: async (articleId: number) => {
     return prisma.comment.findMany({
       where: { articleId },
       include: {
@@ -39,7 +44,7 @@ const commentRepository = {
     });
   },
 
-  findAllCommentsByProductId: async (productId) => {
+  findAllCommentsByProductId: async (productId: number) => {
     return prisma.comment.findMany({
       where: { productId },
       include: {
@@ -56,7 +61,7 @@ const commentRepository = {
     });
   },
 
-  findCommentById: async (id) => {
+  findCommentById: async (id: number) => {
     return prisma.comment.findUnique({
       where: { id },
       include: {
@@ -70,7 +75,7 @@ const commentRepository = {
     });
   },
 
-  updateComment: async (id, content) => {
+  updateComment: async (id: number, content: string) => {
     return prisma.comment.update({
       where: { id },
       data: {
@@ -88,11 +93,11 @@ const commentRepository = {
     });
   },
 
-  deleteComment: async (id) => {
+  deleteComment: async (id: number) => {
     return prisma.comment.delete({
       where: { id },
     });
   },
 };
 
-export default commentRepository;
+export default commentRepository; 
