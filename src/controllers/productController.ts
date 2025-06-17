@@ -195,7 +195,7 @@ const updateProduct = async (
     const data = {
       ...otherData,
       ...(processedTags !== undefined && { tags: processedTags }),
-      ...(finalImagePaths.length > 0 && { image: finalImagePaths }),
+      ...(finalImagePaths.length > 0 && { images: finalImagePaths }),
     };
 
     const updatedProduct = await productService.updateProduct(productId, data);

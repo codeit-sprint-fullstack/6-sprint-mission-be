@@ -113,7 +113,7 @@ const updateArticle: RequestHandler = async (req, res, next) => {
     const data = {
       title,
       content,
-      image: finalImagePaths,
+      images: finalImagePaths,
     };
 
     const article = await articleService.updateArticle(articleId, data);
