@@ -1,7 +1,7 @@
 import { Article, User, Comment } from "@prisma/client";
 import articleRepository from "../repositories/articleRepository";
 import { ArticleBodyDTO, ArticlePatchDTO } from "../dto/article.dto";
-import { CommentBody, CommentBodyDTO } from "../dto/comment.dto";
+import { CommentBodyDTO } from "../dto/comment.dto";
 
 async function create(article: ArticleBodyDTO) {
   return articleRepository.save(article);

@@ -86,10 +86,7 @@ commentController
         if (!parsed.success)
           throw new ValidationError("요청 형식이 유효하지 않습니다");
 
-        const updatedComment = await commentService.update(
-          id,
-          parsed.data.content
-        );
+        const updatedComment = await commentService.update(id, parsed.data);
         res.json(updatedComment);
       } catch (error) {
         next(error);
