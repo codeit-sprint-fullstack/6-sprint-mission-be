@@ -1,5 +1,7 @@
-import { Article, Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../db/prisma/client.prisma";
+import { ArticleCreateDto, ArticleParamsDto } from "../dtos/article.dto";
+import { UserParamsDto } from "../dtos/user.dto";
 
 // 전체 조회
 async function findAll(options: Prisma.ArticleFindManyArgs) {
@@ -38,7 +40,10 @@ async function findAll(options: Prisma.ArticleFindManyArgs) {
 }
 
 // 단일 조회
-async function findById(id: Article["id"], userId?: Partial<User["id"]>) {
+async function findById(
+  id: ArticleParamsDto["id"],
+  userId?: UserParamsDto["id"]
+) {
   return prisma.article.findUnique({
     where: {
       id,
@@ -63,8 +68,8 @@ async function findById(id: Article["id"], userId?: Partial<User["id"]>) {
 
 // 현재 좋아요한 컬럼만 추출
 async function findLikedArticleIdsByUser(
-  userId: User["id"],
-  articleIds: Article["id"][]
+  userId: UserParamsDto["id"],
+  articleIds: ArticleParamsDto["id"][]
 ) {
   return prisma.articleLike.findMany({
     where: {
@@ -79,9 +84,7 @@ async function findLikedArticleIdsByUser(
   });
 }
 
-async function create(
-  articleData: Omit<Article, "id" | "createdAt" | "updatedAt">
-) {
+async function create(articleData: ArticleCreateDto) {
   return prisma.article.create({
     data: articleData,
   });
@@ -94,8 +97,8 @@ async function count(where: Prisma.ArticleWhereInput) {
 }
 
 async function update(
-  id: Article["id"],
-  data: Pick<Article, "title" | "content" | "image">
+  id: ArticleParamsDto["id"],
+  data: Partial<ArticleCreateDto>
 ) {
   return prisma.article.update({
     where: { id },
@@ -103,7 +106,7 @@ async function update(
   });
 }
 
-async function remove(id: Article["id"]) {
+async function remove(id: ArticleParamsDto["id"]) {
   return prisma.article.delete({
     where: { id },
   });

@@ -1,14 +1,12 @@
 import authService from "../service/authService";
 import { NextFunction, Request, Response } from "express";
-import { User } from "@prisma/client";
 import userService from "../service/userService";
-
-type FilteredUser = Omit<User, "encryptedPassword" | "refreshToken">;
+import { UserFilteredDto } from "../dtos/user.dto";
 
 // 유저 프로필 정보 조회
 const getProfile = async (
   req: NonNullable<Request>,
-  res: Response<{ user: FilteredUser }>,
+  res: Response<{ user: UserFilteredDto }>,
   next: NextFunction
 ) => {
   try {
@@ -23,7 +21,7 @@ const getProfile = async (
 // 유저 정보 수정
 const updateUser = async (
   req: NonNullable<Request>,
-  res: Response<{ user: FilteredUser }>,
+  res: Response<{ user: UserFilteredDto }>,
   next: NextFunction
 ) => {
   try {

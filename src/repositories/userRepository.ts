@@ -1,7 +1,12 @@
-import { User } from "@prisma/client";
 import { prisma } from "../db/prisma/client.prisma";
+import {
+  UserDto,
+  UserParamsDto,
+  UserSaveDto,
+  UserUpdateDto,
+} from "../dtos/user.dto";
 
-async function findById(id: User["id"]) {
+async function findById(id: UserDto["id"]) {
   return prisma.user.findUnique({
     where: {
       id,
@@ -9,7 +14,7 @@ async function findById(id: User["id"]) {
   });
 }
 
-async function findByEmail(email: User["email"]) {
+async function findByEmail(email: UserDto["email"]) {
   return await prisma.user.findUnique({
     where: {
       email,
@@ -17,11 +22,7 @@ async function findByEmail(email: User["email"]) {
   });
 }
 
-async function save(user: {
-  nickname: User["nickname"];
-  email: User["email"];
-  encryptedPassword: User["encryptedPassword"];
-}) {
+async function save(user: UserSaveDto) {
   return prisma.user.create({
     data: {
       email: user.email,
@@ -31,15 +32,7 @@ async function save(user: {
   });
 }
 
-async function update(
-  id: User["id"],
-  data: {
-    nickname?: User["nickname"];
-    email?: User["email"];
-    encryptedPassword?: User["encryptedPassword"];
-    refreshToken?: User["refreshToken"];
-  }
-) {
+async function update(id: UserParamsDto["id"], data: Partial<UserUpdateDto>) {
   return prisma.user.update({
     where: {
       id,
@@ -48,23 +41,9 @@ async function update(
   });
 }
 
-// async function createOrUpdate(
-//   provider: string,
-//   providerId: string,
-//   email: string,
-//   name: string
-// ) {
-//   return prisma.user.upsert({
-//     where: { provider, providerId },
-//     update: { email, name },
-//     create: { provider, providerId, email, name },
-//   });
-// }
-
 export default {
   findById,
   findByEmail,
   save,
   update,
-  // createOrUpdate,
 };

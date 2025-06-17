@@ -1,8 +1,12 @@
-import { Article, User } from "@prisma/client";
 import { prisma } from "../db/prisma/client.prisma";
 import { P2002Error } from "../types/dbError";
+import { UserParamsDto } from "../dtos/user.dto";
+import { ArticleParamsDto } from "../dtos/article.dto";
 
-const likeArticle = async (userId: User["id"], articleId: Article["id"]) => {
+const likeArticle = async (
+  userId: UserParamsDto["id"],
+  articleId: ArticleParamsDto["id"]
+) => {
   try {
     const liked = await prisma.$transaction([
       prisma.articleLike.create({
@@ -24,7 +28,10 @@ const likeArticle = async (userId: User["id"], articleId: Article["id"]) => {
   }
 };
 
-const unlikeArticle = async (userId: User["id"], articleId: Article["id"]) => {
+const unlikeArticle = async (
+  userId: UserParamsDto["id"],
+  articleId: ArticleParamsDto["id"]
+) => {
   try {
     await prisma.$transaction([
       prisma.articleLike.delete({

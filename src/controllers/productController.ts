@@ -1,15 +1,13 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import { prisma } from "../db/prisma/client.prisma";
+import { NextFunction, Request, Response } from "express";
 import productService from "../service/productService";
-import { Product } from "@prisma/client";
 import { NotFoundError } from "../types/commonError";
+import { prisma } from "../db/prisma/client.prisma";
+import { ProductParamsDto } from "../dtos/product.dto";
 
 // 전체 상품 목록 조회
 const getProducts = async (
   req: Request<
-    {
-      id: Product["id"];
-    },
+    {},
     {},
     {},
     {
@@ -46,7 +44,7 @@ const getProducts = async (
 
 // 단일 상품 조회
 const getProductById = async (
-  req: Request<{ id: Product["id"] }>,
+  req: Request<{ id: ProductParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -67,12 +65,10 @@ const getProductById = async (
   }
 };
 
-// TODO : 토큰확인 하는지 아래 컨트롤러들 확인하기
-
 // 상품 생성
 const createProduct = async (
   req: Request<
-    { id: Product["id"] },
+    {},
     {},
     {
       name?: string;
@@ -132,7 +128,7 @@ const createProduct = async (
 // 상품 수정
 const updateProduct = async (
   req: Request<
-    { id: Product["id"] },
+    { id: ProductParamsDto["id"] },
     {},
     {
       name?: string;
@@ -222,7 +218,7 @@ const updateProduct = async (
 
 // 상품 삭제
 const deleteProduct = async (
-  req: Request<{ id: Product["id"] }>,
+  req: Request<{ id: ProductParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -248,7 +244,7 @@ const deleteProduct = async (
 
 // 좋아요 누르기
 const likeProduct = async (
-  req: Request<{ productId: Product["id"] }>,
+  req: Request<{ productId: ProductParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -277,7 +273,7 @@ const likeProduct = async (
 
 // 좋아요 취소
 const unlikeProduct = async (
-  req: Request<{ productId: Product["id"] }>,
+  req: Request<{ productId: ProductParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {

@@ -1,8 +1,12 @@
-import { Product, User } from "@prisma/client";
 import productLikeRepository from "../repositories/productLikeRepository";
 import { P2002Error } from "../types/dbError";
+import { UserParamsDto } from "../dtos/user.dto";
+import { ProductParamsDto } from "../dtos/product.dto";
 
-const likeProduct = async (userId: User["id"], productId: Product["id"]) => {
+const likeProduct = async (
+  userId: UserParamsDto["id"],
+  productId: ProductParamsDto["id"]
+) => {
   try {
     return await productLikeRepository.create(userId, productId);
   } catch (error) {
@@ -13,7 +17,10 @@ const likeProduct = async (userId: User["id"], productId: Product["id"]) => {
     throw error; // 예상 외 에러는 그대로 throw
   }
 };
-const unlikeProduct = async (userId: User["id"], productId: Product["id"]) => {
+const unlikeProduct = async (
+  userId: UserParamsDto["id"],
+  productId: ProductParamsDto["id"]
+) => {
   return await productLikeRepository.delete(userId, productId);
 };
 

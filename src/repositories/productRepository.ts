@@ -1,5 +1,7 @@
-import { Prisma, Product, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../db/prisma/client.prisma";
+import { ProductCreateDto, ProductParamsDto } from "../dtos/product.dto";
+import { UserParamsDto } from "../dtos/user.dto";
 
 async function findAll({
   skip,
@@ -33,7 +35,10 @@ async function countAll(where: Prisma.ProductWhereInput) {
   return prisma.product.count({ where });
 }
 
-async function findById(id: Product["id"], userId?: User["id"]) {
+async function findById(
+  id: ProductParamsDto["id"],
+  userId?: UserParamsDto["id"]
+) {
   return prisma.product.findUnique({
     where: { id },
     include: {
@@ -55,8 +60,8 @@ async function findById(id: Product["id"], userId?: User["id"]) {
 }
 
 async function findLikedProductIdsByUser(
-  userId: User["id"],
-  productIds: Product["id"][]
+  userId: UserParamsDto["id"],
+  productIds: ProductParamsDto["id"][]
 ) {
   return prisma.productLike.findMany({
     where: {
@@ -71,22 +76,23 @@ async function findLikedProductIdsByUser(
   });
 }
 
-async function create(
-  productData: Omit<Product, "id" | "createdAt" | "updatedAt">
-) {
+async function create(productData: ProductCreateDto) {
   return prisma.product.create({
     data: productData,
   });
 }
 
-async function update(id: Product["id"], data: Partial<Product>) {
+async function update(
+  id: ProductParamsDto["id"],
+  data: Partial<ProductCreateDto>
+) {
   return prisma.product.update({
     where: { id },
     data,
   });
 }
 
-async function remove(id: Product["id"]) {
+async function remove(id: ProductParamsDto["id"]) {
   return prisma.product.delete({
     where: { id },
   });

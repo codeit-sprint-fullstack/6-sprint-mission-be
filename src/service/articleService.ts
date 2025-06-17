@@ -1,7 +1,9 @@
-import { Article, Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import articleRepository from "../repositories/articleRepository";
 import { P2025Error } from "../types/dbError";
 import { NotFoundError } from "../types/commonError";
+import { UserParamsDto } from "../dtos/user.dto";
+import { ArticleCreateDto, ArticleParamsDto } from "../dtos/article.dto";
 
 // 게시글 목록 조회 (검색 및 페이지네이션)
 async function getArticles({
@@ -15,7 +17,7 @@ async function getArticles({
   limit: number;
   search: string;
   sort: string;
-  userId?: User["id"];
+  userId?: UserParamsDto["id"];
 }) {
   const skip = Number(offset);
   const take = Number(limit);
@@ -71,9 +73,7 @@ async function getArticles({
   // ✅ products에 isLiked 필드 추가
   const articlesWithLike = articles.map((article) => {
     // user 객체 분리 (user 필드는 include에서 가져옴)
-    const { user, ...articleData } = article as Article & {
-      user: Pick<User, "id" | "nickname" | "image">;
-    };
+    const { user, ...articleData } = article;
 
     return {
       ...articleData,
@@ -95,7 +95,10 @@ async function getArticles({
 }
 
 // 특정 게시글 조회
-async function getArticleById(id: Article["id"], userId?: User["id"]) {
+async function getArticleById(
+  id: ArticleParamsDto["id"],
+  userId?: UserParamsDto["id"]
+) {
   const article = await articleRepository.findById(id, userId);
 
   if (!article) {
@@ -119,7 +122,7 @@ async function createArticle({
   content,
   userId,
   image,
-}: Pick<Article, "title" | "content" | "image"> & { userId: User["id"] }) {
+}: ArticleCreateDto) {
   return articleRepository.create({
     title,
     content,
@@ -131,8 +134,8 @@ async function createArticle({
 
 // 게시글 수정
 async function updateArticle(
-  id: Article["id"],
-  data: Pick<Article, "title" | "content" | "image">
+  id: ArticleParamsDto["id"],
+  data: Partial<ArticleCreateDto>
 ) {
   try {
     return await articleRepository.update(id, data);
@@ -146,7 +149,7 @@ async function updateArticle(
 }
 
 // 게시글 삭제
-async function deleteArticle(id: Article["id"]) {
+async function deleteArticle(id: ArticleParamsDto["id"]) {
   try {
     return await articleRepository.remove(id);
   } catch (error) {

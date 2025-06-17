@@ -1,6 +1,4 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5NzkxODkxLCJleHAiOjE3NDk3OTI3OTF9.6kexuksn20wMDhtgFBRMNeP71OrgNdMtKf6YXFij98o
-# 제품 API
-
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzUwMTIzNzE2LCJleHAiOjE3NTAxMjQ2MTZ9.qkuvCshHgqm-GwDkTt7B1NI8bBbu6zZIDWueyaRs8ns
 ### 제품 목록 조회
 GET http://localhost:7777/products?page=0&pageSize=10&orderBy=likes
 Authorization: {{accessToken}}
@@ -41,9 +39,9 @@ DELETE http://localhost:7777/products/cmbu2yws60001up2417zl6bi9
 Authorization: {{accessToken}}
 
 ### 제품 좋아요 추가
-POST http://localhost:7777/products/cmbu51cy40001up7cadhlsn2r/like
+POST http://localhost:7777/products/cmbzsypeh0001upl0pp4c0dfv/like
 Authorization: {{accessToken}}
 
 ### 제품 좋아요 삭제
-DELETE http://localhost:7777/products/cmbu2yws60001up2417zl6bi9/like
+DELETE http://localhost:7777/products/cmbzsypeh0001upl0pp4c0dfv/like
 Authorization: {{accessToken}}

@@ -1,5 +1,7 @@
-import { Product, User, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import productRepository from "../repositories/productRepository";
+import { ProductCreateDto, ProductParamsDto } from "../dtos/product.dto";
+import { UserParamsDto } from "../dtos/user.dto";
 
 // 상품조회
 async function getProducts({
@@ -79,7 +81,10 @@ async function getProducts({
 }
 
 // 특정 상품 조회
-async function getProductById(productId: Product["id"], userId?: User["id"]) {
+async function getProductById(
+  productId: ProductParamsDto["id"],
+  userId?: UserParamsDto["id"]
+) {
   const product = await productRepository.findById(productId, userId);
 
   if (!product) throw { code: "P2025" };
@@ -120,20 +125,23 @@ async function createProduct({
     name,
     description,
     price: Number(price),
-    tags,
-    likes: 0,
-    userId,
     image,
+    likes: 0,
+    tags,
+    userId,
   };
 
   return productRepository.create(productData);
 }
 
-async function updateProduct(id: Product["id"], data: Partial<Product>) {
+async function updateProduct(
+  id: ProductParamsDto["id"],
+  data: Partial<ProductCreateDto>
+) {
   return productRepository.update(id, data);
 }
 
-async function deleteProduct(id: Product["id"]) {
+async function deleteProduct(id: ProductParamsDto["id"]) {
   return productRepository.remove(id);
 }
 

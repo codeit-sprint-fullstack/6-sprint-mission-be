@@ -1,13 +1,16 @@
 import commentRepository from "../repositories/commentRepository";
 import articleRepository from "../repositories/articleRepository";
 import productRepository from "../repositories/productRepository";
-import { Article, Comment, Product, User } from "@prisma/client";
 import { ForbiddenError, NotFoundError } from "../types/commonError";
+import { ArticleParamsDto } from "../dtos/article.dto";
+import { ProductParamsDto } from "../dtos/product.dto";
+import { CommentDto, CommentParamsDto } from "../dtos/comment.dto";
+import { UserParamsDto } from "../dtos/user.dto";
 
 /**
  * 특정 게시글의 댓글 목록 조회
  */
-async function getCommentsByArticleId(articleId: Article["id"]) {
+async function getCommentsByArticleId(articleId: ArticleParamsDto["id"]) {
   // 게시글이 존재하는지 확인
   const article = await articleRepository.findById(articleId);
   if (!article) {
@@ -20,7 +23,7 @@ async function getCommentsByArticleId(articleId: Article["id"]) {
 /**
  * 특정 상품의 댓글 목록 조회
  */
-async function getCommentsByProductId(productId: Product["id"]) {
+async function getCommentsByProductId(productId: ProductParamsDto["id"]) {
   // 상품이 존재하는지 확인
   const product = await productRepository.findById(productId);
   if (!product) {
@@ -34,9 +37,9 @@ async function getCommentsByProductId(productId: Product["id"]) {
  * 게시글에 새 댓글 작성
  */
 async function createArticleComment(
-  articleId: Article["id"],
-  content: Comment["content"],
-  userId: User["id"]
+  articleId: ArticleParamsDto["id"],
+  content: CommentDto["content"],
+  userId: UserParamsDto["id"]
 ) {
   // 게시글이 존재하는지 확인
 
@@ -56,9 +59,9 @@ async function createArticleComment(
  * 상품에 새 댓글 작성
  */
 async function createProductComment(
-  productId: Product["id"],
-  userId: User["id"],
-  content: Comment["content"]
+  productId: ProductParamsDto["id"],
+  userId: UserParamsDto["id"],
+  content: CommentDto["content"]
 ) {
   // 상품이 존재하는지 확인
   const product = await productRepository.findById(productId);
@@ -77,9 +80,9 @@ async function createProductComment(
  * 댓글 수정
  */
 async function updateComment(
-  commentId: Comment["id"],
-  userId: User["id"],
-  content: Comment["content"]
+  commentId: CommentParamsDto["id"],
+  userId: UserParamsDto["id"],
+  content: CommentDto["content"]
 ) {
   // 댓글이 존재하는지 확인
   const comment = await commentRepository.findById(commentId);
@@ -98,7 +101,10 @@ async function updateComment(
 /**
  * 댓글 삭제
  */
-async function deleteComment(commentId: Comment["id"], userId: User["id"]) {
+async function deleteComment(
+  commentId: CommentParamsDto["id"],
+  userId: UserParamsDto["id"]
+) {
   // 댓글이 존재하는지 확인
   const comment = await commentRepository.findById(commentId);
   if (!comment) {

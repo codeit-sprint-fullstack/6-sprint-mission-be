@@ -1,7 +1,7 @@
 import articleService from "../service/articleService";
 import articleLikeService from "../service/articleLikeService";
 import { NextFunction, Request, Response, RequestHandler } from "express";
-import { Article } from "@prisma/client";
+import { ArticleParamsDto } from "../dtos/article.dto";
 
 // 게시글 목록 조회
 const getArticles = async (
@@ -45,7 +45,7 @@ const getArticles = async (
 
 // 게시글 상세 조회
 const getArticleById = async (
-  req: Request<{ articleId: Article["id"] }>,
+  req: Request<{ articleId: ArticleParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -71,8 +71,9 @@ const createArticle: RequestHandler = async (req, res, next) => {
     const article = await articleService.createArticle({
       title,
       content,
-      userId,
       image: imagePaths,
+      userId,
+      likes: 0,
     });
     res
       .status(201)
@@ -128,7 +129,7 @@ const updateArticle: RequestHandler = async (req, res, next) => {
 
 // 게시글 삭제
 const deleteArticle = async (
-  req: Request<{ articleId: Article["id"] }>,
+  req: Request<{ articleId: ArticleParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -146,7 +147,7 @@ const deleteArticle = async (
 
 // 좋아요 누르기
 const likeArticle = async (
-  req: Request<{ articleId: Article["id"] }>,
+  req: Request<{ articleId: ArticleParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -164,7 +165,7 @@ const likeArticle = async (
 
 // 좋아요 취소
 const unlikeArticle = async (
-  req: Request<{ articleId: Article["id"] }>,
+  req: Request<{ articleId: ArticleParamsDto["id"] }>,
   res: Response,
   next: NextFunction
 ) => {

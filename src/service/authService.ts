@@ -12,13 +12,12 @@ import {
   ServerError,
   ValidationError,
 } from "../types/commonError";
-import { User } from "@prisma/client";
+import { UserDto, UserParamsDto } from "../dtos/user.dto";
 
 // 비밀번호 검증 함수
 async function verifyPassword(inputPassword: string, storedPassword: string) {
   try {
     const isMatch = await bcrypt.compare(inputPassword, storedPassword);
-    console.log("✅ bcrypt.compare 결과:", isMatch);
 
     if (!isMatch) {
       const error = new AuthenticationError("비밀번호가 일치하지 않습니다.");
@@ -31,13 +30,13 @@ async function verifyPassword(inputPassword: string, storedPassword: string) {
 }
 
 // 민감한 정보 필터링
-function filterSensitiveUserData(user: User) {
+function filterSensitiveUserData(user: UserDto) {
   const { encryptedPassword, refreshToken, ...rest } = user;
   return rest;
 }
 
 // 로그인
-async function signIn(email: User["email"], password: string) {
+async function signIn(email: string, password: string) {
   try {
     const user = await userRepository.findByEmail(email);
     if (!user) {
@@ -58,7 +57,7 @@ async function signIn(email: User["email"], password: string) {
 
 // 토큰 생성
 // type에 따라 access, refresh 토큰 발급
-function createToken(userId: User["id"], type: "access" | "refresh") {
+function createToken(userId: string, type: "access" | "refresh") {
   const payload = { userId };
   const token = jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: type === "refresh" ? REFRESH_TOKEN_TTL : ACCESS_TOKEN_TTL,
@@ -67,10 +66,7 @@ function createToken(userId: User["id"], type: "access" | "refresh") {
 }
 
 // 토큰 재발급 (Sliding Session)
-async function refreshUserToken(
-  userId: User["id"],
-  currentRefreshToken?: string
-) {
+async function refreshUserToken(userId: string, currentRefreshToken?: string) {
   const user = await userRepository.findById(userId);
 
   if (!user || user.refreshToken !== currentRefreshToken) {
@@ -101,7 +97,7 @@ async function refreshUserToken(
 
 // 비밀번호 변경
 async function changePassword(
-  userId: User["id"],
+  userId: string,
   currentPassword: string,
   newPassword: string
 ) {
@@ -143,7 +139,7 @@ async function changePassword(
 }
 
 // 로그아웃
-async function logout(userId: User["id"]) {
+async function logout(userId: UserParamsDto["id"]) {
   try {
     // 사용자의 refreshToken을 null로 업데이트
     await userRepository.update(userId, { refreshToken: undefined });

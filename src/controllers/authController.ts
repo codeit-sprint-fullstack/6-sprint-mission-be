@@ -1,11 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import authService from "../service/authService";
 import userService from "../service/userService";
-import { User } from "@prisma/client";
+import { UserSignInDto, UserSignUpDto } from "../dtos/user.dto";
 
 // 로그인
 const signIn = async (
-  req: Request<{}, {}, { email: User["email"]; password: string }>,
+  req: Request<{}, {}, UserSignInDto>,
   res: Response,
   next: NextFunction
 ) => {
@@ -39,11 +39,7 @@ const logOut: RequestHandler = async (req, res, next) => {
 
 // 회원가입
 const signUp = async (
-  req: Request<
-    {},
-    {},
-    { nickname: User["nickname"]; email: User["email"]; password: string }
-  >,
+  req: Request<{}, {}, UserSignUpDto>,
   res: Response,
   next: NextFunction
 ) => {

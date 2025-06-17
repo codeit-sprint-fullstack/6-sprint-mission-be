@@ -1,10 +1,16 @@
-import { Article, Comment, Product } from "@prisma/client";
 import { prisma } from "../db/prisma/client.prisma";
+import { ArticleParamsDto } from "../dtos/article.dto";
+import {
+  CommentCreateDto,
+  CommentDto,
+  CommentParamsDto,
+} from "../dtos/comment.dto";
+import { ProductParamsDto } from "../dtos/product.dto";
 
 /**
  * 특정 게시글의 댓글 목록 조회
  */
-const findByArticleId = async (articleId: Article["id"]) => {
+const findByArticleId = async (articleId: ArticleParamsDto["id"]) => {
   const comments = await prisma.comment.findMany({
     where: { articleId },
     orderBy: { createdAt: "desc" },
@@ -30,7 +36,7 @@ const findByArticleId = async (articleId: Article["id"]) => {
 /**
  * 특정 상품의 댓글 목록 조회
  */
-const findByProductId = async (productId: Product["id"]) => {
+const findByProductId = async (productId: ProductParamsDto["id"]) => {
   const comments = await prisma.comment.findMany({
     where: {
       productId,
@@ -63,10 +69,7 @@ const findByProductId = async (productId: Product["id"]) => {
 /**
  * 댓글 생성
  */
-const create = async (
-  data: Pick<Comment, "content" | "userId"> &
-    Partial<Pick<Comment, "articleId" | "productId">>
-) => {
+const create = async (data: CommentCreateDto) => {
   return prisma.comment.create({
     data,
   });
@@ -75,7 +78,7 @@ const create = async (
 /**
  * 댓글 상세 조회
  */
-const findById = async (id: Comment["id"]) => {
+const findById = async (id: CommentParamsDto["id"]) => {
   return prisma.comment.findUnique({
     where: {
       id,
@@ -95,7 +98,10 @@ const findById = async (id: Comment["id"]) => {
 /**
  * 댓글 수정
  */
-const update = async (id: Comment["id"], data: Pick<Comment, "content">) => {
+const update = async (
+  id: CommentParamsDto["id"],
+  data: Pick<CommentDto, "content">
+) => {
   return prisma.comment.update({
     where: {
       id,
@@ -107,7 +113,7 @@ const update = async (id: Comment["id"], data: Pick<Comment, "content">) => {
 /**
  * 댓글 삭제
  */
-const remove = async (id: Comment["id"]) => {
+const remove = async (id: CommentParamsDto["id"]) => {
   return prisma.comment.delete({
     where: {
       id,

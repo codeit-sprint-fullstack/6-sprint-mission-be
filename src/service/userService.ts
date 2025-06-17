@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import userRepository from "../repositories/userRepository";
 import authService from "./authService";
-import { User } from "@prisma/client";
 import {
   DatabaseError,
   NotFoundError,
   ValidationError,
 } from "../types/commonError";
+import { UserParamsDto, UserSignUpDto, UserUpdateDto } from "../dtos/user.dto";
 
 // 패스워드 암호화
 function hashPassword(password: string) {
@@ -14,11 +14,7 @@ function hashPassword(password: string) {
 }
 
 // 회원가입
-async function createUser(user: {
-  nickname: string;
-  email: string;
-  password: string;
-}) {
+async function createUser(user: UserSignUpDto) {
   try {
     // 중복 유저 체크
     const existedUser = await userRepository.findByEmail(user.email);
@@ -50,7 +46,7 @@ async function createUser(user: {
 }
 
 // 유저 id로 조회
-async function getUserById(id: string) {
+async function getUserById(id: UserParamsDto["id"]) {
   const user = await userRepository.findById(id);
 
   if (!user) {
@@ -63,10 +59,8 @@ async function getUserById(id: string) {
 
 // 유저 정보 업데이트
 async function updateUser(
-  id: string,
-  data: Partial<
-    Pick<User, "nickname" | "email" | "encryptedPassword" | "refreshToken">
-  >
+  id: UserParamsDto["id"],
+  data: Partial<UserUpdateDto>
 ) {
   const updatedUser = await userRepository.update(id, data);
   return authService.filterSensitiveUserData(updatedUser);
