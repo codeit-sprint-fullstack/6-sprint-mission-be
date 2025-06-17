@@ -88,7 +88,6 @@ async function create(articleData: ArticleCreateDto) {
   return prisma.article.create({
     data: {
       ...articleData,
-      likes: articleData.likes || 0,
     },
   });
 }
@@ -107,7 +106,6 @@ async function update(
     where: { id },
     data: {
       ...data,
-      likes: data.likes || 0,
     },
   });
 }

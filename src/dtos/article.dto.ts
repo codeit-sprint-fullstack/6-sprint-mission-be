@@ -13,7 +13,7 @@ export type ArticleParamsDto = {
   id: string;
 };
 
-export type ArticleCreateDto = Omit<ArticleDto, "id"> & {
+export type ArticleCreateDto = Omit<ArticleDto, "id" | "likes"> & {
   userId: UserParamsDto["id"];
 };
 

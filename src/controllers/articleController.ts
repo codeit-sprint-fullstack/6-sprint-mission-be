@@ -73,7 +73,6 @@ const createArticle: RequestHandler = async (req, res, next) => {
       content,
       images: imagePaths,
       userId,
-      likes: 0,
     });
     res
       .status(201)

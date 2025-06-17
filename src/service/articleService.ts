@@ -128,7 +128,6 @@ async function createArticle({
     content,
     images,
     userId,
-    likes: 0,
   });
 }
 

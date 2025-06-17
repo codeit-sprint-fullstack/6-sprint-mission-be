@@ -252,9 +252,6 @@ const likeProduct = async (
     const productId = req.params.productId;
     const userId = req.auth!.userId;
 
-    console.log("userId", userId);
-    console.log("productId", productId);
-
     const liked = await prisma.$transaction([
       prisma.productLike.create({
         data: { userId, productId },

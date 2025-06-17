@@ -80,7 +80,6 @@ async function create(productData: ProductCreateDto) {
   return prisma.product.create({
     data: {
       ...productData,
-      likes: productData.likes || 0,
     },
   });
 }
@@ -93,7 +92,6 @@ async function update(
     where: { id },
     data: {
       ...data,
-      likes: data.likes || 0,
     },
   });
 }
