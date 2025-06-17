@@ -1,5 +1,5 @@
 import { Comment, User } from "../generated/prisma/index.js";
-import commentRepository from "../repositories/commentRepository.js";
+import commentRepository from "../repositories/commentRepository";
 
 async function createComment(
   type: "article" | "item",

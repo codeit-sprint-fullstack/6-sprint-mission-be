@@ -8,17 +8,17 @@ dotenv.config();
 // }
 
 const verifyAccessToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET!,
   algorithms: ["HS256"],
   requestProperty: "auth", //필요?
 });
 
 const verifyRefreshToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET!,
   algorithms: ["HS256"],
   getToken: (req) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader) return null;
+    if (!authHeader) return undefined;
     return authHeader.split(" ")[1];
   },
 });

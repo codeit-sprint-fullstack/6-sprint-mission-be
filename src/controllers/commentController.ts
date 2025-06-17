@@ -1,7 +1,8 @@
-import { UpdateCommentDto } from "../dtos/comment.dto.js";
-import auth from "../middlewares/auth.js";
-import commentService from "../services/commentService.js";
+import { UpdateCommentDto } from "../dtos/comment.dto";
+import auth from "../middlewares/auth";
+import commentService from "../services/commentService";
 import express, { NextFunction, Request, Response } from "express";
+import { TError } from "../types/error.js";
 
 const commentController = express.Router();
 

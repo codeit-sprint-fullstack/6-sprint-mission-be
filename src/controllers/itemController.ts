@@ -1,8 +1,11 @@
 import commentService from "../services/commentService";
 import auth from "../middlewares/auth";
-import ItemService from "../services/itemService";
+import itemService from "../services/itemService";
 import express, { Request, Response, NextFunction } from "express";
 import uploads from "../middlewares/multer";
+import { TError } from "../types/error";
+import { CreateItemDto, UpdateItemDto } from "../dtos/item.dto";
+import { CreateCommentDto } from "../dtos/comment.dto";
 
 const itemController = express.Router();
 
@@ -41,7 +44,7 @@ itemController.get(
   ) => {
     try {
       const { keyword, orderBy } = req.query;
-      const items = await ItemService.getItems(keyword, orderBy);
+      const items = await itemService.getItems(keyword, orderBy);
       res.status(200).json(items);
     } catch (error) {
       next(error);
@@ -71,11 +74,11 @@ itemController.get(
 itemController.get(
   "/:id",
   auth.verifyAccessToken,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
       const userId = req.auth?.userId as string;
-      const items = await ItemService.getById(id, userId);
+      const items = await itemService.getById(id, userId);
       res.status(200).json(items);
     } catch (error) {
       next(error);
@@ -121,7 +124,11 @@ itemController.post(
   "/",
   uploads.array("images", 3),
   auth.verifyAccessToken,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{}, {}, CreateItemDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       let { name, description, price, tags } = req.body;
       const userId = req.auth?.userId as string;
@@ -141,7 +148,7 @@ itemController.post(
       if (files.length > 0) {
         imagePaths = files.map((file) => `/uploads/${file.filename}`);
       }
-      const item = await ItemService.createItem({
+      const item = await itemService.createItem({
         name,
         description,
         price,
@@ -200,12 +207,16 @@ itemController.patch(
   "/:id",
   auth.verifyAccessToken,
   uploads.array("images", 3),
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<{ id: string }, {}, UpdateItemDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const id = req.params.id;
       let { name, description, price, tags } = req.body;
       const userId = req.auth?.userId as string;
-      const item = await ItemService.getById(id, userId);
+      const item = await itemService.getById(id, userId);
       if (!item) {
         const error = new Error(
           "수정하려는 물건이 존재하지 않습니다."
@@ -231,7 +242,7 @@ itemController.patch(
       if (files.length > 0) {
         imagePaths = files.map((file) => `/uploads/${file.filename}`);
       }
-      const updatedItem = await ItemService.patchItem(id, {
+      const updatedItem = await itemService.patchItem(id, {
         name,
         description,
         price,
@@ -266,12 +277,12 @@ itemController.patch(
 itemController.delete(
   "/:id",
   auth.verifyAccessToken,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
       const userId = req.auth?.userId as string;
 
-      const item = await ItemService.getById(id, userId);
+      const item = await itemService.getById(id, userId);
       if (!item) {
         const error = new Error(
           "삭제하려는 물건이 존재하지 않습니다."
@@ -286,7 +297,7 @@ itemController.delete(
         error.code = 401;
         throw error;
       }
-      await ItemService.deleteItem(id);
+      await itemService.deleteItem(id);
       res.status(204).send();
     } catch (error) {
       next(error);
@@ -324,7 +335,11 @@ itemController.delete(
 itemController.post(
   "/:id/comments",
   auth.verifyAccessToken,
-  async (req, res, next) => {
+  async (
+    req: Request<{ id: string }, {}, CreateCommentDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const id = req.params.id;
       const { content } = req.body;
@@ -373,7 +388,7 @@ itemController.post(
     try {
       const id = req.params.id;
       const userId = req.auth?.userId as string;
-      const createdFavorite = await ItemService.postFavorite(id, userId);
+      const createdFavorite = await itemService.postFavorite(id, userId);
       res.status(201).json(createdFavorite);
     } catch (error) {
       next(error);
@@ -406,7 +421,7 @@ itemController.delete(
     try {
       const id = req.params.id;
       const userId = req.auth?.userId as string;
-      const deletedFavorite = await ItemService.deleteFavorite(id, userId);
+      const deletedFavorite = await itemService.deleteFavorite(id, userId);
       res.status(201).json(deletedFavorite);
     } catch (error) {
       next(error);

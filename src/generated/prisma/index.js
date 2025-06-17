@@ -188,7 +188,8 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.7.0",
@@ -197,12 +198,11 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "value": "postgresql://pandamarket_3z2r_user:2i5vD90Jz0m6zlP34KaP82PnLmmmDqsD@dpg-d18fjr0dl3ps738ah3d0-a.singapore-postgres.render.com/pandamarket_3z2r?schema=public"
       }
     }
   },

@@ -1,7 +1,8 @@
 import { CreateUserDto, LoginUserDto } from "../dtos/user.dto.js";
-import auth from "../middlewares/auth.js";
-import userService from "../services/userService.js";
+import auth from "../middlewares/auth";
+import userService from "../services/userService";
 import express, { NextFunction, Request, Response } from "express";
+import { TError } from "../types/error.js";
 
 const userController = express.Router();
 

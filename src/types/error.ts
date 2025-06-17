@@ -1,1 +1,1 @@
-type TError = Error & { code: number };
+export type TError = Error & { code: number };
