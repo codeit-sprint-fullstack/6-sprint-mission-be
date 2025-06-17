@@ -29,8 +29,9 @@
   },
   "scripts": {
     "dev": "ts-node-dev --respawn src/app.ts",
-    "build": "tsc",
-    "start": "node --enable-source-maps dist/app.js"
+    "build": "prisma generate && tsc",
+    "start": "node --enable-source-maps dist/app.js",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "schema": "src/db/prisma/schema.prisma"
