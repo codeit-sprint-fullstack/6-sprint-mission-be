@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+import { ArticleResponseDto } from '../Types/article';
 
 const prisma = new PrismaClient();
 
 const articleRepository = {
-  createArticle: async (userId, title, content, images) => {
+  createArticle: async (userId: string, title: string, content: string, images: string[]): Promise<ArticleResponseDto> => {
     return prisma.article.create({
       data: {
         userId,
@@ -11,22 +12,26 @@ const articleRepository = {
         content,
         images,
       },
-    });
+    }) as unknown as ArticleResponseDto;
   },
 
-  findAllArticles: async (sort, search, skip, limit) => {
-    const orderBy = {};
+  findAllArticles: async (
+    sort: string,
+    search: string | undefined,
+    skip: number,
+    limit: number
+  ): Promise<ArticleResponseDto[]> => {
+    const orderBy: any = {};
     if (sort === 'like') {
       orderBy._count = { likes: 'desc' };
     } else {
-      orderBy.createdAt = 'desc'; 
+      orderBy.createdAt = 'desc';
     }
 
-    // NaN 방지 처리
     if (isNaN(skip) || skip < 0) skip = 0;
     if (isNaN(limit) || limit < 1) limit = 10;
 
-    const where = {};
+    const where: any = {};
     if (search) {
       where.OR = [
         { title: { contains: search } },
@@ -50,11 +55,10 @@ const articleRepository = {
       orderBy,
       skip,
       take: limit,
-    });
+    }) as unknown as ArticleResponseDto[];
   },
 
-
-  findArticleById: async (id) => {
+  findArticleById: async (id: number): Promise<ArticleResponseDto | null> => {
     return prisma.article.findUnique({
       where: { id },
       include: {
@@ -76,10 +80,10 @@ const articleRepository = {
           },
         },
       },
-    });
+    }) as unknown as ArticleResponseDto | null;
   },
 
-  updateArticle: async (id, title, content, images) => {
+  updateArticle: async (id: number, title: string, content: string, images: string[]): Promise<ArticleResponseDto> => {
     return prisma.article.update({
       where: { id },
       data: {
@@ -88,14 +92,14 @@ const articleRepository = {
         images,
         updatedAt: new Date(),
       },
-    });
+    }) as unknown as ArticleResponseDto;
   },
 
-  deleteArticle: async (id) => {
-    return prisma.article.delete({
+  deleteArticle: async (id: number): Promise<void> => {
+    await prisma.article.delete({
       where: { id },
     });
   },
 };
 
-export default articleRepository;
+export default articleRepository; 

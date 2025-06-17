@@ -1,17 +1,23 @@
-import articleRepository from '../repositories/articleRepository.js';
+import articleRepository from '../repositories/article.repository';
+import { ArticleResponseDto, CreateArticleDto, UpdateArticleDto } from '../Types/article';
 
 const articleService = {
-  createArticle: async (userId, title, content, images) => {
+  createArticle: async (userId: string, title: string, content: string, images: string[]): Promise<ArticleResponseDto> => {
     return articleRepository.createArticle(userId, title, content, images);
   },
 
-  getArticles: async (sort, search, page, limit) => {
+  getArticles: async (
+    sort: string,
+    search: string | undefined,
+    page: number,
+    limit: number
+  ): Promise<ArticleResponseDto[]> => {
     const skip = (page - 1) * limit;
     const articles = await articleRepository.findAllArticles(sort, search, skip, limit);
     return articles;
   },
 
-  getArticleById: async (id) => {
+  getArticleById: async (id: number): Promise<ArticleResponseDto> => {
     const article = await articleRepository.findArticleById(id);
     if (!article) {
       throw { status: 404, message: '게시글을 찾을 수 없습니다.' };
@@ -19,7 +25,13 @@ const articleService = {
     return article;
   },
 
-  updateArticle: async (id, userId, title, content, images) => {
+  updateArticle: async (
+    id: number,
+    userId: string,
+    title: string,
+    content: string,
+    images: string[]
+  ): Promise<ArticleResponseDto> => {
     const article = await articleRepository.findArticleById(id);
     if (!article) {
       throw { status: 404, message: '게시글을 찾을 수 없습니다.' };
@@ -30,7 +42,7 @@ const articleService = {
     return articleRepository.updateArticle(id, title, content, images);
   },
 
-  deleteArticle: async (id, userId) => {
+  deleteArticle: async (id: number, userId: string): Promise<void> => {
     const article = await articleRepository.findArticleById(id);
     if (!article) {
       throw { status: 404, message: '게시글을 찾을 수 없습니다.' };
@@ -38,8 +50,8 @@ const articleService = {
     if (article.userId !== userId) {
       throw { status: 403, message: '게시글 삭제 권한이 없습니다.' };
     }
-    return articleRepository.deleteArticle(id);
+    await articleRepository.deleteArticle(id);
   },
 };
 
-export default articleService;
+export default articleService; 
