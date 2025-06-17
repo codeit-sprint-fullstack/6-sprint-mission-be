@@ -3,7 +3,11 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const likeRepository = {
-  createLike: async (userId, articleId = null, productId = null) => {
+  createLike: async (
+    userId: string,
+    articleId: number | null = null,
+    productId: number | null = null
+  ) => {
     return prisma.like.create({
       data: {
         userId,
@@ -13,10 +17,12 @@ const likeRepository = {
     });
   },
 
-  deleteLike: async (userId, articleId = null, productId = null) => {
-    const where = {
-      userId,
-    };
+  deleteLike: async (
+    userId: string,
+    articleId: number | null = null,
+    productId: number | null = null
+  ) => {
+    const where: any = { userId };
     if (articleId) {
       where.articleId = articleId;
     }
@@ -28,19 +34,19 @@ const likeRepository = {
     });
   },
 
-  countLikesByArticleId: async (articleId) => {
+  countLikesByArticleId: async (articleId: number) => {
     return prisma.like.count({
       where: { articleId },
     });
   },
 
-  countLikesByProductId: async (productId) => {
+  countLikesByProductId: async (productId: number) => {
     return prisma.like.count({
       where: { productId },
     });
   },
 
-  findLikeByUserIdAndArticleId: async (userId, articleId) => {
+  findLikeByUserIdAndArticleId: async (userId: string, articleId: number) => {
     return prisma.like.findUnique({
       where: {
         userId_articleId: {
@@ -51,7 +57,7 @@ const likeRepository = {
     });
   },
 
-  findLikeByUserIdAndProductId: async (userId, productId) => {
+  findLikeByUserIdAndProductId: async (userId: string, productId: number) => {
     return prisma.like.findUnique({
       where: {
         userId_productId: {
@@ -63,4 +69,4 @@ const likeRepository = {
   },
 };
 
-export default likeRepository;
+export default likeRepository; 

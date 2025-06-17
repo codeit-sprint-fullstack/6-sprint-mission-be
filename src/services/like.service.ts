@@ -1,10 +1,8 @@
-import prisma from '../db/prisma.js';
-import likeRepository from '../repositories/likeRepository.js';
+import prisma from '../db/prisma';
+import likeRepository from '../repositories/like.repository';
 
 const likeService = {
-  addLike: async (userId, articleId, productId) => {
-    console.log("articleId:", articleId)
-    console.log("productId:",productId)
+  addLike: async (userId: string, articleId: number | null, productId: number | null) => {
     return prisma.$transaction(async (tx) => {
       if (!articleId && !productId) {
         throw { status: 400, message: '게시글 ID 또는 상품 ID 중 하나는 필수입니다.' };
@@ -52,7 +50,7 @@ const likeService = {
     });
   },
 
-  removeLike: async (userId, articleId, productId) => {
+  removeLike: async (userId: string, articleId: number | null, productId: number | null) => {
     return prisma.$transaction(async (tx) => {
       if (!articleId && !productId) {
         throw { status: 400, message: '게시글 ID 또는 상품 ID 중 하나는 필수입니다.' };
@@ -71,13 +69,13 @@ const likeService = {
     });
   },
 
-  getArticleLikeCount: async (articleId) => {
+  getArticleLikeCount: async (articleId: number) => {
     return likeRepository.countLikesByArticleId(articleId); 
   },
 
-  getProductLikeCount: async (productId) => {
+  getProductLikeCount: async (productId: number) => {
     return likeRepository.countLikesByProductId(productId); 
   },
 };
 
-export default likeService;
+export default likeService; 
