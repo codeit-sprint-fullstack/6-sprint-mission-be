@@ -1,17 +1,18 @@
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxOWY5ZDYxNy1kYTA5LTRjZTUtYTk3ZS02ZDViNDk5ZmM4ZjEiLCJpYXQiOjE3NDk4MzAxMTksImV4cCI6MTc0OTgzMzcxOX0.hVVyGhQZQXDB8FDxlD2KfMLaZfoCV3pCVg0L7lW5kag
+
 ### 회원가입
-POST http://localhost:5050/auth/signUp
+POST http://localhost:8080/auth/signUp
 Content-Type: application/json
 
 {
-  "email": "test1@test.com",
-  "nickname": "test1",
+  "email": "test@test.com",
+  "nickname": "test",
   "password": "testtest",
   "passwordConfirmation": "testtest"
 }
 
-
 ### 로그인
-POST http://localhost:5050/auth/signIn
+POST http://localhost:8080/auth/signIn
 Content-Type: application/json
 
 {
@@ -20,7 +21,7 @@ Content-Type: application/json
 }
 
 ### 로그인2
-POST http://localhost:5050/auth/signIn
+POST http://localhost:8080/auth/signIn
 Content-Type: application/json
 
 {
@@ -29,9 +30,9 @@ Content-Type: application/json
 }
 
 ### 토큰 갱신
-POST http://localhost:5050/auth/refresh-token
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA0MzM2MiwiZXhwIjoxNzQ4MjUyOTYyfQ.3RQSddbUozZEJtvkwkbHhnRreLzeny7gwBxiJHAyCMA
+POST http://localhost:8080/auth/refresh-token
+Cookie: refreshToken={{token}}
 
 ### 유저 정보 가져오기
-GET http://localhost:5050/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NzA1MTk4NCwiZXhwIjoxNzQ3MDU1NTg0fQ.igu4onWJD8seDHqBODpF9b5hp72UAcbdqjNp-DVvZCg
+GET http://localhost:8080/users/me
+Cookie: accessToken={{token}}

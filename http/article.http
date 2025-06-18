@@ -1,24 +1,26 @@
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxOWY5ZDYxNy1kYTA5LTRjZTUtYTk3ZS02ZDViNDk5ZmM4ZjEiLCJpYXQiOjE3NDk4Mjk3NTcsImV4cCI6MTc0OTgzMzM1N30.YV_QSmOkZaeNrg-BCjbwVpof3cy1LxoMpaRCP7hcv8g
+
 ### 게시글 등록
-POST http://localhost:5050/articles
+POST http://localhost:8080/articles
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
+Cookie: accessToken={{accessToken}}
 
 {
-  "content": "게시글 내용입니다.",
-  "title": "게시글 제목입니다."
+  "title": "게시글 제목입니다.",
+  "content": "게시글 내용입니다."
 }
 
 ### 게시글 목록 조회
-GET http://localhost:5050/articles?page=1&pageSize=10
+GET http://localhost:8080/articles?page=1&pageSize=10
 
 ### 게시글 상세 조회
-GET http://localhost:5050/articles/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
+GET http://localhost:8080/articles/2
+Cookie: accessToken={{accessToken}}
 
 ### 게시글 수정
-PATCH http://localhost:5050/articles/1
+PATCH http://localhost:8080/articles/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
+Cookie: accessToken={{accessToken}}
 
 {
   "title": "수정된 게시글",
@@ -26,38 +28,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhd
 }
 
 ### 게시글 삭제
-DELETE http://localhost:5050/articles/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
+DELETE http://localhost:8080/articles/2
+Cookie: accessToken={{accessToken}}
 
 ### 게시글 좋아요
-POST http://localhost:5050/articles/1/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
+POST http://localhost:8080/articles/1/like
+Cookie: accessToken={{accessToken}}
 
 ### 게시글 좋아요 취소
-DELETE  http://localhost:5050/articles/1/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
-
-### 댓글 목록 조회
-GET http://localhost:5050/articles/1/comments
-
-### 댓글 등록
-POST http://localhost:5050/articles/1/comments
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
-
-{
-  "content": "뎃글댓글"
-}
-
-### 댓글 수정
-PATCH http://localhost:5050/comments/11
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
-
-{
-  "content": "수정된 댓글"
-}
-
-### 댓글 삭제
-DELETE http://localhost:5050/comments/9
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc0NzEwMjYzNywiZXhwIjoxNzQ3MTA2MjM3fQ.y10Fgb7tEbs4PdeZRmrpO8VJj9r3QY5qG6zgQMxQg0E
+DELETE  http://localhost:8080/articles/1/like
+Cookie: accessToken={{accessToken}}
