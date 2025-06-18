@@ -3,9 +3,9 @@ POST http://localhost:3000/auth/signUp
 Content-Type: application/json
 
 {
-    "email": "test2@test.com",
-    "nickname": "test2",
-    "password": "2222"
+    "email": "test1@test.com",
+    "nickname": "test1",
+    "password": "1111"
 }
 
 ### 로그인 유저1
