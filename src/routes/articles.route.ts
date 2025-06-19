@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 import articleController from "../controllers/articleController";
 import auth from "../middlewares/users/auth";
 
@@ -10,8 +11,10 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    const uniqueName = Date.now() + "-" + file.originalname;
-    cb(null, uniqueName);
+    // UUID를 사용하여 안전한 파일명 생성
+    const ext = file.originalname.split(".").pop();
+    const filename = `${uuidv4()}.${ext}`;
+    cb(null, filename);
   },
 });
 
