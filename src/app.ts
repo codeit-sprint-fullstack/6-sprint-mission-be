@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 import favoriteController from "./controllers/favoriteController";
 import { swaggerSpec } from "./swagger";
 import swaggerUi from "swagger-ui-express";
-import { errorHandler } from "./middlewares/erroHandler";
+import { errorHandler } from "./middlewares/errorHandler";
 
 dotenv.config();
 
