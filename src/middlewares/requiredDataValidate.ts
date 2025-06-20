@@ -1,14 +1,8 @@
 import { RequestHandler } from "express";
 import { BadRequestError } from "../types/errors";
+import { productDto } from "../dtos/product.dto";
 
-type TRequiredData = {
-  name: string;
-  description: string;
-  price: number;
-  tags: string;
-};
-
-const requiredDataValidate: RequestHandler<{}, {}, TRequiredData> = (
+const requiredDataValidate: RequestHandler<{}, {}, productDto> = (
   req,
   res,
   next
