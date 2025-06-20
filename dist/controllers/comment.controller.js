@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,17 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteComment = exports.updateComment = exports.createComment = exports.getComments = void 0;
-const client_js_1 = __importDefault(require("../db/prisma/client.js"));
+import prisma from "../db/prisma/client.js";
 // 댓글 목록 조회
-const getComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const getComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const productId = parseInt(req.params.productId);
-        const comments = yield client_js_1.default.comment.findMany({
+        const comments = yield prisma.comment.findMany({
             where: { productId },
             orderBy: { createdAt: "desc" },
             include: {
@@ -37,14 +31,18 @@ const getComments = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json({ message: "댓글 조회 실패" });
     }
 });
-exports.getComments = getComments;
 // 댓글 작성
-const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const productId = parseInt(req.params.productId);
-        const userId = req.user.id;
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         const { content } = req.body;
-        const comment = yield client_js_1.default.comment.create({
+        if (!userId) {
+            res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+            return;
+        }
+        const comment = yield prisma.comment.create({
             data: {
                 content,
                 productId,
@@ -66,19 +64,25 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: "댓글 작성 실패" });
     }
 });
-exports.createComment = createComment;
 // 댓글 수정
-const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const commentId = parseInt(req.params.commentId);
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         const { content } = req.body;
-        const existing = yield client_js_1.default.comment.findUnique({
+        if (!userId) {
+            res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+            return;
+        }
+        const existing = yield prisma.comment.findUnique({
             where: { id: commentId },
         });
-        if (!existing || existing.userId !== req.user.id) {
-            return res.status(403).json({ message: "수정 권한이 없습니다." });
+        if (!existing || existing.userId !== userId) {
+            res.status(403).json({ message: "수정 권한이 없습니다." });
+            return;
         }
-        const updated = yield client_js_1.default.comment.update({
+        const updated = yield prisma.comment.update({
             where: { id: commentId },
             data: { content },
         });
@@ -89,18 +93,24 @@ const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: "댓글 수정 실패" });
     }
 });
-exports.updateComment = updateComment;
 // 댓글 삭제
-const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const commentId = parseInt(req.params.commentId);
-        const existing = yield client_js_1.default.comment.findUnique({
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+        if (!userId) {
+            res.status(401).json({ message: "인증되지 않은 사용자입니다." });
+            return;
+        }
+        const existing = yield prisma.comment.findUnique({
             where: { id: commentId },
         });
-        if (!existing || existing.userId !== req.user.id) {
-            return res.status(403).json({ message: "삭제 권한이 없습니다." });
+        if (!existing || existing.userId !== userId) {
+            res.status(403).json({ message: "삭제 권한이 없습니다." });
+            return;
         }
-        yield client_js_1.default.comment.delete({
+        yield prisma.comment.delete({
             where: { id: commentId },
         });
         res.json({ message: "댓글 삭제 성공" });
@@ -110,4 +120,3 @@ const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: "댓글 삭제 실패" });
     }
 });
-exports.deleteComment = deleteComment;

@@ -1,16 +1,11 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const auth_route_js_1 = __importDefault(require("./auth.route.js"));
-const product_route_js_1 = __importDefault(require("./product.route.js"));
-const comment_route_js_1 = __importDefault(require("./comment.route.js"));
-const image_route_js_1 = __importDefault(require("./image.route.js"));
-const router = express_1.default.Router();
-router.use("/auth", auth_route_js_1.default);
-router.use("/products", product_route_js_1.default);
-router.use("/products", comment_route_js_1.default);
-router.use("/images", image_route_js_1.default);
-exports.default = router;
+import express from "express";
+import authRoutes from "./auth.route.js";
+import productRoutes from "./product.route.js";
+import commentRouter from "./comment.route.js";
+import imageRouter from "./image.route.js";
+const router = express.Router();
+router.use("/auth", authRoutes);
+router.use("/products", productRoutes);
+router.use("/products", commentRouter);
+router.use("/images", imageRouter);
+export default router;
