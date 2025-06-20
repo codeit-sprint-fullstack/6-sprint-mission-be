@@ -1,8 +1,8 @@
 import superstruct from 'superstruct';
 
-import { HttpException } from '../../exceptions/HttpException.js';
-import { BadRequestException } from '../../exceptions/BadRequestException.js';
-import { InternalServerErrorException } from '../../exceptions/InternalServerErrorException.js';
+import { HttpException } from '../../exceptions/HttpException';
+import { BadRequestException } from '../../exceptions/BadRequestException';
+import { InternalServerErrorException } from '../../exceptions/InternalServerErrorException';
 import { Request, Response } from 'express';
 
 export function asyncErrorHandler(handler: any) {
