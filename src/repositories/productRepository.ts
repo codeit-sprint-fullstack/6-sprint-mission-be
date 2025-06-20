@@ -1,9 +1,10 @@
-import prisma from "../config/prisma.js";
+import { Product } from "@prisma/client";
+import prisma from "../config/prisma";
 
-async function getById(id) {
+async function getById(id: Product["id"]) {
   return await prisma.product.findUnique({
     where: {
-      id: parseInt(id, 10),
+      id: id,
     },
   });
 }
@@ -14,12 +15,12 @@ async function getAll() {
     },
   });
 }
-async function save(product) {
+async function save(product: Product) {
   return await prisma.product.create({
     data: {
       name: product.name,
       description: product.description,
-      price: parseInt(product.price, 10),
+      price: product.price,
       ownerId: product.ownerId,
     },
   });

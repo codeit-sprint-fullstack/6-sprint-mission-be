@@ -1,6 +1,6 @@
+import { Review } from "@prisma/client";
 import prisma from "../config/prisma.js";
-
-async function save(review) {
+async function save(review: Review) {
   const createdReview = await prisma.review.create({
     data: {
       title: review.title,
@@ -21,10 +21,10 @@ async function save(review) {
   return createdReview;
 }
 
-async function getById(id) {
+async function getById(id: Review["id"]) {
   const review = await prisma.review.findUnique({
     where: {
-      id: parseInt(id, 10),
+      id: id,
     },
   });
   return review;
@@ -35,10 +35,10 @@ async function getAll() {
   return reviews;
 }
 
-async function update(id, review) {
+async function update(id: Review["id"], review: Review) {
   const updatedReview = await prisma.review.update({
     where: {
-      id: parseInt(id, 10),
+      id: id,
     },
     data: {
       title: review.title,
@@ -49,10 +49,10 @@ async function update(id, review) {
   return updatedReview;
 }
 
-async function deleteById(id) {
+async function deleteById(id: Review["id"]) {
   const deletedReview = await prisma.review.delete({
     where: {
-      id: parseInt(id, 10),
+      id: id,
     },
   });
   return deletedReview;

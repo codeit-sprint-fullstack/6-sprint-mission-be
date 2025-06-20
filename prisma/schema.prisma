@@ -17,11 +17,13 @@ model User {
   id                Int       @id @default(autoincrement())
   email             String    @unique
   nickName          String    @db.VarChar(10)
-  image             String?
+  password          String
   encryptedPassword String
+  image             String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   products          Product[]
+  Review            Review[]
 }
 
 model Product {
@@ -35,4 +37,18 @@ model Product {
   description   String
   name          String
   createdAt     DateTime @default(now())
+  reviews       Review[]
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  rating      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
 }

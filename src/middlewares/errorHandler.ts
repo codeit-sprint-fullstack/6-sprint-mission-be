@@ -1,4 +1,10 @@
-export default function errorHandler(error, req, res, next) {
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+const errorHandler: ErrorRequestHandler = (
+  error: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   if (error.name === "UnauthorizedError") {
     res.status(401).send("invalid token...");
   }
@@ -6,11 +12,12 @@ export default function errorHandler(error, req, res, next) {
   const status = error.code ?? 500;
 
   console.error(error);
-  return res.status(status).json({
+  res.status(status).json({
     path: req.path,
     method: req.method,
     message: error.message ?? "Internal Server Error",
     data: error.data ?? undefined,
     date: new Date(),
   });
-}
+};
+export default errorHandler;

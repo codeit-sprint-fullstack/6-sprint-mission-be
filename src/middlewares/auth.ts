@@ -1,5 +1,6 @@
 import { expressjwt } from "express-jwt";
-import reviewRepository from "../repositories/reviewRepository.js";
+import reviewRepository from "../repositories/reviewRepository";
+import { NextFunction, Request, Response } from "express";
 
 function throwUnauthorizedError() {
   const error = new Error("Unauthorized");
@@ -12,7 +13,11 @@ const verifyAccessToken = expressjwt({
   algorithms: ["HS256"],
 });
 // TODO: verifyReviewAuth 함수 추가
-async function verifyReviewAuth(req, res, next) {
+async function verifyReviewAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const { id: reviewId } = req.params;
   try {
     const review = await reviewRepository.getById(reviewId);
