@@ -19,11 +19,12 @@ const getProducts: RequestHandler<{}, {}, {}, productQueryDto> = async (
   try {
     const [products, totalCount] = await productService.getProducts(req.query);
 
-    const productsWithImages = products.map((product) => ({
-      ...product,
-      productImages: undefined,
-      images: product.productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
-    }));
+    const productsWithImages = products.map(
+      ({ productImages, ...product }) => ({
+        ...product,
+        images: productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
+      })
+    );
 
     res.status(200).json({ list: productsWithImages, totalCount });
   } catch (e) {
