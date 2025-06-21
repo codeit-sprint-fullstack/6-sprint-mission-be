@@ -1,0 +1,50 @@
+# ------------------------
+# ✅ 공통
+# ------------------------
+.DS_Store
+*.pem
+.vscode
+.github
+
+# 환경 변수
+.env*
+*.env
+
+# 로그 파일
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 커버리지
+/coverage
+
+# 빌드
+/build
+/dist
+
+# ------------------------
+# ✅ Node.js dependencies
+# ------------------------
+/node_modules
+
+# ------------------------
+# ✅ yarn / pnpm / berry
+# ------------------------
+.pnp.*
+/.pnp
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ------------------------
+# ✅ BE 관련
+prisma/dev.db
+prisma/dev.db-journal
+.env
+node_modules
+dist/*
+!BE/dist/index.js
+/src/generated/prisma
