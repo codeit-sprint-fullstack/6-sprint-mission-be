@@ -1,7 +1,7 @@
-import { prismaClient } from '../../infra/prismaClient.js';
+import { prismaClient } from '../../infra/prismaClient';
 
-import { Product } from '../../domain/Product.js';
-import { Like } from '../../domain/Like.js';
+import { Product } from '../../domain/Product';
+import { Like } from '../../domain/Like';
 
 interface IRequester {
   userId: number;

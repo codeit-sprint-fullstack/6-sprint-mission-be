@@ -70,7 +70,7 @@ ArticleRouter.get(
             articleId,
         });
 
-        return res.status(201).send(articleView);
+        res.status(201).send(articleView);
     }),
 );
 
@@ -78,7 +78,7 @@ ArticleRouter.get(
 ArticleRouter.patch(
     '/:articleId',
     AuthN(),
-    asyncErrorHandler(async (req: Request<{ articleId: number }, {}, Pick<Article, "title" | "content" | "image">>, res: Response) => {
+    asyncErrorHandler(async (req: Request, res: Response) => {
         const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
 
         const { articleId } = req.params;
@@ -91,7 +91,7 @@ ArticleRouter.patch(
             image,
         });
 
-        return res.status(201).send(articleView);
+        res.status(201).send(articleView);
     }),
 );
 
@@ -108,7 +108,7 @@ ArticleRouter.delete(
             articleId: Number(articleId),
         });
 
-        return res.status(204).send();
+        res.status(204).send();
     }),
 );
 
@@ -129,7 +129,7 @@ ArticleRouter.get(
             keyword,
         });
 
-        return res.send(articleListView);
+        res.send(articleListView);
     }),
 );
 
@@ -148,7 +148,7 @@ ArticleRouter.post(
             content,
         });
 
-        return res.status(201).send(articleCommentView);
+        res.status(201).send(articleCommentView);
     }),
 );
 
@@ -165,7 +165,7 @@ ArticleRouter.get(
             take: limit,
         });
 
-        return res.send(articleCommentListView);
+        res.send(articleCommentListView);
     }),
 );
 
@@ -182,7 +182,7 @@ ArticleRouter.post(
             articleId,
         });
 
-        return res.status(201).send(articleView);
+        res.status(201).send(articleView);
     }),
 );
 
@@ -199,6 +199,6 @@ ArticleRouter.delete(
             articleId,
         });
 
-        return res.status(201).send(articleView);
+        res.status(201).send(articleView);
     }),
 );

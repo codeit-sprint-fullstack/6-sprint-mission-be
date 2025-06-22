@@ -1,20 +1,20 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { create } from 'superstruct';
 
-import { AuthTokenManager } from '../infra/AuthTokenManager.js';
-import { asyncErrorHandler } from './utils/asyncErrorHandler.js';
-import { AuthN } from './utils/AuthN.js';
+import { AuthTokenManager } from '../infra/AuthTokenManager';
+import { asyncErrorHandler } from './utils/asyncErrorHandler';
+import { AuthN } from './utils/AuthN';
 
-import { UpdateProfileRequestStruct } from './structs/user/UpdateProfileRequestStruct.js';
-import { UpdatePasswordRequestStruct } from './structs/user/UpdatePasswordRequestStruct.js';
-import { GetMyProductListRequestStruct } from './structs/user/GetMyProductListRequestStruct.js';
-import { GetMyFavoritesProductListRequestStruct } from './structs/user/GetMyFavoritesProductListRequestStruct.js';
+import { UpdateProfileRequestStruct } from './structs/user/UpdateProfileRequestStruct';
+import { UpdatePasswordRequestStruct } from './structs/user/UpdatePasswordRequestStruct';
+import { GetMyProductListRequestStruct } from './structs/user/GetMyProductListRequestStruct';
+import { GetMyFavoritesProductListRequestStruct } from './structs/user/GetMyFavoritesProductListRequestStruct';
 
-import { GetUserProfileHandler } from '../application/user/GetUserProfileHandler.js';
-import { UpdateUserProfileHandler } from '../application/user/UpdateUserProfileHandler.js';
-import { UpdateUserPasswordHandler } from '../application/user/UpdateUserPasswordHandler.js';
-import { GetUserProductListHandler } from '../application/user/GetUserProductListHandler.js';
-import { GetUserFavoriteListHandler } from '../application/user/GetUserFavoriteListHandler.js';
+import { GetUserProfileHandler } from '../application/user/GetUserProfileHandler';
+import { UpdateUserProfileHandler } from '../application/user/UpdateUserProfileHandler';
+import { UpdateUserPasswordHandler } from '../application/user/UpdateUserPasswordHandler';
+import { GetUserProductListHandler } from '../application/user/GetUserProductListHandler';
+import { GetUserFavoriteListHandler } from '../application/user/GetUserFavoriteListHandler';
 
 export const UserRouter = express.Router();
 

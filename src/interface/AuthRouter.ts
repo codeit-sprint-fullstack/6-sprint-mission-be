@@ -91,10 +91,11 @@ AuthRouter.get('/google', asyncErrorHandler(async (req: Request, res:Response) =
 AuthRouter.get(
     '/google/callback',
     asyncErrorHandler(async (req: Request, res:Response) => {
-        const code = req.query.code;
+        const { code } = req.query;
 
         if (typeof code !== 'string') {
-          return res.status(400).send({ message: 'Invalid or missing code parameter' });
+          res.status(400).send({ message: 'Invalid or missing Google auth code' });
+          return 
         }
 
         const { accessToken, refreshToken } = await AuthByGoogleHandler.handle({

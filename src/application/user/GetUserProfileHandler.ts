@@ -1,7 +1,7 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-import { User } from '../../domain/User.js';
+import { prismaClient } from '../../infra/prismaClient';
+import { NotFoundException } from '../../exceptions/NotFoundException';
+import { ExceptionMessage } from '../../constant/ExceptionMessage';
+import { User } from '../../domain/User';
 
 interface Requester {
   userId: number;

@@ -1,8 +1,7 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { create } from 'superstruct';
 
 import { AuthTokenManager } from '../infra/AuthTokenManager';
-
 import { asyncErrorHandler } from './utils/asyncErrorHandler';
 import { AuthN } from './utils/AuthN.js';
 
@@ -13,40 +12,48 @@ import { DeleteCommentHandler } from '../application/comment/DeleteCommentHandle
 
 export const CommentRouter = express.Router();
 
-
-
-// 댓글 수정 api
+// 댓글 수정 API
 CommentRouter.patch(
-    '/:commentId',
-    AuthN(),
-    asyncErrorHandler(async (req: Request<{ commentId: string }>, res:Response) => {
-        const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
+  '/:commentId',
+  AuthN(),
+  asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
+      const { commentId } = req.params;
+      const { content } = create(req.body, UpdateCommentRequestStruct);
+      
+      if (typeof content !== 'string') {
+          throw new Error('Content is required');
+        }
 
-        const { commentId } = req.params;
-        const { content } = create(req.body, UpdateCommentRequestStruct) as { content: string };;
+      const commentView = await UpdateCommentHandler.handle(requester, {
+        commentId: Number(commentId),
+        content,
+      });
 
-        const commentView = await UpdateCommentHandler.handle(requester, {
-            commentId: Number(commentId),
-            content,
-        });
-
-        return res.send(commentView);
-    }),
+      res.send(commentView);
+    } catch (err) {
+      next(err);
+    }
+  }),
 );
 
-// 댓글 삭제 api
+// 댓글 삭제 API
 CommentRouter.delete(
-    '/:commentId',
-    AuthN(),
-    asyncErrorHandler(async (req: Request, res:Response) => {
-        const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
+  '/:commentId',
+  AuthN(),
+  asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
+      const { commentId } = req.params;
 
-        const { commentId } = req.params;
+      await DeleteCommentHandler.handle(requester, {
+        commentId: Number(commentId),
+      });
 
-        await DeleteCommentHandler.handle(requester, {
-            commentId: Number(commentId),
-        });
-
-        return res.status(204).send();
-    }),
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  }),
 );

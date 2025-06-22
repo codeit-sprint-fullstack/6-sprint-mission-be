@@ -10,8 +10,8 @@ class GoogleOAuthAdapter {
      */
     generateAuthURI() {
         const searchParams = new URLSearchParams({
-            client_id: process.env.GOOGLE_CLIENT_ID,
-            redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+            client_id: process.env.GOOGLE_CLIENT_ID ?? '',
+            redirect_uri: process.env.GOOGLE_REDIRECT_URI ?? '',
             response_type: 'code',
             scope: 'email profile',
             access_type: 'offline',
@@ -23,7 +23,7 @@ class GoogleOAuthAdapter {
     /**
      * 구글 OAuth AccessToken 발급을 요청합니다.
      */
-    async getAccessToken(code) {
+    async getAccessToken(code: string) {
         const response = await this._httpClient.post('https://oauth2.googleapis.com/token', {
             code,
             client_id: process.env.GOOGLE_CLIENT_ID,
@@ -38,7 +38,7 @@ class GoogleOAuthAdapter {
     /**
      * 구글 OAuth AccessToken을 이용해 사용자 프로필 정보를 가져옵니다.
      */
-    async getProfile(accessToken) {
+async getProfile(accessToken: string) {
         const response = await this._httpClient.get(
             'https://www.googleapis.com/oauth2/v2/userinfo',
             {

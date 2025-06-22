@@ -1,10 +1,10 @@
-import { prismaClient } from '../../infra/prismaClient.js';
+import { prismaClient } from '../../infra/prismaClient';
 
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ForbiddenException } from '../../exceptions/ForbiddenException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
+import { NotFoundException } from '../../exceptions/NotFoundException';
+import { ForbiddenException } from '../../exceptions/ForbiddenException';
+import { ExceptionMessage } from '../../constant/ExceptionMessage';
 
-import { Product } from '../../domain/Product.js';
+import { Product } from '../../domain/Product';
 
 interface IRequester {
   userId: number;

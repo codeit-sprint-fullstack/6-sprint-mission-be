@@ -1,4 +1,4 @@
-import { AuthTokenManager } from '../../infra/AuthTokenManager.js';
+import { AuthTokenManager } from '../../infra/AuthTokenManager';
 import type { Request, Response, NextFunction } from 'express';
 
 declare global {

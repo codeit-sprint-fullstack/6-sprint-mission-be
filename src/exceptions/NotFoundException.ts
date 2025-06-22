@@ -1,7 +1,7 @@
-import { HttpException } from './HttpException.js';
+import { HttpException } from './HttpException';
 
 export class NotFoundException extends HttpException {
-    constructor(name, message) {
+    constructor(name: string, message: string) {
         super({
             status: 404,
             name,
