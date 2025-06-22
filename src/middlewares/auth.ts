@@ -1,12 +1,21 @@
+import { configDotenv } from "dotenv";
+import { Request } from "express";
 import { expressjwt } from "express-jwt";
+configDotenv();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 // 토큰 인증용
 const verifyAccessToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: JWT_SECRET as string,
   algorithms: ["HS256"],
   credentialsRequired: false, // 새로고침 실패 시 처리 완화를 위해 false로 설정 (개발환경만)
   // send request용
-  getToken: (req) => {
+  getToken: (req: Request) => {
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer ")
@@ -18,18 +27,20 @@ const verifyAccessToken = expressjwt({
 });
 
 const verifyRefreshToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: JWT_SECRET as string,
   algorithms: ["HS256"],
   credentialsRequired: false, // 개발 중 새로고침 시 쿠키 누락 대응
   // 쿠키에 리프레시 토큰을 담기 때문
-  getToken: (req) => {
+  getToken: (req: Request) => {
     const token = req.cookies?.refreshToken || null;
     console.log("refreshToken from cookie:", token); // 디버깅용
     return token;
   },
 });
 
-export default {
+const auth = {
   verifyAccessToken,
   verifyRefreshToken,
 };
+
+export default auth;

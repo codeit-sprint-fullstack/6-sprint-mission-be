@@ -1,15 +1,18 @@
-import express from "express";
+// app.ts
+
+import express, { NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 import { UnauthorizedError } from "express-jwt";
 
 // 컨트롤러 연결
-import userController from "./controllers/userController.js";
-import productController from "./controllers/productController.js";
+import userController from "./controllers/userController";
+import productController from "./controllers/productController";
 import productCommentController from "./controllers/productCommentController.js";
 import favoriteController from "./controllers/favoriteController.js";
-import uploadController from "./controllers/uploadController.js";
+import uploadController from "./controllers/uploadController";
+import { AppError } from "./types/errors";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -37,12 +40,24 @@ app.use("/", productCommentController);
 app.use("/", favoriteController);
 
 // express-jwt 인증 에러 핸들링
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   if (err instanceof UnauthorizedError) {
     console.error("JWT 인증 오류:", err.message);
-    return res.status(401).json({ message: "인증이 유효하지 않습니다." });
+    res.status(401).json({ message: "인증이 유효하지 않습니다." });
+    return;
   }
   next(err);
+});
+
+// AppError 핸들링
+app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
+  if (err instanceof AppError) {
+    console.error(`[AppError] ${err.name}:`, err.message);
+    res.status(err.code || 500).json({ message: err.message, data: err.data });
+    return;
+  }
+  console.error("[Unknown Error]", err);
+  res.status(500).json({ message: "서버 내부 오류가 발생했습니다." });
 });
 
 app.listen(port, () => {
