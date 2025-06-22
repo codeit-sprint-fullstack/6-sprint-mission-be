@@ -1,13 +1,25 @@
-import { Response, NextFunction } from 'express';
-import productService from '../services/product.service';
-import { AuthRequest, ProductQueryParams } from '../Types';
+import { Response, NextFunction } from "express";
+import productService from "../services/product.service";
+import { AuthRequest } from "../Types/user";
+import { ProductQueryParams } from "../Types/product";
 
 const productController = {
-  createProduct: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  createProduct: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { name, description, price, tags, images } = req.body;
       const { userId } = req.auth!;
-      const newProduct = await productService.createProduct(userId, name, description, price, tags, images);
+      const newProduct = await productService.createProduct(
+        userId,
+        name,
+        description,
+        price,
+        tags,
+        images
+      );
       return res.status(201).json(newProduct);
     } catch (error) {
       next(error);
@@ -17,8 +29,18 @@ const productController = {
 
   getProducts: async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const { page = '1', pageSize: limit = '10', orderBy: sort = 'recent', keyword: search } = req.query as ProductQueryParams;
-      const products = await productService.getProducts(sort, search, parseInt(page), parseInt(limit));
+      const {
+        page = "1",
+        pageSize: limit = "10",
+        orderBy: sort = "recent",
+        keyword: search,
+      } = req.query as ProductQueryParams;
+      const products = await productService.getProducts(
+        sort,
+        search,
+        parseInt(page),
+        parseInt(limit)
+      );
       return res.status(200).json(products);
     } catch (error) {
       next(error);
@@ -26,7 +48,11 @@ const productController = {
     }
   },
 
-  getProductById: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  getProductById: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { productId } = req.params;
       const product = await productService.getProductById(parseInt(productId));
@@ -37,7 +63,11 @@ const productController = {
     }
   },
 
-  updateProduct: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  updateProduct: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { productId } = req.params;
       const { name, description, price, tags, images } = req.body;
@@ -58,7 +88,11 @@ const productController = {
     }
   },
 
-  deleteProduct: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  deleteProduct: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { productId } = req.params;
       const { userId } = req.auth!;
@@ -71,4 +105,4 @@ const productController = {
   },
 };
 
-export default productController; 
+export default productController;

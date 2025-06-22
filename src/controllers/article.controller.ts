@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import articleService from '../services/article.service';
+import { Request, Response, NextFunction } from "express";
+import articleService from "../services/article.service";
 import {
   ArticleResponseDto,
   CreateArticleDto,
   UpdateArticleDto,
-} from '../Types/article';
-import { AuthRequest } from '../Types';
+} from "../Types/article";
+import { AuthRequest } from "../Types/user";
 
 const articleController = {
   createArticle: async (
@@ -15,7 +15,7 @@ const articleController = {
   ): Promise<void> => {
     try {
       if (!req.auth?.userId) {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: "Unauthorized" });
         return;
       }
 
@@ -47,11 +47,11 @@ const articleController = {
 
       const page = pageParam ? parseInt(pageParam as string, 10) : 1;
       const limit = pageSizeParam ? parseInt(pageSizeParam as string, 10) : 10;
-      const sort = typeof orderByParam === 'string' ? orderByParam : 'recent';
-      const search = typeof keywordParam === 'string' ? keywordParam : '';
+      const sort = typeof orderByParam === "string" ? orderByParam : "recent";
+      const search = typeof keywordParam === "string" ? keywordParam : "";
 
       if (isNaN(page) || isNaN(limit)) {
-        res.status(400).json({ message: 'Invalid pagination parameters' });
+        res.status(400).json({ message: "Invalid pagination parameters" });
         return;
       }
 
@@ -77,12 +77,13 @@ const articleController = {
       const articleId = parseInt(req.params.articleId, 10);
 
       if (isNaN(articleId)) {
-        res.status(400).json({ message: 'Invalid article ID' });
+        res.status(400).json({ message: "Invalid article ID" });
         return;
       }
 
-      const article: ArticleResponseDto =
-        await articleService.getArticleById(articleId);
+      const article: ArticleResponseDto = await articleService.getArticleById(
+        articleId
+      );
 
       res.status(200).json(article);
     } catch (error) {
@@ -97,7 +98,7 @@ const articleController = {
   ): Promise<void> => {
     try {
       if (!req.auth?.userId) {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: "Unauthorized" });
         return;
       }
 
@@ -105,7 +106,7 @@ const articleController = {
       const { title, content, images }: UpdateArticleDto = req.body;
 
       if (isNaN(articleId)) {
-        res.status(400).json({ message: 'Invalid article ID' });
+        res.status(400).json({ message: "Invalid article ID" });
         return;
       }
 
@@ -131,14 +132,14 @@ const articleController = {
   ): Promise<void> => {
     try {
       if (!req.auth?.userId) {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: "Unauthorized" });
         return;
       }
 
       const articleId = parseInt(req.params.articleId, 10);
 
       if (isNaN(articleId)) {
-        res.status(400).json({ message: 'Invalid article ID' });
+        res.status(400).json({ message: "Invalid article ID" });
         return;
       }
 

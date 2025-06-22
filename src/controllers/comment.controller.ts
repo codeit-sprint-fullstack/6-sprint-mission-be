@@ -1,9 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
-import commentService from '../services/comment.service';
-import { AuthRequest } from '../Types';
+import { Request, Response, NextFunction } from "express";
+import commentService from "../services/comment.service";
+import { AuthRequest } from "../Types/user";
 
 const commentController = {
-  createComment: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  createComment: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { content } = req.body;
       const { userId } = req.auth!;
@@ -11,12 +15,12 @@ const commentController = {
       let articleId: string | null = null;
       let productId: string | null = null;
 
-      if (itemType === 'articles') {
+      if (itemType === "articles") {
         articleId = itemId;
-      } else if (itemType === 'products') {
+      } else if (itemType === "products") {
         productId = itemId;
       } else {
-        return res.status(400).json({ message: '잘못된 itemType입니다.' });
+        return res.status(400).json({ message: "잘못된 itemType입니다." });
       }
 
       const newComment = await commentService.createComment(
@@ -32,10 +36,16 @@ const commentController = {
     }
   },
 
-  getCommentsByArticleId: async (req: Request, res: Response, next: NextFunction) => {
+  getCommentsByArticleId: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { articleId } = req.params;
-      const comments = await commentService.getCommentsByArticleId(parseInt(articleId));
+      const comments = await commentService.getCommentsByArticleId(
+        parseInt(articleId)
+      );
       return res.status(200).json(comments);
     } catch (error) {
       next(error);
@@ -43,10 +53,16 @@ const commentController = {
     }
   },
 
-  getCommentsByProductId: async (req: Request, res: Response, next: NextFunction) => {
+  getCommentsByProductId: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { productId } = req.params;
-      const comments = await commentService.getCommentsByProductId(parseInt(productId));
+      const comments = await commentService.getCommentsByProductId(
+        parseInt(productId)
+      );
       return res.status(200).json(comments);
     } catch (error) {
       next(error);
@@ -54,12 +70,20 @@ const commentController = {
     }
   },
 
-  updateComment: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  updateComment: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { commentId } = req.params;
       const { content } = req.body;
       const { userId } = req.auth!;
-      const updatedComment = await commentService.updateComment(parseInt(commentId), userId, content);
+      const updatedComment = await commentService.updateComment(
+        parseInt(commentId),
+        userId,
+        content
+      );
       return res.status(200).json(updatedComment);
     } catch (error) {
       next(error);
@@ -67,7 +91,11 @@ const commentController = {
     }
   },
 
-  deleteComment: async (req: AuthRequest, res: Response, next: NextFunction) => {
+  deleteComment: async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { commentId } = req.params;
       const { userId } = req.auth!;
@@ -80,4 +108,4 @@ const commentController = {
   },
 };
 
-export default commentController; 
+export default commentController;

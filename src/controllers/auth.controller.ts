@@ -1,6 +1,10 @@
-import { Response, NextFunction } from 'express';
-import authService from '../services/auth.service';
-import { AuthRequest, UserCreateRequest, UserLoginRequest } from '../Types';
+import { Response, NextFunction } from "express";
+import authService from "../services/auth.service";
+import {
+  AuthRequest,
+  UserCreateRequest,
+  UserLoginRequest,
+} from "../Types/user";
 
 const authController = {
   signup: async (req: AuthRequest, res: Response, next: NextFunction) => {
