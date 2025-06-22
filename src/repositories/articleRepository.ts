@@ -1,9 +1,15 @@
-import prisma from "../db/prisma/client.js";
+import prisma from "../db/prisma/client";
+import {
+  ArticleRepository,
+  CreateArticleInput,
+  UpdateArticleInput,
+} from "../types/index.js";
+import { Article } from "@prisma/client";
 
 /**
  * 자유게시글 생성
  */
-async function createArticle(article) {
+async function createArticle(article: CreateArticleInput): Promise<Article> {
   const createdArticle = await prisma.article.create({
     data: {
       title: article.title,
@@ -22,10 +28,10 @@ async function createArticle(article) {
 /**
  * 자유게시글 ID로 조회
  */
-async function getById(id) {
+async function getById(id: number): Promise<any> {
   const getArticle = await prisma.article.findUnique({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
     include: {
       author: {
@@ -58,7 +64,7 @@ async function getById(id) {
 /**
  * 자유게시글 전체 조회
  */
-async function getAll() {
+async function getAll(): Promise<any[]> {
   const getAllArticles = await prisma.article.findMany({
     include: {
       author: {
@@ -79,10 +85,13 @@ async function getAll() {
 /**
  * 자유게시글 수정
  */
-async function updateById(id, article) {
+async function updateById(
+  id: number,
+  article: UpdateArticleInput
+): Promise<Article> {
   const updatedArticle = await prisma.article.update({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
     data: {
       title: article.title,
@@ -96,10 +105,10 @@ async function updateById(id, article) {
 /**
  * 자유게시글 삭제
  */
-async function deleteById(id) {
+async function deleteById(id: number): Promise<Article> {
   const deletedArticle = await prisma.article.delete({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
   });
   return deletedArticle;
@@ -108,7 +117,7 @@ async function deleteById(id) {
 /**
  * 좋아요 추가
  */
-async function addLike(userId, articleId) {
+async function addLike(userId: number, articleId: number): Promise<void> {
   await prisma.articleLike.create({
     data: { userId, articleId },
   });
@@ -122,7 +131,7 @@ async function addLike(userId, articleId) {
 /**
  * 좋아요 취소
  */
-async function removeLike(userId, articleId) {
+async function removeLike(userId: number, articleId: number): Promise<void> {
   await prisma.articleLike.delete({
     where: {
       userId_articleId: { userId, articleId },
@@ -138,7 +147,10 @@ async function removeLike(userId, articleId) {
 /**
  * 유저가 해당 게시글 좋아요 했는지 확인
  */
-async function hasUserLiked(userId, articleId) {
+async function hasUserLiked(
+  userId: number,
+  articleId: number
+): Promise<boolean> {
   const like = await prisma.articleLike.findUnique({
     where: {
       userId_articleId: { userId, articleId },
@@ -147,7 +159,7 @@ async function hasUserLiked(userId, articleId) {
   return !!like;
 }
 
-export default {
+const articleRepository: ArticleRepository = {
   createArticle,
   getById,
   getAll,
@@ -157,3 +169,5 @@ export default {
   removeLike,
   hasUserLiked,
 };
+
+export default articleRepository;

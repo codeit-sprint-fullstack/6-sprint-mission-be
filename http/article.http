@@ -1,6 +1,6 @@
 ### 자유게시글 생성
 POST http://localhost:5050/article
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJiamx5ZW9uMkBuYXZlci5jb20iLCJuYW1lIjoi7YWM7Iqk7Yq47Jyg7KCAOSIsImlhdCI6MTc1MDYxMDg2MywiZXhwIjoxNzUwNjE0NDYzfQ.cDvZ4hmyDLWGEj-7BULD5oBswX7DQZX_WdeRjSJQ7RY
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -23,11 +23,11 @@ Content-Type: image/jpeg
 GET http://localhost:5050/article
 
 ### 자유게시글 단건 조회
-GET http://localhost:5050/article/5
+GET http://localhost:5050/article/1
 
 ### 자유게시글 수정
-PUT http://localhost:5050/article/5
-Authorization: Bearer {{Token}}
+PUT http://localhost:5050/article/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJiamx5ZW9uMkBuYXZlci5jb20iLCJuYW1lIjoi7YWM7Iqk7Yq47Jyg7KCAOSIsImlhdCI6MTc1MDYxMDg2MywiZXhwIjoxNzUwNjE0NDYzfQ.cDvZ4hmyDLWGEj-7BULD5oBswX7DQZX_WdeRjSJQ7RY
 Content-Type: application/json
 
 {
@@ -37,16 +37,16 @@ Content-Type: application/json
 
 ### 자유게시글 삭제
 DELETE http://localhost:5050/article/5
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 자유게시글 좋아요 추가
-POST http://localhost:5050/article/5/like
-Authorization: Bearer {{Token}}
+POST http://localhost:5050/article/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 자유게시글 좋아요 취소
-DELETE http://localhost:5050/article/5/like
-Authorization: Bearer {{Token}}
+DELETE http://localhost:5050/article/1/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 자유게시글 좋아요 여부 확인
 GET http://localhost:5050/article/5/like
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c

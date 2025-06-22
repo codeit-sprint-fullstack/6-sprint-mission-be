@@ -1,14 +1,20 @@
-import prisma from "../db/prisma/client.js";
+import prisma from "../db/prisma/client";
+import {
+  ProductRepository,
+  CreateProductInput,
+  UpdateProductInput,
+} from "../types/index";
+import { Product } from "@prisma/client";
 
 /**
  * 상품 등록
  */
-async function createProduct(product) {
+async function createProduct(product: CreateProductInput): Promise<Product> {
   console.log(product);
   const createdProduct = await prisma.product.create({
     data: {
       name: product.name,
-      description: product.description,
+      description: product.description || "",
       price: product.price,
       tags: product.tags ? product.tags : [],
       images: product.images || null,
@@ -25,9 +31,9 @@ async function createProduct(product) {
 /**
  * 상품 ID로 조회
  */
-async function getById(id) {
+async function getById(id: number): Promise<any> {
   const getProduct = await prisma.product.findUnique({
-    where: { id: parseInt(id, 10) },
+    where: { id: parseInt(id.toString(), 10) },
     include: {
       author: {
         select: {
@@ -59,7 +65,7 @@ async function getById(id) {
 /**
  * 상품 전체 조회
  */
-async function getAll() {
+async function getAll(): Promise<any[]> {
   const getAllProducts = await prisma.product.findMany({
     include: {
       author: {
@@ -80,10 +86,13 @@ async function getAll() {
 /**
  * 상품 수정
  */
-async function updateById(id, product) {
+async function updateById(
+  id: number,
+  product: UpdateProductInput
+): Promise<Product> {
   const updatedProduct = await prisma.product.update({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
     data: {
       name: product.name,
@@ -99,10 +108,10 @@ async function updateById(id, product) {
 /**
  * 상품 삭제
  */
-async function deleteById(id) {
+async function deleteById(id: number): Promise<Product> {
   const deletedProduct = await prisma.product.delete({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
   });
   return deletedProduct;
@@ -111,7 +120,7 @@ async function deleteById(id) {
 /**
  * 상품 좋아요 추가
  */
-async function addLike(userId, productId) {
+async function addLike(userId: number, productId: number): Promise<void> {
   await prisma.productLike.create({
     data: { userId, productId },
   });
@@ -125,7 +134,7 @@ async function addLike(userId, productId) {
 /**
  * 상품 좋아요 취소
  */
-async function removeLike(userId, productId) {
+async function removeLike(userId: number, productId: number): Promise<void> {
   await prisma.productLike.delete({
     where: {
       userId_productId: { userId, productId },
@@ -141,7 +150,10 @@ async function removeLike(userId, productId) {
 /**
  * 유저가 상품에 좋아요 눌렀는지 확인
  */
-async function hasUserLiked(userId, productId) {
+async function hasUserLiked(
+  userId: number,
+  productId: number
+): Promise<boolean> {
   const like = await prisma.productLike.findUnique({
     where: {
       userId_productId: { userId, productId },
@@ -150,7 +162,7 @@ async function hasUserLiked(userId, productId) {
   return !!like;
 }
 
-export default {
+const productRepository: ProductRepository = {
   createProduct,
   getById,
   getAll,
@@ -160,3 +172,5 @@ export default {
   removeLike,
   hasUserLiked,
 };
+
+export default productRepository;

@@ -1,6 +1,6 @@
 ### 상품 생성
 POST http://localhost:5050/product
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJiamx5ZW9uMkBuYXZlci5jb20iLCJuYW1lIjoi7YWM7Iqk7Yq47Jyg7KCAOSIsImlhdCI6MTc1MDYxMDg2MywiZXhwIjoxNzUwNjE0NDYzfQ.cDvZ4hmyDLWGEj-7BULD5oBswX7DQZX_WdeRjSJQ7RY
 Content-Type: application/json
 
 {
@@ -20,9 +20,9 @@ GET http://localhost:5050/product
 GET http://localhost:5050/product/1
 
 ### 상품 수정
-PUT http://localhost:5050/product/2
+PUT http://localhost:5050/product/1
 Content-Type: application/json
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 {
   "name": "수정된 상품명2",
@@ -34,16 +34,16 @@ Authorization: Bearer {{Token}}
 
 ### 상품 삭제
 DELETE http://localhost:5050/product/4
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 상품 좋아요
 POST http://localhost:5050/product/1/like
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 좋아요 취소
 DELETE http://localhost:5050/product/1/like
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 좋아요 여부 확인
 GET http://localhost:5050/product/1/like
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c

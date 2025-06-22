@@ -1,7 +1,7 @@
-import express from "express";
-import auth from "../middlewares/auth.js";
-import productService from "../services/productService.js";
-import upload from "../middlewares/multer.js";
+import express, { NextFunction, Request, Response } from "express";
+import auth from "../middlewares/auth";
+import productService from "../services/productService";
+import upload from "../middlewares/multer";
 
 const productController = express.Router();
 
@@ -14,14 +14,35 @@ productController.post(
   upload.single("image"),
   async (req, res, next) => {
     try {
-      const authorId = req.user.userId;
+      const authorId = (req as any).auth?.id;
+
+      if (!authorId) {
+        res.status(401).json({ message: "로그인이 필요합니다." });
+        return;
+      }
+
+      // 필수 필드 검증
+      if (!req.body.name) {
+        res.status(400).json({ message: "상품명은 필수입니다." });
+        return;
+      }
+
+      if (!req.body.price || isNaN(Number(req.body.price))) {
+        res.status(400).json({ message: "유효한 가격을 입력해주세요." });
+        return;
+      }
 
       const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
       const productData = {
-        ...req.body,
+        name: req.body.name,
+        description: req.body.description || "",
         price: Number(req.body.price),
-        tags: req.body.tags || [], // 프론트에서 JSON 문자열로 보내면
+        tags: req.body.tags
+          ? Array.isArray(req.body.tags)
+            ? req.body.tags
+            : [req.body.tags]
+          : [],
         images: imagePath,
         authorId,
       };
@@ -29,7 +50,7 @@ productController.post(
       console.log("Product data before creation:", productData); // productData 로그 추가
 
       const createdProduct = await productService.create(productData);
-      return res.status(201).json(createdProduct);
+      res.status(201).json(createdProduct);
     } catch (err) {
       next(err);
     }
@@ -42,7 +63,7 @@ productController.post(
 productController.get("/", async (req, res, next) => {
   try {
     const products = await productService.getAll();
-    return res.json(products);
+    res.json(products);
   } catch (err) {
     next(err);
   }
@@ -54,8 +75,8 @@ productController.get("/", async (req, res, next) => {
 productController.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await productService.getById(id);
-    return res.json(product);
+    const product = await productService.getById(Number(id));
+    res.json(product);
   } catch (err) {
     next(err);
   }
@@ -67,12 +88,11 @@ productController.get("/:id", async (req, res, next) => {
 productController.put(
   "/:id",
   auth.verifyAccessToken,
-  auth.checkProductOwner,
-  async (req, res, next) => {
+  async (req: Request<{ id: string }>, res, next) => {
     try {
       const { id } = req.params;
-      const updated = await productService.updateById(id, req.body);
-      return res.json(updated);
+      const updated = await productService.updateById(Number(id), req.body);
+      res.json(updated);
     } catch (err) {
       next(err);
     }
@@ -85,12 +105,11 @@ productController.put(
 productController.delete(
   "/:id",
   auth.verifyAccessToken,
-  auth.checkProductOwner,
-  async (req, res, next) => {
+  async (req: Request<{ id: string }>, res, next) => {
     try {
       const { id } = req.params;
-      const deleted = await productService.deleteById(id);
-      return res.json(deleted);
+      const deleted = await productService.deleteById(Number(id));
+      res.json(deleted);
     } catch (err) {
       next(err);
     }
@@ -105,10 +124,14 @@ productController.post(
   auth.verifyAccessToken,
   async (req, res, next) => {
     try {
-      const userId = req.user.userId;
+      const userId = (req as any).auth?.id;
+      if (!userId) {
+        res.status(401).json({ message: "로그인이 필요합니다." });
+        return;
+      }
       const productId = Number(req.params.id);
       await productService.addLike(userId, productId);
-      return res.status(200).json({ message: "좋아요가 눌러졌습니다." });
+      res.status(200).json({ message: "좋아요가 눌러졌습니다." });
     } catch (err) {
       next(err);
     }
@@ -123,10 +146,14 @@ productController.delete(
   auth.verifyAccessToken,
   async (req, res, next) => {
     try {
-      const userId = req.user.userId;
+      const userId = (req as any).auth?.id;
+      if (!userId) {
+        res.status(401).json({ message: "로그인이 필요합니다." });
+        return;
+      }
       const productId = parseInt(req.params.id, 10);
       await productService.removeLike(userId, productId);
-      return res.status(200).json({ message: "좋아요가 취소되었습니다." });
+      res.status(200).json({ message: "좋아요가 취소되었습니다." });
     } catch (err) {
       next(err);
     }
@@ -141,10 +168,14 @@ productController.get(
   auth.verifyAccessToken,
   async (req, res, next) => {
     try {
-      const userId = req.user.userId;
+      const userId = (req as any).auth?.id;
+      if (!userId) {
+        res.status(401).json({ message: "로그인이 필요합니다." });
+        return;
+      }
       const productId = parseInt(req.params.id, 10);
       const hasLiked = await productService.hasUserLiked(userId, productId);
-      return res.status(200).json({ liked: hasLiked });
+      res.status(200).json({ liked: hasLiked });
     } catch (err) {
       next(err);
     }

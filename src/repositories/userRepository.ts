@@ -1,12 +1,18 @@
-import prisma from "../db/prisma/client.js";
+import prisma from "../db/prisma/client";
+import {
+  UserRepository,
+  CreateUserInput,
+  UpdateUserInput,
+} from "../types/index";
+import { User } from "@prisma/client";
 
 /**
  * ID로 사용자 조회
  */
-async function findById(id) {
+async function findById(id: number): Promise<User | null> {
   return await prisma.user.findUnique({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
   });
 }
@@ -14,7 +20,7 @@ async function findById(id) {
 /**
  * 이메일로 사용자 조회
  */
-async function findByEmail(email) {
+async function findByEmail(email: string): Promise<User | null> {
   return await prisma.user.findUnique({
     where: {
       email,
@@ -25,7 +31,7 @@ async function findByEmail(email) {
 /**
  * 회원가입 (비밀번호는 bcrypt로 암호화된 상태여야 함)
  */
-async function createdUser(user) {
+async function createdUser(user: CreateUserInput): Promise<User> {
   return await prisma.user.create({
     data: {
       email: user.email,
@@ -39,18 +45,20 @@ async function createdUser(user) {
 /**
  * 사용자 정보 업데이트
  */
-async function updateUser(id, data) {
+async function updateUser(id: number, data: UpdateUserInput): Promise<User> {
   return await prisma.user.update({
     where: {
-      id: parseInt(id, 10),
+      id: parseInt(id.toString(), 10),
     },
     data,
   });
 }
 
-export default {
+const userRepository: UserRepository = {
   findById,
   findByEmail,
   createdUser,
   updateUser,
 };
+
+export default userRepository;
