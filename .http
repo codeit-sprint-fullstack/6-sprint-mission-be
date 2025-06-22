@@ -1,5 +1,5 @@
 ### 회원가입
-POST http://localhost:5000/api/auth/signup
+POST http://localhost:5001/api/auth/signup
 Content-Type: application/json
 
 {
@@ -11,7 +11,7 @@ Content-Type: application/json
 ###
 
 ### 로그인
-POST http://localhost:5000/api/auth/signin
+POST http://localhost:5001/api/auth/signin
 Content-Type: application/json
 
 {
@@ -20,7 +20,7 @@ Content-Type: application/json
 }
 
 ### 상품 등록
-POST http://localhost:5000/api/products
+POST http://localhost:5001/api/products
 Content-Type: application/json
 Authorization: Bearer 
 
@@ -28,17 +28,17 @@ Authorization: Bearer
   "name": "콩이",
   "description": "소중한 포토카드",
   "price": 8000,
-  "image": "http://localhost:5000/uploads/1747111931321-20655938.jpg"
+  "image": "http://localhost:5001/uploads/1747111931321-20655938.jpg"
 }
 
 
 ### 댓글 목록 조회
-GET http://localhost:5000/api/products/8/comments
+GET http://localhost:5001/api/products/8/comments
 Content-Type: application/json
 
 
 ### ✍ 댓글 작성 
-POST http://localhost:5000/api/products/8/comments
+POST http://localhost:5001/api/products/8/comments
 Content-Type: application/json
 Authorization: Bearer 
 
@@ -48,7 +48,7 @@ Authorization: Bearer
 
 
 ### 댓글 수정 
-PATCH http://localhost:5000/api/products/comments/1
+PATCH http://localhost:5001/api/products/comments/1
 Content-Type: application/json
 Authorization: Bearer 
 
@@ -58,10 +58,10 @@ Authorization: Bearer
 
 
 ### 댓글 삭제 
-DELETE http://localhost:5000/api/products/comments/2
+DELETE http://localhost:5001/api/products/comments/2
 Authorization: Bearer 
 
 
 ### 상품 삭제
-DELETE http://localhost:5000/api/products/8
+DELETE http://localhost:5001/api/products/8
 Authorization: Bearer 
