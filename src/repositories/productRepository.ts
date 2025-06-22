@@ -1,10 +1,14 @@
-import prisma from "../config/prisma.js";
+import { Prisma, Product } from "@prisma/client";
+import prisma from "../config/prisma";
 
-export async function create(data) {
+//상품생성
+export async function create(
+  data: Prisma.ProductCreateInput
+): Promise<Product> {
   return prisma.product.create({ data });
 }
 
-export async function findAllWithLikes(userId) {
+export async function findAllWithLikes(userId: number) {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
     include: {
@@ -23,18 +27,21 @@ export async function findAllWithLikes(userId) {
   }));
 }
 
-export async function findById(id) {
+export async function findById(id: number): Promise<Product | null> {
   return prisma.product.findUnique({ where: { id } });
 }
 
-export async function update(id, data) {
+export async function update(
+  id: number,
+  data: Prisma.ProductUpdateInput
+): Promise<Product> {
   return prisma.product.update({
     where: { id },
     data,
   });
 }
 
-export async function remove(id) {
+export async function remove(id: number): Promise<Product> {
   return prisma.product.delete({ where: { id } });
 }
 

@@ -1,4 +1,4 @@
-import multer from "multer";
+import multer, { StorageEngine } from "multer";
 import path from "path";
 import fs from "fs";
 import { v4 as uuid } from "uuid";
@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadPath)) {
 }
 
 // multer 저장 방식 설정
-const storage = multer.diskStorage({
+const storage: StorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadPath);
   },
@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 5MB 제한
+    fileSize: 10 * 1024 * 1024, // 10MB 제한
   },
 });
 

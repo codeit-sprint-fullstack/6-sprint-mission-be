@@ -1,15 +1,15 @@
-import express from "express";
+import { Router } from "express";
 import {
   getMe,
   updateMe,
   changePassword,
   getMyProducts,
   getMyFavorites,
-} from "../controllers/userController.js";
+} from "../controllers/userController";
 
-import { verifyAccessToken } from "../middlewares/authMiddleware.js";
+import { verifyAccessToken } from "../middlewares/authMiddleware";
 
-const router = express.Router();
+const router = Router();
 
 // /me 경로에 대한 라우트 통합
 router

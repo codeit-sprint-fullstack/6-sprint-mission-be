@@ -1,24 +1,27 @@
-import productRepository from "../repositories/productRepository.js";
-import prisma from "../config/prisma.js";
+import productRepository from "../repositories/productRepository";
+import prisma from "../config/prisma";
+import { Prisma, Product } from "@prisma/client";
 
-export async function createProduct(data) {
+export async function createProduct(
+  data: Prisma.ProductCreateInput
+): Promise<Product> {
   return productRepository.create(data);
 }
 
 // 전체 상품 조회 (정렬 옵션 포함)
-export async function getAllProductsWithLikes(userId, sortBy = "latest") {
-  // 기본 include 옵션
-  const include = {
-    likes: true,
-  };
-
+export async function getAllProductsWithLikes(
+  userId?: number,
+  sortBy: string = "latest"
+) {
   // 모든 상품 가져오기 (정렬은 메모리에서 함)
   const products = await prisma.product.findMany({
-    include,
+    include: {
+      likes: true,
+    },
   });
 
   // 상품 데이터 가공
-  const processedProducts = products.map((product) => ({
+  const processed = products.map((product) => ({
     ...product,
     isLiked: userId
       ? product.likes.some((like) => like.userId === userId)
@@ -26,21 +29,13 @@ export async function getAllProductsWithLikes(userId, sortBy = "latest") {
     likeCount: product.likes.length,
   }));
 
-  // 정렬 적용
-  if (sortBy === "likes") {
-    // 좋아요 많은 순 정렬
-    return processedProducts.sort((a, b) => b.likeCount - a.likeCount);
-  } else {
-    // 기본 최신순 정렬
-    return processedProducts.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
+  return sortBy === "likes"
+    ? processed.sort((a, b) => b.likeCount - a.likeCount)
+    : processed.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 }
 
 // 베스트 상품 조회 (좋아요 많은 순 상위 N개)
-export async function getBestProducts(userId, limit = 4) {
+export async function getBestProducts(userId: number, limit = 4) {
   // 모든 상품 가져오기
   const products = await prisma.product.findMany({
     include: {
@@ -61,7 +56,7 @@ export async function getBestProducts(userId, limit = 4) {
     .slice(0, limit);
 }
 
-export async function getProductById(id, userId) {
+export async function getProductById(id: number, userId?: number) {
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
@@ -112,10 +107,18 @@ export async function getProductById(id, userId) {
   };
 }
 
-export async function updateProduct({ id, userId, data }) {
+export async function updateProduct({
+  id,
+  userId,
+  data,
+}: {
+  id: number;
+  userId: number;
+  data: Prisma.ProductUpdateInput;
+}): Promise<Product> {
   const product = await productRepository.findById(id);
   if (!product || product.ownerId !== userId) {
-    const err = new Error("수정 권한이 없습니다.");
+    const err = new Error("수정 권한이 없습니다.") as Error & { code?: number };
     err.code = 403;
     throw err;
   }
@@ -123,10 +126,13 @@ export async function updateProduct({ id, userId, data }) {
   return productRepository.update(id, data);
 }
 
-export async function deleteProduct(id, userId) {
+export async function deleteProduct(
+  id: number,
+  userId: number
+): Promise<Product> {
   const product = await productRepository.findById(id);
   if (!product || product.ownerId !== userId) {
-    const err = new Error("삭제 권한이 없습니다.");
+    const err = new Error("삭제 권한이 없습니다.") as Error & { code?: number };
     err.code = 403;
     throw err;
   }
@@ -134,7 +140,10 @@ export async function deleteProduct(id, userId) {
   return productRepository.remove(id);
 }
 
-export async function likeProduct(productId, userId) {
+export async function likeProduct(
+  productId: number,
+  userId: number
+): Promise<{ message: string }> {
   return await prisma.$transaction(async (tx) => {
     const alreadyLiked = await tx.like.findUnique({
       where: {
@@ -146,7 +155,9 @@ export async function likeProduct(productId, userId) {
     });
 
     if (alreadyLiked) {
-      const err = new Error("이미 좋아요를 누르셨습니다.");
+      const err = new Error("이미 좋아요를 누르셨습니다.") as Error & {
+        code?: number;
+      };
       err.code = 409;
       throw err;
     }
@@ -159,7 +170,10 @@ export async function likeProduct(productId, userId) {
   });
 }
 
-export async function unlikeProduct(productId, userId) {
+export async function unlikeProduct(
+  productId: number,
+  userId: number
+): Promise<void> {
   return await prisma.$transaction(async (tx) => {
     await tx.like.delete({
       where: {

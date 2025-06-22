@@ -1,13 +1,13 @@
-import prisma from "../config/prisma.js";
+import prisma from "../config/prisma";
 
 // 댓글 생성
-export async function createComment({ content, productId, userId }) {
+export async function createComment(data: {
+  content: string;
+  productId: number;
+  userId: number;
+}) {
   return prisma.comment.create({
-    data: {
-      content,
-      productId,
-      userId,
-    },
+    data,
     include: {
       user: {
         select: {
@@ -20,7 +20,7 @@ export async function createComment({ content, productId, userId }) {
 }
 
 // 상품별 댓글 목록 조회
-export async function getCommentsByProductId(productId) {
+export async function getCommentsByProductId(productId: number) {
   const comments = await prisma.comment.findMany({
     where: {
       productId,
@@ -62,20 +62,29 @@ export async function getCommentsByProductId(productId) {
 }
 
 // 댓글 수정
-export async function updateComment({ id, content, userId }) {
+export async function updateComment(data: {
+  id: number;
+  content: string;
+  userId: number;
+}) {
+  const { id, content, userId } = data;
   // 댓글 소유자 확인
   const comment = await prisma.comment.findUnique({
     where: { id },
   });
 
   if (!comment) {
-    const error = new Error("댓글을 찾을 수 없습니다.");
+    const error = new Error("댓글을 찾을 수 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 404;
     throw error;
   }
 
   if (comment.userId !== userId) {
-    const error = new Error("댓글을 수정할 권한이 없습니다.");
+    const error = new Error("댓글을 수정할 권한이 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 403;
     throw error;
   }
@@ -95,20 +104,24 @@ export async function updateComment({ id, content, userId }) {
 }
 
 // 댓글 삭제
-export async function deleteComment(id, userId) {
+export async function deleteComment(id: number, userId: number) {
   // 댓글 소유자 확인
   const comment = await prisma.comment.findUnique({
     where: { id },
   });
 
   if (!comment) {
-    const error = new Error("댓글을 찾을 수 없습니다.");
+    const error = new Error("댓글을 찾을 수 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 404;
     throw error;
   }
 
   if (comment.userId !== userId) {
-    const error = new Error("댓글을 삭제할 권한이 없습니다.");
+    const error = new Error("댓글을 삭제할 권한이 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 403;
     throw error;
   }

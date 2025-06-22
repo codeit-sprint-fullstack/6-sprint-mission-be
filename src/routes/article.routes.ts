@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 import {
   createArticle,
   getAllArticles,
@@ -7,10 +7,10 @@ import {
   deleteArticle,
   likeArticle,
   unlikeArticle,
-} from "../controllers/articleController.js";
-import { verifyAccessToken } from "../middlewares/authMiddleware.js";
+} from "../controllers/articleController";
+import { verifyAccessToken } from "../middlewares/authMiddleware";
 
-const router = express.Router();
+const router = Router();
 
 // /articles 경로에 대한 라우트
 router.route("/").get(getAllArticles).post(verifyAccessToken, createArticle);

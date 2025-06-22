@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 import {
   createProduct,
   getAllProducts,
@@ -8,21 +8,21 @@ import {
   likeProduct,
   unlikeProduct,
   getBestProducts,
-} from "../controllers/productController.js";
+} from "../controllers/productController";
 import {
   createComment,
   getProductComments,
   updateComment,
   deleteComment,
-} from "../controllers/commentController.js";
-import { verifyAccessToken } from "../middlewares/authMiddleware.js";
-import upload from "../middlewares/uploadMiddleware.js";
+} from "../controllers/commentController";
+import { verifyAccessToken } from "../middlewares/authMiddleware";
+import upload from "../middlewares/uploadMiddleware";
 import {
   validateProductInputs,
   validateProductImages,
-} from "../middlewares/productValidation.js";
+} from "../middlewares/productValidation";
 
-const router = express.Router();
+const router = Router();
 
 // 베스트 상품 라우트 (일반 상품 목록 라우트보다 위에 배치)
 router.get("/best", getBestProducts);
