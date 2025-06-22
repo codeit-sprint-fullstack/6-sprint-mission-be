@@ -1,7 +1,13 @@
-import prisma from "../config/prisma.js";
+import { Product } from "@prisma/client";
+import prisma from "../config/prisma";
 
 // 상품 등록
-async function create(data) {
+async function create(
+  data: Pick<
+    Product,
+    "name" | "description" | "price" | "tags" | "images" | "ownerId"
+  > & { favoriteCount?: number }
+) {
   return prisma.product.create({
     data,
   });
@@ -9,7 +15,15 @@ async function create(data) {
 
 // 상품 전체 조회
 // 페이징 + 정렬 조건에 따른 상품 조회
-async function findAll({ skip, take, orderBy }) {
+async function findAll({
+  skip,
+  take,
+  orderBy,
+}: {
+  skip: number;
+  take: number;
+  orderBy: { [key: string]: "asc" | "desc" };
+}) {
   return prisma.product.findMany({
     skip,
     take,
@@ -23,7 +37,7 @@ async function count() {
 }
 
 // 상품 상세 조회 (좋아요 수 및 내가 누른 좋아요 여부 포함)
-async function findById(id, userId) {
+async function findById(id: Product["id"], userId?: number) {
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
@@ -55,7 +69,7 @@ async function findById(id, userId) {
 }
 
 // 좋아요 수 증가
-async function incrementFavoriteCount(productId) {
+async function incrementFavoriteCount(productId: Product["id"]) {
   return prisma.product.update({
     where: { id: productId },
     data: {
@@ -67,7 +81,7 @@ async function incrementFavoriteCount(productId) {
 }
 
 // 좋아요 수 감소
-async function decrementFavoriteCount(productId) {
+async function decrementFavoriteCount(productId: Product["id"]) {
   return prisma.product.update({
     where: { id: productId },
     data: {
@@ -79,17 +93,27 @@ async function decrementFavoriteCount(productId) {
 }
 
 // 상품 삭제
-async function remove(id) {
+async function remove(id: Product["id"]) {
   return prisma.product.delete({
     where: { id },
   });
 }
 
+// undefined를 제거하겠다.
+function removeUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v !== undefined)
+  ) as Partial<T>;
+}
+
 // 상품 수정
-async function update(id, data) {
+async function update(
+  id: Product["id"],
+  data: Partial<Omit<Product, "id" | "createdAt" | "updatedAt">>
+) {
   return prisma.product.update({
     where: { id },
-    data,
+    data: removeUndefined(data),
   });
 }
 

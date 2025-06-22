@@ -1,7 +1,11 @@
-import prisma from "../config/prisma.js";
+import { Favorite } from "@prisma/client";
+import prisma from "../config/prisma";
 
 // 좋아요 여부 확인
-async function isFavorite(userId, productId) {
+async function isFavorite(
+  userId: Favorite["userId"],
+  productId: Favorite["productId"]
+) {
   return prisma.favorite.findUnique({
     where: {
       userId_productId: {
@@ -13,7 +17,10 @@ async function isFavorite(userId, productId) {
 }
 
 // 좋아요 추가
-async function addFavorite(userId, productId) {
+async function addFavorite(
+  userId: Favorite["userId"],
+  productId: Favorite["productId"]
+) {
   return prisma.favorite.create({
     data: {
       userId,
@@ -23,7 +30,10 @@ async function addFavorite(userId, productId) {
 }
 
 // 좋아요 제거
-async function removeFavorite(userId, productId) {
+async function removeFavorite(
+  userId: Favorite["userId"],
+  productId: Favorite["productId"]
+) {
   return prisma.favorite.delete({
     where: {
       userId_productId: {

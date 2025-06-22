@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ### 토큰 재발급 
 POST http://localhost:3000/token/refresh
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTc3NTY5MiwiZXhwIjoxNzUwOTg1MjkyfQ.3jh8-9OnSBU9bC-vdrLIZEz1WwALMyXbta89yAJIvzo
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc1MTI5NDAyMSwiZXhwIjoxNzUxMjk3NjIxfQ.m6wz5Be9UwVQdou1J3tUb7miIx0jpsAD8f3dDK7sa0k
 
 ###
  http://localhost:3000/uploads/1746979915826.png
