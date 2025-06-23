@@ -1,0 +1,19 @@
+//db와의 동작 확인
+POST http://localhost:4000/auth/signUp
+Content-Type: application/json
+
+{
+  "email": "Layna@nate.com",
+  "nickName": "레이나",
+  "password": "115678910"
+}
+
+###
+POST http://localhost:4000/auth/signIn
+Content-Type:application/json
+
+{
+  "email": "Layna@nate.com",
+  "password": "115678910"
+
+}
