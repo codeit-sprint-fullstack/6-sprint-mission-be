@@ -1,0 +1,29 @@
+# 회원가입
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "nickName": "다은킴",
+  "password": "12341234"
+}
+
+### 로그인
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "12341234"
+}
+
+### 토큰 재발급 
+POST http://localhost:3000/token/refresh
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTc3NTY5MiwiZXhwIjoxNzUwOTg1MjkyfQ.3jh8-9OnSBU9bC-vdrLIZEz1WwALMyXbta89yAJIvzo
+
+###
+ http://localhost:3000/uploads/1746979915826.png
+
+
+###
+GET http://localhost:3000
