@@ -5,14 +5,14 @@ POST http://localhost:7777/auth/signIn
 Content-Type: application/json
 
 {
-  "email": "gksktl123@naver.com",
+  "email": "gksktl111@naver.com",
   "password": "1rhdiddl!"
 }
 
 ### 로그아웃
 POST http://localhost:7777/auth/logOut
 Content-Type: application/json
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrdTd2dm4wMDAwY3YzMXp0cDA4bTZzIiwiaWF0IjoxNzQ3MTAwNDU4LCJleHAiOjE3NDc5NjQ0NTh9.flJILERjaI84KfjgEXnP29klEMKkGc0QCn4Jxr1oRgc
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5Nzc1MDMzLCJleHAiOjE3NDk3NzU5MzN9.Ffr-jL6bZmTxT7pGN_Zs3RIgleTcJHObN3sE8iAgXCg
 
 ### 회원가입
 POST http://localhost:7777/auth/signUp
@@ -31,4 +31,4 @@ Content-Type: application/json
 // 정확히는 쿠키의 maxAge와 토큰의 expiresIn의 간극에 따른 오류였음
 POST http://localhost:7777/auth/token/refresh
 Content-Type: application/json
-Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrdTd2dm4wMDAwY3YzMXp0cDA4bTZzIiwiaWF0IjoxNzQ3MTAwNDU4LCJleHAiOjE3NDc5NjQ0NTh9.flJILERjaI84KfjgEXnP29klEMKkGc0QCn4Jxr1oRgc
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5Nzc1MDg1LCJleHAiOjE3NTA2MzkwODV9.nFyI-2ijwllD1GOJTj5tz3uiIifzbaMWOFoG9RmCckw

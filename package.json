@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@prisma/client": "^6.5.0",
+    "@prisma/client": "^6.10.1",
+    "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -9,23 +10,29 @@
     "express-jwt": "^7.7.8",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.8.6",
     "multer": "^1.4.5-lts.2",
+    "prisma": "^6.10.1",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^1.4.13",
     "@types/node": "^22.13.10",
-    "nodemon": "^3.1.9",
-    "prisma": "^6.5.0",
-    "tsx": "^4.19.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.2"
   },
-  "type": "module",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
-    "seed": "node src/db/prisma/seed.js",
+    "dev": "ts-node-dev --respawn src/app.ts",
+    "build": "prisma generate && tsc",
+    "start": "node --enable-source-maps dist/app.js",
     "postinstall": "prisma generate"
   },
   "prisma": {

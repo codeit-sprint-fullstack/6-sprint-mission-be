@@ -1,13 +1,14 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzQ5NzgyMDQ2LCJleHAiOjE3NDk3ODI5NDZ9.-1xTGMYtiMvyyqfP1iBzD5eDWJvmKYnTs6JoK4_JWM4
+
 ### 유저 정보 확인
 GET http://localhost:7777/user/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDM3MjI1LCJleHAiOjE3NDcwMzgxMjV9.WGmHh8xqLROfc1dgmBapCOYMEsnHPqnPbHtBm8aDNmQ
-
+Authorization: {{accessToken}}
 
 ### 유저 정보 수정
 PATCH http://localhost:7777/user/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDM3MjI1LCJleHAiOjE3NDcwMzgxMjV9.WGmHh8xqLROfc1dgmBapCOYMEsnHPqnPbHtBm8aDNmQ
+Authorization: {{accessToken}}
 
 {
   "nickname": "홍길동"
@@ -16,9 +17,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZ
 ### 유저 비밀번호 수정
 PATCH http://localhost:7777/user/me/password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWFrZWFqcm0wMDAwdXBlY21jazN1NzNzIiwiaWF0IjoxNzQ3MDM3MjI1LCJleHAiOjE3NDcwMzgxMjV9.WGmHh8xqLROfc1dgmBapCOYMEsnHPqnPbHtBm8aDNmQ
+Authorization: {{accessToken}}
 
 {
-  "currentPassword": "123",
-  "newPassword": "1234"
+  "currentPassword": "1rhdiddl!",
+  "newPassword": "1rhdiddl!"
 }
