@@ -1,10 +1,27 @@
-import { prismaClient } from '../prismaClient.js';
+import { Prisma, Product } from '@prisma/client';
+import { prismaClient } from '../prismaClient';
 
 // 모든 상품 가져오기
-export const FindMany = async ({ page = 1, pageSize = 10, orderBy = 'recent', keyword }) => {
-    const skip = (page - 1) * pageSize;
+export const FindMany = async ({
+    page: cursor = 1,
+    pageSize = 10,
+    orderBy = 'recent',
+    keyword,
+}: {
+    page?: number;
+    pageSize?: number;
+    orderBy?: string;
+    keyword?: string;
+}) => {
+    const skip = (cursor - 1) * pageSize;
+    type StrictWhereClause = {
+        name: {
+            contains: string;
+            mode: 'insensitive';
+        };
+    };
 
-    const whereClause = keyword
+    const whereClause: StrictWhereClause | {} = keyword
         ? {
               name: {
                   contains: keyword,
@@ -12,8 +29,8 @@ export const FindMany = async ({ page = 1, pageSize = 10, orderBy = 'recent', ke
               },
           }
         : {};
-
-    const orderByClause =
+    type OrderByClause = { favoriteCount: 'desc' } | { createdAt: 'desc' };
+    const orderByClause: OrderByClause =
         orderBy === 'favorite' ? { favoriteCount: 'desc' } : { createdAt: 'desc' }; // 최근순이면 createdAt 기준 내림차순
 
     const [totalCount, products] = await Promise.all([
@@ -47,7 +64,7 @@ export const FindMany = async ({ page = 1, pageSize = 10, orderBy = 'recent', ke
 };
 
 // id 값으로 상품 하나 가져오기
-export const FindById = async (id) => {
+export const FindById = async (id: number) => {
     const product = await prismaClient.product.findUnique({
         where: { id },
         select: {
@@ -73,12 +90,17 @@ export const FindById = async (id) => {
 };
 
 // 새 상품 추가하기
-export const Create = async (data) => {
+export const Create = async (
+    data: Pick<
+        Product,
+        'description' | 'name' | 'price' | 'tags' | 'images' | 'ownerNickname' | 'ownerId'
+    >,
+) => {
     return prismaClient.product.create({ data });
 };
 
 // 상품 정보 수정하기/
-export const Update = async (id, data) => {
+export const Update = async (id: number, data: Product) => {
     return prismaClient.$transaction(async (tx) => {
         const exists = await tx.product.findUnique({ where: { id } });
         if (!exists) throw new Error('Product not found');
@@ -103,7 +125,7 @@ export const Update = async (id, data) => {
     });
 };
 
-export const Delete = async (id) => {
+export const Delete = async (id: number) => {
     return prismaClient.$transaction(async (tx) => {
         const exists = await tx.product.findUnique({ where: { id } });
         if (!exists) throw new Error('Product not found');
@@ -111,7 +133,7 @@ export const Delete = async (id) => {
     });
 };
 
-export const toggleLike = async (userId, productId) => {
+export const toggleLike = async (userId: number, productId: number) => {
     return prismaClient.$transaction(async (tx) => {
         const existing = await tx.myLikes.findUnique({
             where: {

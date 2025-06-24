@@ -1,8 +1,8 @@
 import express from 'express';
-import * as productController from '../controllers/productController.js';
-import { errorHandler } from '../middlewares/errorHandler.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
-import upload from '../middlewares/imageupload.js';
+import * as productController from '../controllers/productController';
+import { errorHandler } from '../middlewares/errorHandler';
+import { authMiddleware } from '../middlewares/authMiddleware';
+import upload from '../middlewares/imageupload';
 
 const router = express.Router();
 

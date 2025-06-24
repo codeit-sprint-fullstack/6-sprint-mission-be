@@ -1,8 +1,9 @@
-import * as userService from '../services/userService.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as userService from '../services/userService';
+import { HttpError } from '../middlewares/HttpError';
+import { NextFunction, Request, Response } from 'express';
 
 // userId 유효성 보장 함수
-function assertUserId(req) {
+function assertUserId(req: Request) {
     if (!req.userId) {
         throw new HttpError(401, '로그인이 필요합니다');
     }
@@ -10,7 +11,7 @@ function assertUserId(req) {
 }
 
 // 내 유저정보 가져오기
-export const getMe = async (req, res, next) => {
+export const getMe = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = assertUserId(req);
         const user = await userService.getMe(userId);
@@ -21,7 +22,7 @@ export const getMe = async (req, res, next) => {
 };
 
 // 내 프로필 이미지 업데이트
-export const updateMe = async (req, res, next) => {
+export const updateMe = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = assertUserId(req);
 
@@ -38,7 +39,7 @@ export const updateMe = async (req, res, next) => {
 };
 
 // 내 비밀번호 업데이트
-export const updateMyPassword = async (req, res, next) => {
+export const updateMyPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = assertUserId(req);
 
@@ -58,16 +59,14 @@ export const updateMyPassword = async (req, res, next) => {
         }
 
         const updatedUser = await userService.updateMyPassword(userId, {
-            currentPassword,
-            password,
-            passwordConfirmation,
+            password: currentPassword,
         });
         res.status(200).json(updatedUser);
     } catch (err) {
         next(err);
     }
 };
-export const getMyProduct = async (req, res, next) => {
+export const getMyProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = assertUserId(req);
         const products = await userService.getMyProduct(userId);
@@ -78,7 +77,7 @@ export const getMyProduct = async (req, res, next) => {
 };
 
 // 내가 쓴 게시글 가져오기
-export const getMyArticle = async (req, res, next) => {
+export const getMyArticle = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = assertUserId(req);
         const articles = await userService.getMyArticle(userId);
@@ -89,7 +88,7 @@ export const getMyArticle = async (req, res, next) => {
 };
 
 // 내가 누른 좋아요 목록 가져오기
-export const getMyFavorites = async (req, res, next) => {
+export const getMyFavorites = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = assertUserId(req);
         const favorites = await userService.getMyFavorites(userId);

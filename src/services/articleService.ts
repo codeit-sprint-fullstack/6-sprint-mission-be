@@ -1,14 +1,13 @@
-import { HttpError } from '../middlewares/HttpError.js';
-import * as articleRepository from '../repositories/articleRepository.js';
-import * as commentRepository from '../repositories/commentRepository.js';
+import { Article } from '@prisma/client';
+import { HttpError } from '../middlewares/HttpError';
+import * as articleRepository from '../repositories/articleRepository';
 
-export const createArticle = async (data, userId) => {
-    console.log('서비스에서 유저아이디:', userId);
+export const createArticle = async (data: Pick<Article, 'title' | 'content'>, userId: number) => {
     const entity = await articleRepository.Create({
         ...data,
         authorId: userId,
     });
-    console.log('생성한 entity 데이터:', entity);
+
     return {
         id: entity.id,
         title: entity.title,
@@ -24,7 +23,7 @@ export const createArticle = async (data, userId) => {
     };
 };
 
-export const getArticle = async (id) => {
+export const getArticle = async (id: number) => {
     const entity = await articleRepository.FindById(id);
     if (!entity) throw new HttpError(404, '게시글이 존재하지 않습니다');
 
@@ -38,7 +37,17 @@ export const getArticle = async (id) => {
     };
 };
 
-export const getArticles = async ({ cursor, take, orderBy, word }) => {
+export const getArticles = async ({
+    cursor,
+    take,
+    orderBy,
+    word,
+}: {
+    orderBy?: string;
+    take: number;
+    cursor?: number;
+    word?: string;
+}) => {
     const safeTake = Number(take ?? 10); // 기본값 10 지정 + 숫자 변환
 
     const entities = await articleRepository.FindMany({
@@ -64,7 +73,7 @@ export const getArticles = async ({ cursor, take, orderBy, word }) => {
     };
 };
 
-export const updateArticle = async (id, data) => {
+export const updateArticle = async (id: number, data: Pick<Article, 'title' | 'content'>) => {
     const entity = await articleRepository.Update(id, data);
     if (!entity) throw new HttpError(404, '게시글이 존재하지 않습니다');
     return {
@@ -77,36 +86,51 @@ export const updateArticle = async (id, data) => {
     };
 };
 
-export const deleteArticle = async (id) => {
+export const deleteArticle = async (id: number) => {
     const entity = await articleRepository.FindById(id);
     if (!entity) throw new HttpError(404, '게시글이 존재하지 않습니다');
     await articleRepository.Delete(id);
 };
 
-export const createComment = async (articleId, content) => {
-    const entity = await commentRepository.create(articleId, content);
-    return {
-        id: entity.id,
-        content: entity.content,
-        createdAt: entity.createdAt,
-    };
-};
+// export const createComment = async (articleId: number, content: string) => {
+//     const entity = await commentRepository.Create(articleId, content);
+//     return {
+//         id: entity.id,
+//         content: entity.content,
+//         createdAt: entity.createdAt,
+//     };
+// };
 
-export const listComments = async (articleId, { cursor, take }) => {
-    const entities = await commentRepository.findManyByArticle(articleId, { cursor, take });
-    const hasNext = entities.length === take + 1;
-    return {
-        data: entities.slice(0, take).map((c) => ({
-            id: c.id,
-            articleId: c.articleId,
-            content: c.content,
-            createdAt: c.createdAt,
-        })),
-        hasNext,
-        nextCursor: hasNext ? entities[entities.length - 1].id : null,
-    };
-};
-export const toggleLike = async (articleId, userId) => {
+// export const listComments = async (
+//     articleId: number,
+//     {
+//         type,
+//         tableId,
+//         cursor,
+//         limit = 10,
+//     }: {
+//         type: string;
+//         tableId: number;
+//         cursor?: number;
+//         limit?: number;
+//     },
+// ) => {
+//     const entities = await commentRepository.fetchComments(articleId, { cursor, take });
+
+//   const take = limit; // ✅ 누락된 변수 정의
+//     const hasNext = entities.length === take + 1;
+//     return {
+//         data: entities.slice(0, take).map((c) => ({
+//             id: c.id,
+//             articleId: c.articleId,
+//             content: c.content,
+//             createdAt: c.createdAt,
+//         })),
+//         hasNext,
+//         nextCursor: hasNext ? entities[entities.length - 1].id : null,
+//     };
+// };
+export const toggleLike = async (articleId: number, userId: number) => {
     const result = await articleRepository.toggleLike(userId, articleId);
     return result;
 };

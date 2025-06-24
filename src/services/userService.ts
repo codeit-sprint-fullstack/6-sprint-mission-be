@@ -1,8 +1,11 @@
 //import * as productRepository from '../repositories/productRepository.js';
 import jwt from 'jsonwebtoken';
-import * as userRepository from '../repositories/userRepository.js';
+import * as userRepository from '../repositories/userRepository';
+import { HttpError } from '../middlewares/HttpError';
+import { User } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
-export const getMe = async (id) => {
+export const getMe = async (id: number) => {
     // 유저 존재 확인
     const user = await userRepository.findById(id);
     if (!user) {
@@ -20,12 +23,12 @@ export const getMe = async (id) => {
     };
 };
 
-export const updateMe = async (id, data) => {
+export const updateMe = async (id: number, data: { image: User['image'] }) => {
     const user = await userRepository.findById(id);
     if (!user) {
         throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
     }
-    const updatedUser = await userRepository.update(id, { image: data.image });
+    const updatedUser = await userRepository.updateImg(id, data);
 
     return {
         user: {
@@ -38,7 +41,7 @@ export const updateMe = async (id, data) => {
     };
 };
 
-export const updateMyPassword = async (id, data) => {
+export const updateMyPassword = async (id: number, data: { password: User['password'] }) => {
     // 유저 존재 확인
     const user = await userRepository.findById(id);
     if (!user) {
@@ -46,18 +49,13 @@ export const updateMyPassword = async (id, data) => {
     }
 
     // 현재 비밀번호 확인
-    const isMatch = await bcrypt.compare(data.currentPassword, user.password);
+    const isMatch = await bcrypt.compare(data.password, user.password);
     if (!isMatch) {
         throw new HttpError(401, '현재 비밀번호가 일치하지 않습니다.');
     }
 
-    // 새 비밀번호와 확인용 비밀번호 일치 확인
-    if (data.password !== data.passwordConfirmation) {
-        throw new HttpError(401, '새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-    }
-
     // 새 비밀번호 해싱 후 업데이트
-    const updatedUser = await userRepository.update(id, { password: data.password });
+    const updatedUser = await userRepository.update(id, data);
 
     return {
         user: {
@@ -71,21 +69,21 @@ export const updateMyPassword = async (id, data) => {
 };
 
 // 유저 게시글
-export const getMyArticle = async (id) => {
+export const getMyArticle = async (id: number) => {
     const user = await userRepository.userArticles(id);
     if (!user) throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
     return user.articles; // ✅ 수정됨
 };
 
 // 유저 프로덕트
-export const getMyProduct = async (id) => {
+export const getMyProduct = async (id: number) => {
     const user = await userRepository.userProduct(id);
     if (!user) throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
     return user.products; // ✅ 수정됨
 };
 
 // 유저 좋아요 목록
-export const getMyFavorites = async (id) => {
+export const getMyFavorites = async (id: number) => {
     const user = await userRepository.userFavorites(id);
     if (!user) throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
     return user.myLikes; // ✅ 그대로 OK

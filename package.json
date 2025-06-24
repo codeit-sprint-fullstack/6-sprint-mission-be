@@ -1,16 +1,16 @@
 {
     "name": "codeit-panda-market-mission-3",
-    "type": "module",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
         "test": "jest",
-        "dev": "node ./src/app.js",
         "precompose": "docker-compose build --no-cache",
         "compose": "docker-compose down && docker-compose up",
         "seed": "node ./prisma/seed",
-        "start": "node ./src/app.js"
+        "dev": "ts-node-dev src/app.ts",
+        "build": "tsc",
+        "start": "node --enable-source-maps dist/app.js"
     },
     "prisma": {
         "seed": "node prisma/seed.js"
@@ -26,8 +26,18 @@
     },
     "homepage": "https://github.com/MyAeroCode/codeit-panda-market#readme",
     "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.3",
+        "@types/jsonwebtoken": "^9.0.9",
+        "@types/multer": "^1.4.13",
+        "@types/node": "^24.0.1",
+        "nodemon": "^3.1.10",
         "prettier": "^3.3.2",
-        "prisma": "^5.16.2"
+        "prisma": "^5.16.2",
+        "ts-node": "^10.9.2",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.8.3"
     },
     "dependencies": {
         "@prisma/client": "^5.16.2",
@@ -35,7 +45,7 @@
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
-        "express": "^4.19.2",
+        "express": "^4.21.2",
         "express-session": "^1.18.1",
         "jsonwebtoken": "^9.0.2",
         "multer": "^1.4.5-lts.2",

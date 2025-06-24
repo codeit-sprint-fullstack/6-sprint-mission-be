@@ -1,10 +1,11 @@
 //import * as productRepository from '../repositories/productRepository.js';
 import jwt from 'jsonwebtoken';
-import * as authRepository from '../repositories/authRepository.js';
-import { HttpError } from '../middlewares/HttpError.js';
+import * as authRepository from '../repositories/authRepository';
+import { HttpError } from '../middlewares/HttpError';
 import bcrypt from 'bcrypt';
-export const signUp = async (data) => {
-    if (data.password !== data.passwordConfirmation) {
+import { CreateUserDto, LoginUserDto } from '../Dtos/UserDto';
+export const signUp = async (data: CreateUserDto) => {
+    if (data.password !== data.repeatpassowrd) {
         throw new HttpError(401, '비밀번호가 일치하지 않습니다.');
     }
 
@@ -13,7 +14,10 @@ export const signUp = async (data) => {
         throw new HttpError(409, '이미 가입된 이메일 입니다.');
     }
 
-    const entity = await authRepository.save(data); // ✅ 검증 통과 후 저장
+    const { repeatpassowrd, ...rest } = data;
+    const repodata = rest;
+
+    const entity = await authRepository.save(rest); // ✅ 검증 통과 후 저장
 
     const accessToken = jwt.sign(
         {
@@ -21,7 +25,7 @@ export const signUp = async (data) => {
             userEmail: entity.email,
             userNickname: entity.nickname,
         },
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_SECRET!,
         { expiresIn: '1h' },
     );
 
@@ -31,7 +35,7 @@ export const signUp = async (data) => {
             userEmail: entity.email,
             userNickname: entity.nickname,
         },
-        process.env.REFRESH_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET!,
         { expiresIn: '7d' },
     );
 
@@ -51,7 +55,7 @@ export const signUp = async (data) => {
     };
 };
 
-export const signIn = async (data) => {
+export const signIn = async (data: LoginUserDto) => {
     const user = await authRepository.findByEmail(data.email);
     if (!user) {
         throw new HttpError(404, '해당 유저를 찾을 수 없습니다');
@@ -68,7 +72,7 @@ export const signIn = async (data) => {
             userEmail: user.email,
             userNickname: user.nickname,
         },
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_SECRET!,
         {
             expiresIn: '1h',
         },
@@ -80,7 +84,7 @@ export const signIn = async (data) => {
             userEmail: user.email,
             userNickname: user.nickname,
         },
-        process.env.REFRESH_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET!,
         {
             expiresIn: '7d',
         },
@@ -100,26 +104,4 @@ export const signIn = async (data) => {
             createdAt: user.createdAt,
         },
     };
-};
-
-export const refreshAccessToken = async (refreshToken) => {
-    // 리프레시 토큰으로 유저 찾기
-    const user = await authRepository.findByToken(refreshToken);
-    if (!user) {
-        throw new HttpError(401, '유효하지 않은 리프레시 토큰입니다');
-    }
-
-    // 토큰 유효성 검증 (jwt.verify 사용)
-    try {
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    } catch (err) {
-        throw new HttpError(401, '리프레시 토큰이 만료되었거나 유효하지 않습니다');
-    }
-
-    // 새 액세스 토큰 발급
-    const newAccessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h',
-    });
-
-    return { accessToken: newAccessToken };
 };

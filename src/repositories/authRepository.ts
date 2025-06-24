@@ -1,29 +1,23 @@
-import { prismaClient } from '../prismaClient.js';
+import { User } from '@prisma/client';
+import { prismaClient } from '../prismaClient';
 import bcrypt from 'bcrypt';
 
 // id 값으로 유저 찾기-
-export async function findById(id) {
+export async function findById(id: number) {
     return prismaClient.user.findUnique({
         where: { id },
     });
 }
 
 // email 값으로 유저 찾기 (로그인용)
-export async function findByEmail(email) {
+export async function findByEmail(email: string) {
     return prismaClient.user.findUnique({
         where: { email },
     });
 }
 
-// 토큰 으로 유저 찾기
-export async function findByToken(token) {
-    return prismaClient.user.findUnique({
-        where: { token },
-    });
-}
-
 // 회원 가입용 (비밀번호 bcrypt로 해싱 후 저장)
-export async function save(user) {
+export async function save(user: Pick<User, 'email' | 'nickname' | 'password'>) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     return prismaClient.user.create({
         data: {
@@ -35,18 +29,18 @@ export async function save(user) {
 }
 
 //  토큰 정보 업데이트 (리프레시 토큰 저장)
-export async function update(id, data) {
+export async function update(id: number, data: { token: string }) {
     return prismaClient.user.update({
         where: { id },
         data,
     });
 }
 
-// 소셜 로그인용
-export async function createOrUpdate(provider, providerId, email, name) {
-    return prismaClient.user.upsert({
-        where: { provider, providerId },
-        update: { email, name },
-        create: { provider, providerId, email, name },
-    });
-}
+// // 소셜 로그인용
+// export async function createOrUpdate(provider, providerId, email, name) {
+//     return prismaClient.user.upsert({
+//         where: { provider, providerId },
+//         update: { email, name },
+//         create: { provider, providerId, email, name },
+//     });
+// }

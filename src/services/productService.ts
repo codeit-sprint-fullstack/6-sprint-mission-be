@@ -1,9 +1,26 @@
-import { HttpError } from '../middlewares/HttpError.js';
-import * as productRepository from '../repositories/productRepository.js';
-import * as commentRepository from '../repositories/commentRepository.js';
+import { Product, User } from '@prisma/client';
+import { HttpError } from '../middlewares/HttpError';
+import * as productRepository from '../repositories/productRepository';
 
-export const getProducts = async ({ cursor, take, orderBy, word }) => {
-    const { list, totalCount } = await productRepository.FindMany({ cursor, take, orderBy, word });
+export const getProducts = async ({
+    page,
+    pageSize,
+    orderBy,
+    keyword,
+}: {
+    page: number;
+    pageSize: number;
+    orderBy?: string;
+    keyword?: string;
+}) => {
+    const take = pageSize; // ✅ 추가
+    const { list, totalCount } = await productRepository.FindMany({
+        page,
+        pageSize: take,
+        orderBy,
+        keyword,
+    });
+
     const hasNext = list.length === take + 1;
 
     return {
@@ -25,7 +42,7 @@ export const getProducts = async ({ cursor, take, orderBy, word }) => {
     };
 };
 
-export const getProduct = async (id) => {
+export const getProduct = async (id: number) => {
     const entity = await productRepository.FindById(id);
     if (!entity) throw new HttpError(404, '상품이 존재하지 않습니다');
 
@@ -44,7 +61,14 @@ export const getProduct = async (id) => {
     };
 };
 
-export const createProduct = async (userId, userNickname, data) => {
+export const createProduct = async (
+    userId: User['id'],
+    userNickname: User['nickname'],
+    data: Pick<
+        Product,
+        'description' | 'name' | 'price' | 'tags' | 'images' | 'ownerNickname' | 'ownerId'
+    >,
+) => {
     const entity = await productRepository.Create({
         ...data,
         ownerId: userId,
@@ -64,7 +88,7 @@ export const createProduct = async (userId, userNickname, data) => {
         createdAt: entity.createdAt,
     };
 }; //
-export const updateProduct = async (id, userId, data) => {
+export const updateProduct = async (id: number, userId: number, data: Product) => {
     const entity = await productRepository.FindById(id);
     if (!entity) throw new HttpError(404, '상품이 존재하지 않습니다');
 
@@ -76,7 +100,7 @@ export const updateProduct = async (id, userId, data) => {
     return updated;
 };
 
-export const deleteProduct = async (id, userId) => {
+export const deleteProduct = async (id: number, userId: number) => {
     const entity = await productRepository.FindById(id);
     if (!entity) throw new HttpError(404, '상품이 존재하지 않습니다');
 
@@ -87,7 +111,7 @@ export const deleteProduct = async (id, userId) => {
     await productRepository.Delete(id);
 };
 
-export const toggleLike = async (productId, userId) => {
+export const toggleLike = async (productId: number, userId: number) => {
     const result = await productRepository.toggleLike(userId, productId);
     return result;
 };
