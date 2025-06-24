@@ -1,7 +1,18 @@
-import articleService from "../services/articleService.js";
+import { NextFunction, Request, RequestHandler, Response } from "express";
+import articleService from "../services/article.service";
+import { AuthenticationError } from "../types/errors";
+import {
+  articleDto,
+  articleParamsDto,
+  articleQueryDto,
+} from "../dtos/article.dto";
 
 // 게시글 목록 불러오기
-const getArticles = async (req, res, next) => {
+const getArticles: RequestHandler<{}, {}, {}, articleQueryDto> = async (
+  req,
+  res,
+  next
+) => {
   try {
     const [articles, totalCount] = await articleService.getArticles(req.query);
 
@@ -12,7 +23,9 @@ const getArticles = async (req, res, next) => {
 };
 
 // 게시글 상세조회
-const getArticle = async (req, res, next) => {
+const getArticle: RequestHandler<articleParamsDto> = async (req, res, next) => {
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
+
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
@@ -26,7 +39,13 @@ const getArticle = async (req, res, next) => {
 };
 
 // 게시글 작성
-const createArticle = async (req, res, next) => {
+const createArticle: RequestHandler<{}, {}, articleDto> = async (
+  req,
+  res,
+  next
+) => {
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
+
   const userId = req.auth.id;
 
   try {
@@ -39,11 +58,19 @@ const createArticle = async (req, res, next) => {
 };
 
 // 게시글 수정
-const updateArticle = async (req, res, next) => {
+const updateArticle: RequestHandler<articleParamsDto, {}, articleDto> = async (
+  req,
+  res,
+  next
+) => {
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
+
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {
     const updatedArticle = await articleService.updateArticle(
+      userId,
       articleId,
       req.body
     );
@@ -55,11 +82,18 @@ const updateArticle = async (req, res, next) => {
 };
 
 // 게시글 삭제
-const deleteArticle = async (req, res, next) => {
+const deleteArticle: RequestHandler<articleParamsDto> = async (
+  req,
+  res,
+  next
+) => {
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
+
+  const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
   try {
-    await articleService.deleteArticle(articleId);
+    await articleService.deleteArticle(userId, articleId);
 
     res.sendStatus(204);
   } catch (e) {
@@ -68,7 +102,13 @@ const deleteArticle = async (req, res, next) => {
 };
 
 // 게시글 좋아요
-const addlikeArticle = async (req, res, next) => {
+const addlikeArticle: RequestHandler<articleParamsDto> = async (
+  req,
+  res,
+  next
+) => {
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
+
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 
@@ -82,7 +122,13 @@ const addlikeArticle = async (req, res, next) => {
 };
 
 // 게시글 좋아요 취소
-const cancelLikeArticle = async (req, res, next) => {
+const cancelLikeArticle: RequestHandler<articleParamsDto> = async (
+  req,
+  res,
+  next
+) => {
+  if (!req.auth) throw new AuthenticationError("인증되지 않은 사용자입니다.");
+
   const userId = req.auth.id;
   const articleId = Number(req.params.articleId);
 

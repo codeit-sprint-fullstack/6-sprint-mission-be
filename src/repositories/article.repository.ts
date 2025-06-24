@@ -1,14 +1,30 @@
-import prisma from "../../prisma/client.prisma.js";
+import { Article, Prisma, PrismaClient, User } from "@prisma/client";
+import prisma from "../config/client.prisma";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 
-const findAll = (query) => {
+type TGetArticlesQuery = {
+  offset: string;
+  limit: string;
+  orderBy: string;
+  keyword: string;
+};
+
+type TOptions = {
+  tx?: Omit<
+    PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+    "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+  >;
+};
+
+const findAll = (query: TGetArticlesQuery) => {
   const { offset, limit, orderBy, keyword } = query;
-  const filter = {
+  const filter: Prisma.ArticleWhereInput = {
     OR: [
       { title: { contains: keyword || "", mode: "insensitive" } },
       { content: { contains: keyword || "", mode: "insensitive" } },
     ],
   };
-  const orderByCondition =
+  const orderByCondition: Prisma.ArticleOrderByWithRelationInput =
     orderBy === "recent"
       ? { createdAt: "desc" }
       : { articleLikes: { _count: "desc" } };
@@ -26,11 +42,11 @@ const findAll = (query) => {
   ]);
 };
 
-const findArticleLikeCountById = (articleId) => {
+const findArticleLikeCountById = (articleId: Article["id"]) => {
   return prisma.articleLike.count({ where: { articleId } });
 };
 
-const findById = (userId, articleId) => {
+const findById = (userId: User["id"], articleId: Article["id"]) => {
   return Promise.all([
     prisma.article.findUnique({
       where: { id: articleId },
@@ -46,40 +62,51 @@ const findById = (userId, articleId) => {
   ]);
 };
 
-const findByIdWithTx = (tx, articleId) => {
-  return tx.article.findUnique({
-    where: { id: articleId },
-  });
-};
+const createArticle = (
+  userId: User["id"],
+  body: Pick<Article, "title" | "content">,
+  options: TOptions = {}
+) => {
+  const { tx } = options;
+  const client = tx || prisma;
 
-const create = (userId, body) => {
   const { title, content } = body;
 
-  return prisma.article.create({
+  return client.article.create({
     data: { title, content, authorId: userId },
   });
 };
 
-const updateWithTx = (tx, articleId, body) => {
+const updateArticle = (
+  articleId: Article["id"],
+  body: Pick<Article, "title" | "content">,
+  options: TOptions = {}
+) => {
+  const { tx } = options;
+  const client = tx || prisma;
+
   const { title, content } = body;
 
-  return tx.article.update({
+  return client.article.update({
     where: { id: articleId },
     data: { title, content },
   });
 };
 
-const deleteWithTx = (tx, articleId) => {
-  return tx.article.delete({
+const deleteArticle = (articleId: Article["id"], options: TOptions = {}) => {
+  const { tx } = options;
+  const client = tx || prisma;
+
+  return client.article.delete({
     where: { id: articleId },
   });
 };
 
-const addlikeArticle = (userId, articleId) => {
+const addlikeArticle = (userId: User["id"], articleId: Article["id"]) => {
   return prisma.articleLike.create({ data: { userId, articleId } });
 };
 
-const cancelLikeArticle = (userId, articleId) => {
+const cancelLikeArticle = (userId: User["id"], articleId: Article["id"]) => {
   return prisma.articleLike.delete({
     where: { userId_articleId: { userId, articleId } },
   });
@@ -89,10 +116,9 @@ export default {
   findAll,
   findArticleLikeCountById,
   findById,
-  findByIdWithTx,
-  create,
-  updateWithTx,
-  deleteWithTx,
+  createArticle,
+  updateArticle,
+  deleteArticle,
   addlikeArticle,
   cancelLikeArticle,
 };
