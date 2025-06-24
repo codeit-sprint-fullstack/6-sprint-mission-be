@@ -1,12 +1,15 @@
-const errorHandler = (error, req, res, next) => {
-  if (error.name === "UnauthorizedError") {
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { ValidationError } from "../types/errors";
+
+const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+  if (error instanceof ValidationError) {
     res.status(401).send("invalid token...");
   }
 
   const status = error.code ?? 500;
 
   console.error(error);
-  return res.status(status).json({
+  res.status(status).json({
     path: req.path,
     method: req.method,
     message: error.message ?? "Internal Server Error",

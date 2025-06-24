@@ -3,8 +3,8 @@ POST http://localhost:5050/users
 Content-Type: application/json
 
 {
-  "email": "bjlyeon2003@naver.com",
-  "name": "테스트유저3",
+  "email": "bjlyeon2@naver.com",
+  "name": "테스트유저9",
   "password": "qwer5678@"
 }
 
@@ -13,15 +13,15 @@ POST http://localhost:5050/login
 Content-Type: application/json
 
 {
-  "email": "bjlyeon2003@naver.com",
+  "email": "bjlyeon2@naver.com",
   "password": "qwer5678@"
 }
 
 ### 유저 확인
 GET  http://localhost:5050/me
 Content-Type: application/json
-Authorization: Bearer {{Token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c
 
 ### 액세스 토큰 재발급
 POST http://localhost:5050/token/refresh
-Cookie: refreshToken={{Token}}
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0OTcxODAzMCwiZXhwIjoxNzQ5NzIxNjMwfQ.J8xoIMhtbGQv3gD1tUGJrkIxVv_1Dn3iGAk_n_3ov_c

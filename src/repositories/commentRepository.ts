@@ -1,4 +1,6 @@
-import prisma from "../db/prisma/client.js";
+import prisma from "../db/prisma/client";
+import { CommentRepository, CreateCommentInput } from "../types/index";
+import { Comment } from "@prisma/client";
 
 /**
  * 댓글 생성 (게시글 또는 상품에 대해)
@@ -8,7 +10,7 @@ async function createComment({
   authorId,
   articleId = null,
   productId = null,
-}) {
+}: CreateCommentInput): Promise<any> {
   const newComment = await prisma.comment.create({
     data: {
       content,
@@ -34,10 +36,10 @@ async function createComment({
 /**
  * 특정 게시글의 댓글 목록 조회
  */
-async function getCommentsByArticleId(articleId) {
+async function getCommentsByArticleId(articleId: number): Promise<any[]> {
   const comments = await prisma.comment.findMany({
     where: {
-      articleId: parseInt(articleId, 10),
+      articleId: parseInt(articleId.toString(), 10),
     },
     orderBy: {
       createdAt: "asc",
@@ -58,10 +60,10 @@ async function getCommentsByArticleId(articleId) {
 /**
  * 특정 상품의 댓글 목록 조회
  */
-async function getCommentsByProductId(productId) {
+async function getCommentsByProductId(productId: number): Promise<any[]> {
   const comments = await prisma.comment.findMany({
     where: {
-      productId: parseInt(productId, 10),
+      productId: parseInt(productId.toString(), 10),
     },
     orderBy: {
       createdAt: "asc",
@@ -80,11 +82,33 @@ async function getCommentsByProductId(productId) {
 }
 
 /**
+ * 댓글 ID로 조회
+ */
+async function getById(commentId: number): Promise<any> {
+  const comment = await prisma.comment.findUnique({
+    where: { id: parseInt(commentId.toString(), 10) },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          profileImageUrl: true,
+        },
+      },
+    },
+  });
+  return comment;
+}
+
+/**
  * 댓글 수정
  */
-async function updateComment(commentId, newContent) {
+async function updateComment(
+  commentId: number,
+  newContent: string
+): Promise<Comment> {
   const updated = await prisma.comment.update({
-    where: { id: parseInt(commentId, 10) },
+    where: { id: parseInt(commentId.toString(), 10) },
     data: { content: newContent },
   });
   return updated;
@@ -93,17 +117,20 @@ async function updateComment(commentId, newContent) {
 /**
  * 댓글 삭제
  */
-async function deleteComment(commentId) {
+async function deleteComment(commentId: number): Promise<Comment> {
   const deleted = await prisma.comment.delete({
-    where: { id: parseInt(commentId, 10) },
+    where: { id: parseInt(commentId.toString(), 10) },
   });
   return deleted;
 }
 
-export default {
+const commentRepository: CommentRepository = {
   createComment,
   getCommentsByArticleId,
   getCommentsByProductId,
+  getById,
   updateComment,
   deleteComment,
 };
+
+export default commentRepository;
