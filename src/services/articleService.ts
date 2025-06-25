@@ -1,14 +1,13 @@
-import prisma from "../config/prisma.js";
+import { Article } from "@prisma/client";
+import prisma from "../config/prisma";
 
 // 게시글 생성
-export async function createArticle(data) {
-  return prisma.article.create({
-    data: {
-      title: data.title,
-      content: data.content,
-      userId: data.userId,
-    },
-  });
+export async function createArticle(data: {
+  title: string;
+  content: string;
+  userId: number;
+}): Promise<Article> {
+  return prisma.article.create({ data });
 }
 
 // 전체 게시글 목록 조회
@@ -30,10 +29,19 @@ export async function getAllArticles() {
 }
 
 // 게시글 상세 조회
-export async function getArticleById(id, userId) {
+export async function getArticleById(
+  id: number,
+  userId?: number
+): Promise<any | null> {
   const article = await prisma.article.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+      userId: true, // ✅ 이게 있어야 userId 비교 가능
       user: {
         select: {
           id: true,
@@ -69,20 +77,31 @@ export async function getArticleById(id, userId) {
 }
 
 // 게시글 수정
-export async function updateArticle({ id, userId, title, content }) {
+export async function updateArticle(data: {
+  id: number;
+  userId: number;
+  title?: string;
+  content?: string;
+}): Promise<Article> {
+  const { id, userId, title, content } = data;
+
   // 게시글 존재 및 권한 확인
   const article = await prisma.article.findUnique({
     where: { id },
   });
 
   if (!article) {
-    const error = new Error("게시글을 찾을 수 없습니다.");
+    const error = new Error("게시글을 찾을 수 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 404;
     throw error;
   }
 
   if (article.userId !== userId) {
-    const error = new Error("수정 권한이 없습니다.");
+    const error = new Error("수정 권한이 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 403;
     throw error;
   }
@@ -97,20 +116,27 @@ export async function updateArticle({ id, userId, title, content }) {
 }
 
 // 게시글 삭제
-export async function deleteArticle(id, userId) {
+export async function deleteArticle(
+  id: number,
+  userId: number
+): Promise<Article> {
   // 게시글 존재 및 권한 확인
   const article = await prisma.article.findUnique({
     where: { id },
   });
 
   if (!article) {
-    const error = new Error("게시글을 찾을 수 없습니다.");
+    const error = new Error("게시글을 찾을 수 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 404;
     throw error;
   }
 
   if (article.userId !== userId) {
-    const error = new Error("삭제 권한이 없습니다.");
+    const error = new Error("삭제 권한이 없습니다.") as Error & {
+      code?: number;
+    };
     error.code = 403;
     throw error;
   }
@@ -135,7 +161,10 @@ export async function deleteArticle(id, userId) {
 }
 
 // 게시글 좋아요
-export async function likeArticle(articleId, userId) {
+export async function likeArticle(
+  articleId: number,
+  userId: number
+): Promise<{ message: string }> {
   return await prisma.$transaction(async (tx) => {
     // 이미 좋아요 했는지 확인
     const alreadyLiked = await tx.articleLike.findUnique({
@@ -148,7 +177,9 @@ export async function likeArticle(articleId, userId) {
     });
 
     if (alreadyLiked) {
-      const err = new Error("이미 좋아요를 누르셨습니다.");
+      const err = new Error("이미 좋아요를 누르셨습니다.") as Error & {
+        code?: number;
+      };
       err.code = 409;
       throw err;
     }
@@ -162,7 +193,10 @@ export async function likeArticle(articleId, userId) {
 }
 
 // 게시글 좋아요 취소
-export async function unlikeArticle(articleId, userId) {
+export async function unlikeArticle(
+  articleId: number,
+  userId: number
+): Promise<{ message: string }> {
   return await prisma.$transaction(async (tx) => {
     // 좋아요 데이터 확인
     const like = await tx.articleLike.findUnique({
@@ -175,7 +209,9 @@ export async function unlikeArticle(articleId, userId) {
     });
 
     if (!like) {
-      const err = new Error("좋아요 기록이 없습니다.");
+      const err = new Error("좋아요 기록이 없습니다.") as Error & {
+        code?: number;
+      };
       err.code = 404;
       throw err;
     }

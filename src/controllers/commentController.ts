@@ -1,14 +1,20 @@
-import commentService from "../services/commentService.js";
+import { Request, NextFunction, Response } from "express";
+import commentService from "../services/commentService";
 
 // 상품에 댓글 생성
-export async function createComment(req, res, next) {
+export async function createComment(
+  req: Request<{ id: string }, {}, { content: string }>,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { content } = req.body;
     const productId = Number(req.params.id);
     const userId = req.auth.userId;
 
     if (!content) {
-      return res.status(400).json({ message: "댓글 내용을 입력해주세요." });
+      res.status(400).json({ message: "댓글 내용을 입력해주세요." });
+      return;
     }
 
     const comment = await commentService.createComment({
@@ -24,7 +30,11 @@ export async function createComment(req, res, next) {
 }
 
 // 상품의 댓글 목록 조회
-export async function getProductComments(req, res, next) {
+export async function getProductComments(
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const productId = Number(req.params.id);
     const comments = await commentService.getCommentsByProductId(productId);
@@ -35,14 +45,19 @@ export async function getProductComments(req, res, next) {
 }
 
 // 댓글 수정
-export async function updateComment(req, res, next) {
+export async function updateComment(
+  req: Request<{ commentId: string }, {}, { content: string }>,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { content } = req.body;
     const commentId = Number(req.params.commentId);
     const userId = req.auth.userId;
 
     if (!content) {
-      return res.status(400).json({ message: "댓글 내용을 입력해주세요." });
+      res.status(400).json({ message: "댓글 내용을 입력해주세요." });
+      return;
     }
 
     const comment = await commentService.updateComment({
@@ -58,7 +73,11 @@ export async function updateComment(req, res, next) {
 }
 
 // 댓글 삭제
-export async function deleteComment(req, res, next) {
+export async function deleteComment(
+  req: Request<{ commentId: string }>,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const commentId = Number(req.params.commentId);
     const userId = req.auth.userId;
