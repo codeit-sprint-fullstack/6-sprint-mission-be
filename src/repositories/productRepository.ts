@@ -1,23 +1,34 @@
 import { Product, User } from "@prisma/client";
 import prisma from "../config/prisma";
 
-// TODO: any 수정 필요
-async function findAll(options: any) {
-  return await prisma.product.findMany(options);
+interface ProductDataType {
+  name: Product["name"];
+  description: Product["description"];
+  price: Product["price"];
+  tags: string[];
+  images: string[];
 }
 
-async function save(
-  data: Pick<Product, "images" | "tags" | "price" | "description" | "name">,
-  ownerId: Product["ownerId"]
-) {
-  return prisma.product.create({
+// TODO: any 수정 필요
+async function findAll(options: any) {
+  const { where } = options;
+
+  const [totalCount, products] = await Promise.all([
+    prisma.product.count({ where }),
+    prisma.product.findMany(options),
+  ]);
+  return { totalCount, products };
+}
+
+async function save(data: ProductDataType, ownerId: Product["ownerId"]) {
+  return await prisma.product.create({
     data: { ...data, owner: { connect: { id: ownerId } } },
   });
 }
 
 async function findById(productId: Product["id"], userId: User["id"]) {
   return await prisma.$transaction([
-    prisma.productFavorite.findUnique({
+    prisma.like.findUnique({
       where: { userId_productId: { userId, productId } },
     }),
     prisma.product.findUnique({
@@ -31,11 +42,8 @@ async function findById(productId: Product["id"], userId: User["id"]) {
   ]);
 }
 
-async function update(
-  productId: Product["id"],
-  data: Pick<Product, "images" | "tags" | "price" | "description" | "name">
-) {
-  return prisma.product.update({
+async function update(productId: Product["id"], data: ProductDataType) {
+  return await prisma.product.update({
     where: {
       id: productId,
     },
@@ -44,25 +52,25 @@ async function update(
 }
 
 async function remove(productId: Product["id"]) {
-  return prisma.product.delete({
+  return await prisma.product.delete({
     where: { id: productId },
   });
 }
 
 async function findLike(productId: Product["id"], userId: User["id"]) {
-  return prisma.productFavorite.findUnique({
+  return await prisma.like.findUnique({
     where: { userId_productId: { userId, productId } },
   });
 }
 
 async function createLike(productId: Product["id"], userId: User["id"]) {
   const [, product] = await prisma.$transaction([
-    prisma.productFavorite.create({
+    prisma.like.create({
       data: { userId, productId },
     }),
     prisma.product.update({
       where: { id: productId },
-      data: { favoriteCount: { increment: 1 } },
+      data: { likeCount: { increment: 1 } },
     }),
   ]);
   return product;
@@ -70,12 +78,12 @@ async function createLike(productId: Product["id"], userId: User["id"]) {
 
 async function deleteLike(productId: Product["id"], userId: User["id"]) {
   const [, product] = await prisma.$transaction([
-    prisma.productFavorite.delete({
+    prisma.like.delete({
       where: { userId_productId: { userId, productId } },
     }),
     prisma.product.update({
       where: { id: productId },
-      data: { favoriteCount: { decrement: 1 } },
+      data: { likeCount: { decrement: 1 } },
     }),
   ]);
   return product;

@@ -1,29 +1,23 @@
-import { ExceptionMessage } from "../ExceptionMessage";
+import { ExceptionMessage } from "../constants/ExceptionMessage";
 import { NotFoundError } from "../types/exceptions";
 import { NextFunction, Request, Response } from "express";
 import productService from "../services/productService";
-
-interface ProductQuery {
-  page?: string;
-  pageSize?: string;
-  orderBy: "recent" | "favorite";
-  keyword?: string;
-}
+import { GetListQuery } from "../types";
 
 // 상품 목록 조회
 export async function getProducts(
-  req: Request<{}, {}, {}, ProductQuery>,
+  req: Request<{}, {}, {}, GetListQuery>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const products = await productService.getProducts({
-      page: Number(req.query.page),
-      pageSize: Number(req.query.pageSize),
-      orderBy: req.query.orderBy,
-      keyword: req.query.keyword,
+    const { totalCount, products } = await productService.getProducts({
+      page: Number(req.query.page) || 1,
+      pageSize: Number(req.query.pageSize) || 10,
+      orderBy: req.query.orderBy || "recent",
+      keyword: req.query.keyword || null,
     });
-    res.json({ totalCount: products.length, list: products });
+    res.json({ totalCount, list: products });
   } catch (e) {
     next(e);
   }

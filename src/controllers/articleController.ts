@@ -1,29 +1,23 @@
-import { ExceptionMessage } from "../ExceptionMessage";
+import { ExceptionMessage } from "../constants/ExceptionMessage";
 import { NotFoundError } from "../types/exceptions";
 import { NextFunction, Request, Response } from "express";
 import articleService from "../services/articleService";
-
-interface ArticleQuery {
-  page?: string;
-  pageSize?: string;
-  orderBy?: "recent" | "like";
-  keyword?: string;
-}
+import { GetListQuery } from "../types";
 
 // 게시글 목록 조회
 export async function getArticles(
-  req: Request<{}, {}, {}, ArticleQuery>,
+  req: Request<{}, {}, {}, GetListQuery>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const articles = await articleService.getArticles({
+    const { totalCount, articles } = await articleService.getArticles({
       page: Number(req.query.page) || 1,
       pageSize: Number(req.query.pageSize) || 10,
       orderBy: req.query.orderBy || "recent",
       keyword: req.query.keyword || null,
     });
-    res.json({ totalCount: articles.length, list: articles });
+    res.json({ totalCount, list: articles });
   } catch (e) {
     next(e);
   }
@@ -54,13 +48,13 @@ export async function getArticle(
 ) {
   try {
     const articleId = Number(req.params.articleId);
-    const { userId } = req.auth;
+    const userId = req.auth.userId;
     const [like, article] = await articleService.getArticle(articleId, userId);
     if (!article) {
       throw new NotFoundError(ExceptionMessage.ARTICLE_NOT_FOUND);
     }
-    const { writerId, ...rest } = article;
-    res.json({ ...rest, isLiked: !!like });
+    const { writerId, likes, ...rest } = article;
+    res.json({ ...rest, likeCount: likes.length, isLiked: !!like });
   } catch (e) {
     next(e);
   }
@@ -107,9 +101,9 @@ export async function likeArticle(
   try {
     const articleId = +req.params.articleId;
     const userId = req.auth.userId;
-    const article = await articleService.likeArticle(articleId, userId);
-    const { writerId, ...rest } = article;
-    res.json({ ...rest, isLiked: true });
+    await articleService.likeArticle(articleId, userId);
+    // const { writerId, ...rest } = article;
+    res.json({ articleId, isLiked: true });
   } catch (e) {
     next(e);
   }
@@ -124,9 +118,8 @@ export async function unlikeArticle(
   try {
     const articleId = +req.params.articleId;
     const userId = req.auth.userId;
-    const article = await articleService.unlikeArticle(articleId, userId);
-    const { writerId, ...rest } = article;
-    res.json({ ...rest, isLiked: false });
+    await articleService.unlikeArticle(articleId, userId);
+    res.json({ articleId, isLiked: false });
   } catch (e) {
     next(e);
   }
