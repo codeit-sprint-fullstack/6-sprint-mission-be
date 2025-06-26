@@ -1,17 +1,18 @@
+// ✅ 반드시 가장 먼저 환경 변수 로드
+import "./config/env";
+
+// 나머지 import는 그 다음에
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
-import indexRouter from "./routes/index.route";
 import cookieParser from "cookie-parser";
 import path from "path";
 
+import indexRouter from "./routes/index.route";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger";
 import commonError from "./middlewares/errors/commonError";
 
-dotenv.config();
-
-const PORT = 7777;
+const PORT = parseInt(process.env.PORT || "7777", 10);
 const ALLOWEPORT = 3000;
 const app = express();
 
