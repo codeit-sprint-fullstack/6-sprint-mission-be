@@ -1,0 +1,36 @@
+@baseUrl = http://3.37.87.65:5050
+# 또는 배포 환경에 따라:
+# @baseUrl = https://api.yourdomain.com
+
+### 로그인
+POST {{baseUrl}}/auth/signIn
+Content-Type: application/json
+
+{
+  "email":"test@test.com",
+  "password":"test"
+}
+
+### 회원가입
+POST {{baseUrl}}/auth/signUp
+Content-Type: application/json
+
+{
+  "nickname": "test",
+  "email": "test@test.com",
+  "password": "test"
+}
+
+### 사진 업로드 (실제 이미지 전송시 image/png 로 개선 필요)
+# 주의: 이 요청은 포트가 3000으로 되어 있습니다. 필요하다면 {{baseUrl}}을 사용하세요.
+# 만약 업로드 서버가 다른 포트를 사용한다면, 해당 URL을 직접 명시해야 합니다.
+# 예: POST http://localhost:3000/upload
+# POST http://localhost:3000/upload
+# Content-Type: multipart/form-data; boundary=---------------------------abcd123456
+
+# -----------------------------abcd123456
+# Content-Disposition: form-data; name="image"; filename="your_image.png"
+# Content-Type: image/png
+
+# This is the content of the file.
+# -----------------------------abcd123456--
