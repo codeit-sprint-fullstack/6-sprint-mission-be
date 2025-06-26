@@ -21,7 +21,9 @@ const upload = multer({
       file: Express.Multer.File,
       cb: (error: any, key?: string) => void
     ) => {
-      cb(null, `public/${Date.now()}_${file.originalname}`);
+      const isPrivate = req.query.access === "private";
+      const folder = isPrivate ? "private/" : "public/";
+      cb(null, `${folder}${Date.now()}_${file.originalname}`);
     },
   }),
   fileFilter: (req, file, cb) => {

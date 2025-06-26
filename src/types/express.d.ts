@@ -32,4 +32,22 @@ declare global {
   }
 }
 
+// S3 이미지 관련 타입 정의
+export interface S3ImageInfo {
+  originalUrl: string;
+  presignedUrl?: string;
+  isPrivate: boolean;
+  key: string;
+}
+
+export interface ImageProcessOptions {
+  generatePresignedUrl?: boolean;
+  expiresIn?: number; // presigned URL 만료 시간 (초)
+}
+
+export interface ProcessedImage {
+  url: string;
+  isPresigned: boolean;
+}
+
 export {}; // ✅ 글로벌 선언을 모듈로 만들어 TypeScript가 인식하게 함

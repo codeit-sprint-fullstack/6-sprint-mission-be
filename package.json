@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@aws-sdk/client-s3": "^3.837.0",
+    "@aws-sdk/s3-request-presigner": "^3.837.0",
     "@aws-sdk/types": "^3.821.0",
     "@prisma/client": "^6.10.1",
     "@types/uuid": "^10.0.0",

@@ -2,7 +2,7 @@ import express from "express";
 import userController from "../controllers/userController";
 import auth from "../middlewares/users/auth";
 import authErrorHandler from "../middlewares/errors/authErrorHandler";
-import upload from "../middlewares/common/upload";
+import { generatePresignedUrls } from "../middlewares/common/presignedUrl";
 
 const usersRouter = express.Router();
 
@@ -116,6 +116,74 @@ usersRouter.get("/me", auth.verifyAccessToken, userController.getProfile);
 
 /**
  * @swagger
+ * /user/presigned-url:
+ *   post:
+ *     summary: 프로필 이미지 업로드용 Presigned URL 생성
+ *     tags: [User]
+ *     security:
+ *       - accessToken: []
+ *     parameters:
+ *       - name: access
+ *         in: query
+ *         description: 접근 권한 (private 시 presigned URL로 접근)
+ *         schema:
+ *           type: string
+ *           enum: [public, private]
+ *           default: public
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - filename
+ *                 - contentType
+ *               properties:
+ *                 filename:
+ *                   type: string
+ *                   example: "profile.jpg"
+ *                   description: 업로드할 파일명
+ *                 contentType:
+ *                   type: string
+ *                   example: "image/jpeg"
+ *                   description: 파일의 MIME 타입
+ *     responses:
+ *       200:
+ *         description: Presigned URL 생성 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   uploadUrl:
+ *                     type: string
+ *                     description: 클라이언트가 업로드할 때 사용할 임시 URL (5분 유효)
+ *                   fileUrl:
+ *                     type: string
+ *                     description: 업로드 완료 후 접근할 최종 URL
+ *                   key:
+ *                     type: string
+ *                     description: S3 객체 키
+ *       400:
+ *         description: 잘못된 요청 데이터
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         description: 서버 오류
+ */
+usersRouter.post(
+  "/presigned-url",
+  auth.verifyAccessToken,
+  generatePresignedUrls
+);
+
+/**
+ * @swagger
  * /user/me:
  *   patch:
  *     summary: 유저 정보 수정
@@ -125,13 +193,13 @@ usersRouter.get("/me", auth.verifyAccessToken, userController.getProfile);
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               profile:
+ *               image:
  *                 type: string
- *                 format: binary
+ *                 description: S3 프로필 이미지 URL
  *               nickname:
  *                 type: string
  *     responses:
@@ -178,12 +246,7 @@ usersRouter.get("/me", auth.verifyAccessToken, userController.getProfile);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-usersRouter.patch(
-  "/me",
-  auth.verifyAccessToken,
-  upload.single("profile"),
-  userController.updateUser
-);
+usersRouter.patch("/me", auth.verifyAccessToken, userController.updateUser);
 
 /**
  * @swagger
