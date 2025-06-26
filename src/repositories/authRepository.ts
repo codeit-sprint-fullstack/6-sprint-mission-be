@@ -15,12 +15,10 @@ async function save(
   });
 }
 
-async function findByEmail(user: User["email"]) {
+async function findByEmail(user: User["email"]): Promise<User | null> {
   const getUser = await prisma.user.findUnique({
     where: { email: user }, //이메일을 통해 유저 찾기
   });
-
-  if (!getUser) throw new Error("존재하지 않는 유저입니다.");
 
   // if (!getUser || !encryptedPassword || !getUser.encryptedPassword) {
   //   throw new Error("이메일 또는 비밀번호가 일치하지 않습니다.");

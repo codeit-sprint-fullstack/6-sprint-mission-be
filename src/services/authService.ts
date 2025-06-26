@@ -29,7 +29,7 @@ function createRefreshToken(user: User["id"]) {
   });
 }
 
-async function getByEmail(email: User["email"]) {
+async function getByEmail(email: User["email"]): Promise<User | null> {
   const parsed = EmailSchema.safeParse(email);
   if (!parsed.success) throw new ValidationError("잘못된 이메일 형식입니다.");
 

@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { ArticleMocks } from "./mocks/articleMocks";
 import { ProductMocks } from "./mocks/productMocks";
 import { CommentMocks } from "./mocks/commentMocks";
 import { getUserMocks } from "./mocks/userMocks";
-
-const prisma = new PrismaClient();
+import prisma from "../config/client.prisma";
 
 async function main(): Promise<void> {
   const UserMocks = await getUserMocks();
