@@ -65,8 +65,10 @@ const createArticle: RequestHandler = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     const userId = req.auth!.userId;
-    const files = req.files as Express.Multer.File[];
-    const imagePaths = files?.map((file) => `/uploads/${file.filename}`) || [];
+    const files = req.files as Express.MulterS3.File[]; // 타입 명확히 변경 (multer-s3 사용 시)
+
+    // S3 업로드 결과 URL 사용
+    const imagePaths = files?.map((file) => file.location) || [];
 
     const article = await articleService.createArticle({
       title,
@@ -74,6 +76,7 @@ const createArticle: RequestHandler = async (req, res, next) => {
       images: imagePaths,
       userId,
     });
+
     res
       .status(201)
       .json({ message: "게시글이 성공적으로 등록되었습니다.", article });
@@ -87,11 +90,10 @@ const updateArticle: RequestHandler = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
     const { title, content, existingImages } = req.body;
-    const files = req.files as Express.Multer.File[];
+    const files = req.files as Express.MulterS3.File[]; // S3용 타입으로 변경
 
-    // 새 이미지 경로 처리
-    const newImagePaths =
-      files?.map((file) => `/uploads/${file.filename}`) || [];
+    // 새 이미지 경로 처리 - S3 location 사용
+    const newImagePaths = files?.map((file) => file.location) || [];
 
     // 기존 이미지 처리
     let existingImagePaths = [];

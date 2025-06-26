@@ -8,6 +8,27 @@ declare global {
       };
       files: Express.Multer.File[];
     }
+
+    // S3용 multer 파일 타입 정의
+    interface MulterS3 {
+      File: {
+        fieldname: string;
+        originalname: string;
+        encoding: string;
+        mimetype: string;
+        size: number;
+        bucket: string;
+        key: string;
+        acl: string;
+        contentType: string;
+        contentDisposition: string;
+        storageClass: string;
+        serverSideEncryption: string;
+        metadata: any;
+        location: string; // S3 URL
+        etag: string;
+      };
+    }
   }
 }
 

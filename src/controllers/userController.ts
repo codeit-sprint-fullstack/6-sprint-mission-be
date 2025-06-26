@@ -26,7 +26,8 @@ const updateUser = async (
 ) => {
   try {
     const userId = req.auth!.userId;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const file = req.file as Express.MulterS3.File;
+    const imagePath = file ? file.location : undefined;
 
     const data = {
       ...req.body,

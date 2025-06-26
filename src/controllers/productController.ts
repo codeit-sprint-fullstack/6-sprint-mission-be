@@ -3,6 +3,7 @@ import productService from "../service/productService";
 import { NotFoundError } from "../types/commonError";
 import { prisma } from "../db/prisma/client.prisma";
 import { ProductParamsDto } from "../dtos/product.dto";
+import { Express } from "express";
 
 // 전체 상품 목록 조회
 const getProducts = async (
@@ -101,10 +102,11 @@ const createProduct = async (
       }
     }
 
-    // 여러 이미지 파일 처리
+    // 여러 이미지 파일 처리 - S3 location 사용
+    const files = req.files as Express.MulterS3.File[]; // S3용 타입으로 변경
     const imagePaths =
-      req.files && Array.isArray(req.files) && req.files.length > 0
-        ? req.files.map((file) => `/uploads/${file.filename}`)
+      files && Array.isArray(files) && files.length > 0
+        ? files.map((file) => file.location)
         : [];
 
     const product = await productService.createProduct({
@@ -145,10 +147,11 @@ const updateProduct = async (
     const productId = req.params.id;
     const { existingImages, tags, ...otherData } = req.body;
 
-    // 여러 이미지 파일 처리
+    // 여러 이미지 파일 처리 - S3 location 사용
+    const files = req.files as Express.MulterS3.File[]; // S3용 타입으로 변경
     const newImagePaths =
-      req.files && Array.isArray(req.files) && req.files.length > 0
-        ? req.files.map((file) => `/uploads/${file.filename}`)
+      files && Array.isArray(files) && files.length > 0
+        ? files.map((file) => file.location)
         : [];
 
     // 기존 이미지 처리: 문자열로 전송된 경우 배열로 변환

@@ -1,22 +1,10 @@
 import express from "express";
-import multer from "multer";
 import userController from "../controllers/userController";
 import auth from "../middlewares/users/auth";
 import authErrorHandler from "../middlewares/errors/authErrorHandler";
+import upload from "../middlewares/common/upload";
 
 const usersRouter = express.Router();
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = Date.now() + "-" + file.originalname;
-    cb(null, uniqueName);
-  },
-});
-
-const upload = multer({ storage });
 
 /**
  * @swagger

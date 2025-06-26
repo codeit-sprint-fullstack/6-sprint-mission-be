@@ -2,10 +2,9 @@
 import "./config/env";
 
 // 나머지 import는 그 다음에
-import express from "express";
+import express, { Request } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "path";
 
 import indexRouter from "./routes/index.route";
 import swaggerUi from "swagger-ui-express";
@@ -16,9 +15,6 @@ const PORT = parseInt(process.env.PORT || "7777", 10);
 const ALLOWEPORT = 3000;
 const app = express();
 
-// ✅ 정적 파일 서빙 (최상단에 위치하는 것이 안전)
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
-
 app.use(cookieParser()); // ✅ 필수!
 
 // 허용할 도메인들
@@ -28,7 +24,7 @@ const allowedOrigins = [
   "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe.vercel.app",
-  "https://six-sprint-mission-be.onrender.com", // ✅ Swagger UI가 실행되는 곳 (자기 자신)
+  "http://3.38.228.28:7777", // ✅ Swagger UI origin 추가
   // 배포된 환경
 ];
 
