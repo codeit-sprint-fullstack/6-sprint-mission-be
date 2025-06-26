@@ -132,7 +132,7 @@ const updateProduct = async (
     {
       name?: string;
       description?: string;
-      price?: number;
+      price?: number | string;
       images?: string[];
       tags?: string | string[];
     }
@@ -142,7 +142,7 @@ const updateProduct = async (
 ) => {
   try {
     const productId = req.params.id;
-    const { images, tags, ...otherData } = req.body;
+    const { images, tags, price, ...otherData } = req.body;
 
     // 기존 상품 조회 (권한 확인 + 이미지 정보 필요)
     const existingProduct = await productService.getProductById(productId);
@@ -175,9 +175,13 @@ const updateProduct = async (
       }
     }
 
+    // price 데이터 처리: 문자열인 경우 숫자로 변환
+    const processedPrice = price !== undefined ? Number(price) : undefined;
+
     // Prisma 모델에 맞는 데이터 구성
     const data = {
       ...otherData,
+      ...(processedPrice !== undefined && { price: processedPrice }),
       ...(processedTags !== undefined && { tags: processedTags }),
       ...(newImages.length > 0 && { image: newImages }),
     };

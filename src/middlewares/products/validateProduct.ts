@@ -8,7 +8,7 @@ export const validateProduct = (
       name?: string;
       description?: string;
       price?: number | string;
-      existingImages?: string;
+      images?: string[];
       tags?: string | string[];
     }
   >,

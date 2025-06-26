@@ -24,7 +24,9 @@ const allowedOrigins = [
   "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
   "https://6-sprint-mission-fe.vercel.app",
-  "http://3.38.228.28:7777", // ✅ Swagger UI origin 추가
+  // ✅ Swagger UI origin 추가
+  // nginx 환경으로 변경
+  "http://3.38.228.28",
   // 배포된 환경
 ];
 
