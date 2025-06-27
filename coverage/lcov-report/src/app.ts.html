@@ -1,0 +1,394 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/app.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> app.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/46</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/4</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/46</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// src/app.ts
+<span class="cstat-no" title="statement not covered" >import express, { Application, Request, Response } from "express";</span>
+<span class="cstat-no" title="statement not covered" >import swaggerUi from "swagger-ui-express";</span>
+<span class="cstat-no" title="statement not covered" >import swaggerSpec from "./swagger";</span>
+<span class="cstat-no" title="statement not covered" >import userRouter from "./routes/user.route";</span>
+<span class="cstat-no" title="statement not covered" >import productRouter from "./routes/product.route";</span>
+<span class="cstat-no" title="statement not covered" >import commentRouter from "./routes/comment.route";</span>
+<span class="cstat-no" title="statement not covered" >import authRouter from "./routes/auth.route";</span>
+<span class="cstat-no" title="statement not covered" >import articleRouter from "./routes/article.route";</span>
+<span class="cstat-no" title="statement not covered" >import imageRouter from "./routes/image.route"; </span>// 이 라우터는 로컬 파일 처리였다면 S3 처리로 수정하거나 필요시 제거
+<span class="cstat-no" title="statement not covered" >import { errorConverter, errorHandler } from "./middlewares/error.middleware";</span>
+<span class="cstat-no" title="statement not covered" >import cors from "cors";</span>
+<span class="cstat-no" title="statement not covered" >import helmet from "helmet";</span>
+<span class="cstat-no" title="statement not covered" >import morgan from "morgan";</span>
+&nbsp;
+// S3 업로드를 위해 추가된/변경된 임포트
+<span class="cstat-no" title="statement not covered" >import multer from "multer";</span>
+<span class="cstat-no" title="statement not covered" >import { S3Client } from "@aws-sdk/client-s3"; </span>// AWS SDK v3의 S3Client
+<span class="cstat-no" title="statement not covered" >import multerS3 from "multer-s3";</span>
+// import path from "path"; // 파일 이름 처리를 위해 필요 (사용하지 않으므로 주석 처리)
+&nbsp;
+const app: Application = <span class="cstat-no" title="statement not covered" >express();</span>
+&nbsp;
+// --- S3 관련 설정 시작 ---
+&nbsp;
+// AWS S3 객체 생성 (AWS SDK v3 방식)
+// EC2 인스턴스에 S3 접근 권한을 가진 IAM Role이 연결되어 있다면,
+// 여기에 accessKeyId와 secretAccessKey를 명시할 필요 없이
+// AWS SDK가 자동으로 인스턴스 프로파일에서 자격 증명을 가져옵니다.
+const s3 = <span class="cstat-no" title="statement not covered" >new S3Client({</span>
+  region: 'ap-northeast-2' // **TODO: S3 버킷이 위치한 실제 AWS 리전으로 변경하세요. (예: 'us-east-1')**
+});
+&nbsp;
+// S3 버킷 이름 설정
+const S3_BUCKET_NAME = <span class="cstat-no" title="statement not covered" >'your-actual-s3-bucket-name';</span> // **TODO: 실제 S3 버킷 이름으로 변경하세요.**
+&nbsp;
+// Multer-S3를 사용한 파일 업로드 설정
+const upload = <span class="cstat-no" title="statement not covered" >multer({</span>
+  storage: multerS3({
+    s3: s3, // S3Client 객체 할당
+    bucket: S3_BUCKET_NAME,
+    acl: 'public-read', // **TODO: 필요에 따라 접근 권한 설정 (예: 'private', 'authenticated-read' 등)**
+    // 웹에서 이미지 URL로 직접 접근하게 하려면 'public-read'가 필요합니다.
+    contentType: multerS3.AUTO_CONTENT_TYPE, // 파일의 MIME 타입 자동 감지
+    metadata: <span class="fstat-no" title="function not covered" >function (_</span>: any, file, cb) {
+<span class="cstat-no" title="statement not covered" >      cb(null, { fieldName: file.fieldname });</span>
+    },
+    key: <span class="fstat-no" title="function not covered" >function (_</span>: any, file, cb) {
+      // 파일을 'image/' 폴더 안에 저장하도록 경로 설정
+      // 예: 'image/1719549304000-myimage.png'
+<span class="cstat-no" title="statement not covered" >      cb(null, `image/${Date.now().toString()}-${file.originalname}`);</span>
+    }
+  })
+});
+&nbsp;
+// --- S3 관련 설정 끝 ---
+&nbsp;
+// 기존 미들웨어 및 라우터 설정
+<span class="cstat-no" title="statement not covered" >app.use(morgan("dev"));</span>
+<span class="cstat-no" title="statement not covered" >app.use(helmet());</span>
+<span class="cstat-no" title="statement not covered" >app.use(cors());</span>
+<span class="cstat-no" title="statement not covered" >app.use(express.json());</span>
+// 로컬 파일 서빙은 S3로 직접 업로드하므로 더 이상 필요 없을 수 있습니다.
+// app.use("/" + UPLOADS_DIR, express.static(UPLOADS_DIR)); // 주석 처리 또는 삭제 고려
+&nbsp;
+<span class="cstat-no" title="statement not covered" >app.use("/auth", authRouter);</span>
+<span class="cstat-no" title="statement not covered" >app.use("/users", userRouter);</span>
+<span class="cstat-no" title="statement not covered" >app.use("/products", productRouter);</span>
+<span class="cstat-no" title="statement not covered" >app.use("/comments", commentRouter);</span>
+<span class="cstat-no" title="statement not covered" >app.use("/articles", articleRouter);</span>
+<span class="cstat-no" title="statement not covered" >app.use("/images", imageRouter); </span>// 이 라우터가 로컬 파일 처리에 의존하고 있었다면 수정 필요
+&nbsp;
+// 이미지 업로드를 위한 POST 라우트
+// S3에 직접 업로드하고, 업로드된 파일의 URL을 반환합니다.
+<span class="cstat-no" title="statement not covered" >app.post("/upload", upload.single("image"), <span class="fstat-no" title="function not covered" >(r</span>eq: Request, res: Response): any =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  if (!req.file) {</span>
+    // 파일이 없을 경우 400 Bad Request 응답 후 함수 종료
+<span class="cstat-no" title="statement not covered" >    res.status(400).send({ message: "No image file uploaded." });</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+  }
+&nbsp;
+  // multer-s3가 업로드 후 req.file에 S3 파일 정보를 추가합니다.
+  // TypeScript 환경에서 req.file의 정확한 타입을 보장하기 위해 단언(assertion)을 사용합니다.
+  const fileUrl = (<span class="cstat-no" title="statement not covered" >req.file as Express.MulterS3.File).location;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (fileUrl) {</span>
+    // 업로드된 파일의 S3 URL을 200 OK 응답으로 반환 후 함수 종료
+<span class="cstat-no" title="statement not covered" >    res.status(200).send({ url: fileUrl });</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+  } else {
+    // 알 수 없는 이유로 파일 URL을 얻지 못했을 경우 500 Internal Server Error 응답 후 함수 종료
+<span class="cstat-no" title="statement not covered" >    res.status(500).send({ message: "파일 업로드에 실패했습니다." });</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+  }
+});
+&nbsp;
+// Swagger API 문서 라우트
+<span class="cstat-no" title="statement not covered" >app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));</span>
+&nbsp;
+// 에러 처리 미들웨어
+<span class="cstat-no" title="statement not covered" >app.use(errorConverter);</span>
+<span class="cstat-no" title="statement not covered" >app.use(errorHandler);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >export default app; </span>// 앱 객체를 내보냅니다.</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-06-27T02:08:47.192Z
+            </div>
+        <script src="../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
+    </body>
+</html>
+    
