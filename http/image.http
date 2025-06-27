@@ -1,6 +1,9 @@
 ### 사진 업로드 (text/plain -> image/png 개선 필요)
 
-POST http://localhost:3000/upload
+# http://3.37.87.65:5050/
+@url=http://3.37.87.65:5050
+
+POST {{url}}/upload
 Content-Type: multipart/form-data; boundary=---------------------------abcd123456
 
 -----------------------------abcd123456
@@ -8,6 +11,9 @@ Content-Disposition: form-data; name="image"; filename="blank.txt"
 Content-Type: text/plain
 
 This is the content of the file.
+
+2025-06-07 업로드한 파일 s3버킷에 저장됨
 -----------------------------abcd123456--
 
-###
+### 업로드된 이미지 확인
+GET {{url}}/uploads/image-1750988411901.txt
