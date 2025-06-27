@@ -201,7 +201,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://pandamarket_3z2r_user:2i5vD90Jz0m6zlP34KaP82PnLmmmDqsD@dpg-d18fjr0dl3ps738ah3d0-a.singapore-postgres.render.com/pandamarket_3z2r?schema=public"
+        "value": "postgresql://postgres:c3574mk%21@localhost:5432/sprint12?schema=public"
       }
     }
   },

@@ -63,9 +63,9 @@ articleController.post(
         throw error;
       }
       let imagePaths = [] as string[];
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
       const item = await articleService.createArticle({
         title,
@@ -110,9 +110,9 @@ articleController.post(
       }
 
       let imagePaths = [] as string[];
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
       const item = await articleService.createArticle({
         title,
@@ -157,9 +157,9 @@ articleController.patch(
       }
 
       let imagePaths = item.images;
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
       const updatedItem = await articleService.patchArticle(id, {
         title,

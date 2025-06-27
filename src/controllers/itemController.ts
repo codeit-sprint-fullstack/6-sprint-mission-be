@@ -144,9 +144,9 @@ itemController.post(
         tags = JSON.parse(tags);
       }
       let imagePaths = [] as string[];
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
       const item = await itemService.createItem({
         name,
@@ -238,9 +238,9 @@ itemController.patch(
         tags = JSON.parse(tags);
       }
       let imagePaths = item.images;
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
       const updatedItem = await itemService.patchItem(id, {
         name,
