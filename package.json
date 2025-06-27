@@ -5,7 +5,7 @@
   "description": "> _이 저장소는 판다마켓 프로젝트의 백엔드 코드를 관리하는 곳입니다. 프로젝트를 클론하여 개발 환경을 설정하고, 각 브랜치에서 해당 스프린트 미션을 수행해 주세요!_ 🛠️",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/app.js",
+    "dev": "tsx watch ./src/app.ts",
     "migrate": "prisma migrate dev --schema=./src/db/prisma/schema.prisma"
   },
   "repository": {
@@ -28,7 +28,11 @@
     "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^1.4.13",
     "@types/node": "^22.13.10",
     "nodemon": "^3.1.9",
     "prisma": "^6.5.0",
