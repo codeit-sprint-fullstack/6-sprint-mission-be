@@ -1,6 +1,6 @@
-import swaggerJSDoc from "swagger-jsdoc";
+import swaggerJSDoc, { Options } from "swagger-jsdoc";
 
-const options = {
+const options: Options = {
   definition: {
     openapi: "3.0.0",
     info: {
@@ -31,9 +31,9 @@ const options = {
     ],
   },
   apis: [
-    "./src/controllers/*.js",
-    "./src/services/*.js",
-    "./src/repositories/*.js",
+    "./src/controllers/*.ts",
+    "./src/services/*.ts",
+    "./src/repositories/*.ts",
   ],
 };
 

@@ -1,11 +1,11 @@
 ###상품 등록
 POST http://localhost:3000/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0NjY4NDI0MCwiZXhwIjoxNzQ2Njg3ODQwfQ.SOESrOEWFQEA_1_MI6Ftwd8o_iZ9V3WwRfuUmIv4bTk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc1MDk5ODAwMCwiZXhwIjoxNzUxMDAxNjAwfQ.x96YtcM7GukyDtYKHsjkpa5w0LMPbs8vdNFvrmIPXac
 
 {
-    "name": "상품9" ,
-    "description": "9번째 상품" ,
+    "name": "multer-s3-1" ,
+    "description": "multer를 이용해 업로드한 상품" ,
     "price": 11111,
     "tags": ["인증된"]
 

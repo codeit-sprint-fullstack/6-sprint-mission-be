@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import productService from "../services/productService";
 import auth from "../middlewares/auth";
-import upload from "../middlewares/images";
+// import upload from "../middlewares/images";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import {
   AuthenticationError,
@@ -14,6 +14,11 @@ import {
   ProductQuerySchema,
   ProductUpdateSchema,
 } from "../dto/product.dto";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client } from "@aws-sdk/client-s3"; //s3에 접근하기 위해 사용됨
+import multer from "multer";
+import multerS3 from "multer-s3";
 
 const productController = express.Router();
 const productCommentController = express.Router();
@@ -209,6 +214,31 @@ const productCommentController = express.Router();
  *         description: 댓글 목록 반환
  */
 
+// app.use("/uploads", express.static("uploads")); 이 코드는 express가 직접 이미지를 제공하겠다는 뜻
+// 그래서 이제 s3가 이미지 응답을 대신해줄거라서 s3 클라이언트를 생성하는 코드를 만들어야 함
+const s3 = new S3Client({
+  region: "ap-northeast-2",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+// const upload = multer({dest:"uploads/"}); destination에 업로드를 해주는 코드
+//dest 대신에 storage라는 속성을 이용해서 업로드의 위치처리를 multer-s3가 해줌.
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.AWS_BUCKET_NAME!,
+    key: (req, file, cb) => {
+      // ?access=private 인 경우 업로드 위치를 private/ 폴더로 지정(분기처리)
+      const isPrivate = req.query?.access === "private";
+      const folder = isPrivate ? "private/" : "public/";
+      cb(null, `${folder}${Date.now()}_${file.originalname}`); //업로드되는 위치1
+    },
+  }),
+});
+
 // 상품 등록, 전체 상품 조회
 productController
   .route("/")
@@ -229,6 +259,9 @@ productController
           return typeof tags === "string" ? [tags] : [];
         })();
 
+        const isPrivate = req.query.access === "private"; //private 요청이 온 경우로 t/f
+        const { location, key } = req.file!; //multer 미들웨어를 통해 생성된(d.ts에 타입명시함)
+
         const accessToken = req.headers.authorization?.split(" ")[1]!;
         const decoded = jwt.verify(
           accessToken,
@@ -239,15 +272,30 @@ productController
           ...req.body,
           price: Number(req.body.price),
           tags: parsedTags,
-          imageUrl: `http://localhost:3000/uploads/${req.file?.filename}`,
+          //imageUrl: `http://localhost:3000/uploads/${req.file?.filename}`, 이거 대신 multer-s3 사용
+          imageUrl: location,
           authorId: decoded.userId,
         });
+
         if (!parsed.success)
           throw new ValidationError("상품 데이터가 유효하지 않습니다.");
 
         const createProduct = await productService.create(parsed.data);
 
-        res.json(createProduct);
+        // private이면 presigned URL 생성
+        let presignedUrl = null;
+        if (isPrivate) {
+          const command = new GetObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: key,
+          });
+          presignedUrl = await getSignedUrl(s3, command, { expiresIn: 60 * 1 }); // 1분
+        }
+
+        res.json({
+          ...createProduct,
+          presignedUrl,
+        });
       } catch (error) {
         next(error);
       }
