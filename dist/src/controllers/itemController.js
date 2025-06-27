@@ -134,7 +134,7 @@ itemController.post("/", multer_1.default.array("images", 3), auth_1.default.ver
         let imagePaths = [];
         const files = req.files;
         if (files.length > 0) {
-            imagePaths = files.map((file) => `/uploads/${file.filename}`);
+            imagePaths = files.map((file) => file.location);
         }
         const item = yield itemService_1.default.createItem({
             name,
@@ -217,7 +217,7 @@ itemController.patch("/:id", auth_1.default.verifyAccessToken, multer_1.default.
         let imagePaths = item.images;
         const files = req.files;
         if (files.length > 0) {
-            imagePaths = files.map((file) => `/uploads/${file.filename}`);
+            imagePaths = files.map((file) => file.location);
         }
         const updatedItem = yield itemService_1.default.patchItem(id, {
             name,

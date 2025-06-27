@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_js_1 = __importDefault(require("../middlewares/auth.js"));
-const commentService_js_1 = __importDefault(require("../services/commentService.js"));
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const commentService_1 = __importDefault(require("../services/commentService"));
 const express_1 = __importDefault(require("express"));
 const commentController = express_1.default.Router();
 /**
@@ -55,13 +55,13 @@ const commentController = express_1.default.Router();
  *       422:
  *         description: 댓글 존재하지 않음
  */
-commentController.patch("/:id", auth_js_1.default.verifyAccessToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+commentController.patch("/:id", auth_1.default.verifyAccessToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const id = req.params.id;
         const { content } = req.body;
         const userId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.userId;
-        const comment = yield commentService_js_1.default.getById(id);
+        const comment = yield commentService_1.default.getById(id);
         if (!comment) {
             const error = new Error("수정하려는 댓글이 존재하지 않습니다.");
             error.code = 422;
@@ -72,7 +72,7 @@ commentController.patch("/:id", auth_js_1.default.verifyAccessToken, (req, res, 
             error.code = 401;
             throw error;
         }
-        const updatedcomment = yield commentService_js_1.default.patchComment(id, { content });
+        const updatedcomment = yield commentService_1.default.patchComment(id, { content });
         res.status(201).json(updatedcomment);
     }
     catch (error) {
@@ -102,12 +102,12 @@ commentController.patch("/:id", auth_js_1.default.verifyAccessToken, (req, res, 
  *       422:
  *         description: 댓글 존재하지 않음
  */
-commentController.delete("/:id", auth_js_1.default.verifyAccessToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+commentController.delete("/:id", auth_1.default.verifyAccessToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const id = req.params.id;
         const userId = (_a = req.auth) === null || _a === void 0 ? void 0 : _a.userId;
-        const comment = yield commentService_js_1.default.getById(id);
+        const comment = yield commentService_1.default.getById(id);
         if (!comment) {
             const error = new Error("삭제하려는 댓글이 존재하지 않습니다.");
             error.code = 422;
@@ -118,7 +118,7 @@ commentController.delete("/:id", auth_js_1.default.verifyAccessToken, (req, res,
             error.code = 401;
             throw error;
         }
-        yield commentService_js_1.default.deleteComment(id);
+        yield commentService_1.default.deleteComment(id);
         res.status(204).send();
     }
     catch (error) {

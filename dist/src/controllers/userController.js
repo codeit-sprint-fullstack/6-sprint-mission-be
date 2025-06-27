@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_js_1 = __importDefault(require("../middlewares/auth.js"));
-const userService_js_1 = __importDefault(require("../services/userService.js"));
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const userService_1 = __importDefault(require("../services/userService"));
 const express_1 = __importDefault(require("express"));
 const userController = express_1.default.Router();
 /**
@@ -56,7 +56,7 @@ userController.post("/signup", (req, res, next) => __awaiter(void 0, void 0, voi
             error.code = 422;
             throw error;
         }
-        const user = yield userService_js_1.default.createUser({
+        const user = yield userService_1.default.createUser({
             email,
             nickname,
             password,
@@ -113,9 +113,9 @@ userController.post("/login", (req, res, next) => __awaiter(void 0, void 0, void
             error.code = 422;
             throw error;
         }
-        const user = yield userService_js_1.default.getUser(email, password);
-        const accessToken = userService_js_1.default.createToken(user);
-        const refreshToken = userService_js_1.default.createToken(user, "refresh");
+        const user = yield userService_1.default.getUser(email, password);
+        const accessToken = userService_1.default.createToken(user);
+        const refreshToken = userService_1.default.createToken(user, "refresh");
         res.json({ accessToken, refreshToken, user });
     }
     catch (error) {
@@ -141,7 +141,7 @@ userController.post("/login", (req, res, next) => __awaiter(void 0, void 0, void
  *                 accessToken:
  *                   type: string
  */
-userController.post("/refresh-token", auth_js_1.default.verifyRefreshToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+userController.post("/refresh-token", auth_1.default.verifyRefreshToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
         const refreshToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
@@ -151,7 +151,7 @@ userController.post("/refresh-token", auth_js_1.default.verifyRefreshToken, (req
             throw error;
         }
         const userId = (_b = req.auth) === null || _b === void 0 ? void 0 : _b.userId;
-        const { newAccessToken } = yield userService_js_1.default.refreshToken(userId, refreshToken);
+        const { newAccessToken } = yield userService_1.default.refreshToken(userId, refreshToken);
         res.json({ accessToken: newAccessToken });
     }
     catch (error) {
@@ -174,10 +174,10 @@ userController.post("/refresh-token", auth_js_1.default.verifyRefreshToken, (req
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-userController.get("/me", auth_js_1.default.verifyAccessToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+userController.get("/me", auth_1.default.verifyAccessToken, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const user = yield userService_js_1.default.getUserById((_a = req.auth) === null || _a === void 0 ? void 0 : _a.userId);
+        const user = yield userService_1.default.getUserById((_a = req.auth) === null || _a === void 0 ? void 0 : _a.userId);
         res.json(user);
     }
     catch (error) {
