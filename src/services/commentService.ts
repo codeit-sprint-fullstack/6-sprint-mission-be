@@ -1,4 +1,4 @@
-import { Comment, User } from "../generated/prisma/index.js";
+import { Comment, User } from "@prisma/client";
 import commentRepository from "../repositories/commentRepository";
 
 async function createComment(

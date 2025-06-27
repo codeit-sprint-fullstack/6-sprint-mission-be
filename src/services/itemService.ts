@@ -1,4 +1,4 @@
-import { Item, User } from "../generated/prisma/index.js";
+import { Item, User } from "@prisma/client";
 import itemRepository from "../repositories/itemRepository";
 
 async function createItem(

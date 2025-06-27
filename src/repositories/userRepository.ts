@@ -1,5 +1,5 @@
-import prisma from "../../prisma/client";
-import { User } from "../generated/prisma";
+import prisma from "../config/client.prisma";
+import { User } from "@prisma/client";
 
 async function findById(id: User["id"]) {
   return prisma.user.findUnique({
