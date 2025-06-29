@@ -2,7 +2,7 @@
 import "./config/env";
 
 // 나머지 import는 그 다음에
-import express, { Request } from "express";
+import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
