@@ -1,16 +1,16 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import userRouter from "./routes/userRouter";
-import articleRouter from "./routes/articleRouter";
-import productRouter from "./routes/productRouter";
-import commentRouter from "./routes/commentRouter";
-import imageRouter from "./routes/imageRouter";
+import userRouter from "./routers/user.router";
+import articleRouter from "./routers/article.router";
+import productRouter from "./routers/product.router";
+import commentRouter from "./routers/comment.router";
+import imageRouter from "./routers/image.router";
 import errorHandler from "./middlewares/errorHandler";
 // import { swaggerUi, specs } from "./swagger";
 import "dotenv/config";
 import passport from "passport";
-import "./config/passport";
+import "./configs/passport.config";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -20,7 +20,7 @@ app.use(passport.initialize());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );

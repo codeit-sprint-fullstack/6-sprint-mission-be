@@ -1,4 +1,4 @@
-import commentRepository from "../repositories/commentRepository";
+import commentRepository from "../repositories/comment.repository";
 import { Comment, User } from "@prisma/client";
 
 interface GetCommentsInput {

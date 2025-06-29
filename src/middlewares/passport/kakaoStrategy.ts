@@ -1,5 +1,5 @@
 import { Strategy as KakaoStrategy, Profile } from "passport-kakao";
-import userService from "../../services/userService";
+import userService from "../../services/user.service";
 
 const kakaoStrategyOptions = {
   clientID: process.env.KAKAO_CLIENT_ID as string,

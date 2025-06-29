@@ -1,11 +1,11 @@
 import { ExceptionMessage } from "../constants/ExceptionMessage";
 import { NotFoundError } from "../types/exceptions";
 import { NextFunction, Request, Response } from "express";
-import articleService from "../services/articleService";
+import articleService from "../services/article.service";
 import { GetListQuery } from "../types";
 
 // 게시글 목록 조회
-export async function getArticles(
+export async function getArticlesController(
   req: Request<{}, {}, {}, GetListQuery>,
   res: Response,
   next: NextFunction
@@ -24,7 +24,7 @@ export async function getArticles(
 }
 
 // 게시글 등록
-export async function createArticle(
+export async function createArticleController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -41,7 +41,7 @@ export async function createArticle(
 }
 
 // 게시글 조회
-export async function getArticle(
+export async function getArticleController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -61,7 +61,7 @@ export async function getArticle(
 }
 
 // 게시글 수정
-export async function updateArticle(
+export async function updateArticleController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -78,7 +78,7 @@ export async function updateArticle(
 }
 
 // 게시글 삭제
-export async function deleteArticle(
+export async function deleteArticleController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -93,7 +93,7 @@ export async function deleteArticle(
 }
 
 // 게시글 좋아요
-export async function likeArticle(
+export async function likeArticleController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -110,7 +110,7 @@ export async function likeArticle(
 }
 
 // 게시글 좋아요 취소
-export async function unlikeArticle(
+export async function unlikeArticleController(
   req: Request,
   res: Response,
   next: NextFunction

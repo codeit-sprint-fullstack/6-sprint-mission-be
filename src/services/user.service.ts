@@ -1,9 +1,9 @@
-import userRepository from "../repositories/userRepository";
+import userRepository from "../repositories/user.repository";
 import {
   filterSensitiveUserData,
   hashPassword,
   verifyPassword,
-} from "../utils/authUtils";
+} from "../utils/auth.utils";
 import { BadRequestError } from "../types/exceptions";
 import { User } from "@prisma/client";
 

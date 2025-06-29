@@ -1,7 +1,6 @@
 import { Article, User } from "@prisma/client";
-import prisma from "../config/prisma";
+import prisma from "../configs/prisma.config";
 
-// TODO: any 수정 필요
 async function findAll(options: any) {
   const { where } = options;
 

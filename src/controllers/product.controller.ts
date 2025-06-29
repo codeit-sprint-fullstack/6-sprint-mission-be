@@ -1,11 +1,11 @@
 import { ExceptionMessage } from "../constants/ExceptionMessage";
 import { NotFoundError } from "../types/exceptions";
 import { NextFunction, Request, Response } from "express";
-import productService from "../services/productService";
+import productService from "../services/product.service";
 import { GetListQuery } from "../types";
 
 // 상품 목록 조회
-export async function getProducts(
+export async function getProductsController(
   req: Request<{}, {}, {}, GetListQuery>,
   res: Response,
   next: NextFunction
@@ -24,7 +24,7 @@ export async function getProducts(
 }
 
 // 상품 등록
-export async function createProduct(
+export async function createProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -40,7 +40,7 @@ export async function createProduct(
 }
 
 // 상품 조회
-export async function getProduct(
+export async function getProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -67,7 +67,7 @@ export async function getProduct(
 }
 
 // 상품 수정
-export async function updateProduct(
+export async function updateProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -83,7 +83,7 @@ export async function updateProduct(
 }
 
 // 상품 삭제
-export async function deleteProduct(
+export async function deleteProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -98,7 +98,7 @@ export async function deleteProduct(
 }
 
 // 상품 좋아요
-export async function likeProduct(
+export async function likeProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -114,7 +114,7 @@ export async function likeProduct(
 }
 
 // 상품 좋아요 취소
-export async function unlikeProduct(
+export async function unlikeProductController(
   req: Request,
   res: Response,
   next: NextFunction

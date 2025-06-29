@@ -1,5 +1,5 @@
 import { BadRequestError } from "../types/exceptions";
-import articleRepository from "../repositories/articleRepository";
+import articleRepository from "../repositories/article.repository";
 import { Article, User } from "@prisma/client";
 import { GetListInput } from "../types";
 

@@ -1,5 +1,5 @@
 import { Product, User } from "@prisma/client";
-import prisma from "../config/prisma";
+import prisma from "../configs/prisma.config";
 
 interface ProductDataType {
   name: Product["name"];
@@ -9,7 +9,6 @@ interface ProductDataType {
   images: string[];
 }
 
-// TODO: any 수정 필요
 async function findAll(options: any) {
   const { where } = options;
 
