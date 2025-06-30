@@ -1,5 +1,4 @@
-// ✅ 반드시 가장 먼저 환경 변수 로드
-import "./config/env";
+import "dotenv/config";
 
 // 나머지 import는 그 다음에
 import express from "express";
