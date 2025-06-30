@@ -16,7 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.832.0",
-    "@prisma/client": "^6.6.0",
+    "@aws-sdk/s3-request-presigner": "^3.839.0",
+    "@prisma/client": "^6.10.1",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -49,7 +50,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "dotenv-cli": "^8.0.0",
     "nodemon": "^3.1.10",
-    "prisma": "^6.6.0",
+    "prisma": "^6.10.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.3",
