@@ -13,7 +13,7 @@ const swaggerDefinition = {
   servers: [
     {
       // nginx 붙이면 80으로 수정해 줘야함 (즉 뒤에 포트 빼버려도됨 http://3.38.228.28)
-      url: isProd ? "http://api.pandamarket.site" : "http://localhost:7777",
+      url: isProd ? "https://api.pandamarket.site" : "http://localhost:7777",
       description: isProd ? "배포 서버" : "로컬 개발 서버",
     },
   ],

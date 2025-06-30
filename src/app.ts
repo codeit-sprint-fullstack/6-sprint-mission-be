@@ -18,15 +18,12 @@ app.use(cookieParser()); // ✅ 필수!
 
 // 허용할 도메인들
 const allowedOrigins = [
-  `http://localhost:${ALLOWEPORT}`, // 프론트 로컬 환경
-  `http://localhost:${PORT}`, // 서버 로컬 환경
-  "https://6-sprint-mission-fe-git-react-parkminkus-projects.vercel.app",
-  "https://6-sprint-mission-fe-git-next-parkminkus-projects.vercel.app",
-  "https://6-sprint-mission-fe.vercel.app",
-  // ✅ Swagger UI origin 추가
-  // nginx 환경으로 변경
-  "http://3.38.228.28",
-  // 배포된 환경
+  `http://localhost:${ALLOWEPORT}`,
+  `http://localhost:${PORT}`,
+  "http://3.38.228.28", // ✅ IP 주소
+  "https://pandamarket.site", // ✅ 메인 도메인
+  "https://www.pandamarket.site", // ✅ www 서브도메인
+  "https://api.pandamarket.site", // ✅ 스웨거 도메인
 ];
 
 // CORS 설정
