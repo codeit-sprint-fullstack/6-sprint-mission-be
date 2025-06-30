@@ -1,5 +1,6 @@
 ###상품 등록
-POST http://localhost:3000/products
+# POST http://localhost:3000/products
+POST http://54.180.150.158/products
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTc1MDk5ODAwMCwiZXhwIjoxNzUxMDAxNjAwfQ.x96YtcM7GukyDtYKHsjkpa5w0LMPbs8vdNFvrmIPXac
 
