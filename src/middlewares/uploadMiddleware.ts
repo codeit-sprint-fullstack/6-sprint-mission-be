@@ -1,70 +1,74 @@
-import multer from "multer";
 import path from "path";
-import fs from "fs/promises";
-import { CustomError } from "../utils/CustomError";
+import { S3Client } from "@aws-sdk/client-s3";
+import multerS3 from "multer-s3";
+import multer, { FileFilterCallback } from "multer";
 import { Request } from "express";
+import { CustomError } from "../utils/CustomError";
 
-const storage = multer.diskStorage({
-  destination: async function (
-    req: Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, destination: string) => void
-  ) {
-    const uploadPath = path.join(process.cwd(), "temp_uploads");
-    try {
-      await fs.mkdir(uploadPath, { recursive: true });
-      cb(null, uploadPath);
-    } catch (error) {
-      console.error("임시 업로드 디렉토리 생성 실패:", error);
-      cb(
-        new CustomError(
-          500,
-          "임시 업로드 디렉토리 생성 중 오류가 발생했습니다."
-        ),
-        ""
-      );
-    }
+const {
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  AWS_REGION,
+  AWS_BUCKET_NAME,
+} = process.env;
+
+if (
+  !AWS_ACCESS_KEY_ID ||
+  !AWS_SECRET_ACCESS_KEY ||
+  !AWS_REGION ||
+  !AWS_BUCKET_NAME
+) {
+  throw new Error(
+    "AWS S3 환경 변수가 설정되지 않았습니다. .env 파일을 확인해주세요. (필수: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, AWS_BUCKET_NAME)"
+  );
+}
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
   },
-  filename: function (
+  region: AWS_REGION,
+});
+
+const storage = multerS3({
+  s3: s3,
+  bucket: AWS_BUCKET_NAME,
+  contentType: multerS3.AUTO_CONTENT_TYPE,
+  key: (
     req: Request,
     file: Express.Multer.File,
-    cb: (error: Error | null, filename: string) => void
-  ) {
+    cb: (error: any, key?: string) => void
+  ) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    );
+    const extension = path.extname(file.originalname);
+    cb(null, `public/images/${uniqueSuffix}${extension}`);
   },
 });
 
 const fileFilter = (
   req: Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback
+  cb: FileFilterCallback
 ) => {
-  const allowedMimeTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/gif",
-    "image/webp",
-  ];
+  const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
   if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
+    cb(null, true); // 파일 허용
   } else {
-    cb(
-      new CustomError(
-        400,
-        "지원하지 않는 이미지 파일 형식입니다. (jpeg, png, gif, webp만 가능)"
-      )
+    const error = new CustomError(
+      400,
+      "지원하지 않는 파일 형식입니다. (jpeg, png, gif만 허용됩니다.)"
     );
+    cb(error);
   }
 };
 
-const upload = multer({
+const uploadMiddleware = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
 });
 
-export default upload;
+export default uploadMiddleware;
