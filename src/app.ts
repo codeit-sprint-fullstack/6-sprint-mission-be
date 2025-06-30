@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "./config/env";
 
 // 나머지 import는 그 다음에
 import express from "express";
