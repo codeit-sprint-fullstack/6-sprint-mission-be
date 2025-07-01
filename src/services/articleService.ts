@@ -1,4 +1,4 @@
-import { Article, User, Comment } from "@prisma/client";
+import { Article, User } from "@prisma/client";
 import articleRepository from "../repositories/articleRepository";
 import { ArticleBodyDTO, ArticlePatchDTO } from "../dto/article.dto";
 import { CommentBodyDTO } from "../dto/comment.dto";

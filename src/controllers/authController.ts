@@ -148,6 +148,7 @@ authController.post(
 
       const createUser = await authService.create(parsed.data);
       const accessToken = generateAccessToken(createUser);
+
       res.status(200).json({
         accessToken,
         user: {

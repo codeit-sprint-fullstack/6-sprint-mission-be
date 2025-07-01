@@ -3,18 +3,18 @@ POST http://localhost:3000/auth/signUp
 Content-Type: application/json
 
 {
-    "email": "test1@test.com",
-    "nickname": "test1",
-    "password": "1111"
+    "email": "test2@test.com",
+    "nickname": "test2",
+    "encryptedPassword": "2222"
 }
 
 ### 로그인 유저1
-POST http://localhost:3000/auth/signIn
+POST http://54.180.150.158/auth/signIn
 Content-Type: application/json
 
 {
-    "email": "test3@test.com",
-    "password": "3333"
+    "email": "test2@test.com",
+    "encryptedPassword": "2222"
 }
 
 ### 로그인 유저2
@@ -23,6 +23,6 @@ Content-Type: application/json
 
 {
    "email": "test2@test.com",
-    "password": "2222"
+    "encryptedPassword": "2222"
 }
 
