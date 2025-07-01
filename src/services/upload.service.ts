@@ -1,6 +1,9 @@
 const uploadService = {
   generateImageUrl: (filename: string): string => {
-    return `/uploads/${filename}`; // 클라이언트에서 접근 가능한 이미지 URL 생성
+    // S3 public URL 반환
+    const bucket = process.env.AWS_S3_BUCKET;
+    const region = process.env.AWS_REGION;
+    return `https://${bucket}.s3.${region}.amazonaws.com/images/${filename}`;
   },
 };
 
