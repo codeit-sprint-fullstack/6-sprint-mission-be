@@ -15,7 +15,7 @@ const app: Express = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3001", // 프론트엔드 주소
+    origin: "https://6-sprint-mission-fe-pxcf.vercel.app", // 프론트엔드 주소
     credentials: true,
   })
 );
