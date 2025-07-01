@@ -6,7 +6,7 @@
     "dev": "ts-node-dev --respawn src/app.ts",
     "build": "tsc",
     "start": "node --enable-source-maps dist/app.js",
-    "ssh": "ssh -i \"/home/vumublne/.ssh/panda_market_EC2.key.pem\" -L 5050:panda-market-db.crm4ooyoc2ja.ap-northeast-2.rds.amazonaws.com:5432 ec2-user@3.36.70.174",
+    "ssh": "dotenv -- bash -c 'ssh -i \"$SSH_KEY_PATH\" -L 5050:$DB_HOST:5432 $EC2_USER_NAME@$EC2_HOST'",
     "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
