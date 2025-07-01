@@ -4,7 +4,7 @@
     "test": "jest",
     "start": "node ./dist/main",
     "dev": "nodemon ./src/main.ts",
-    "seed": "node ./prisma/seed",
+    "seed": "ts-node ./prisma/seed.ts",
     "build": "tsc",
     "ssh": "ssh -i ~/.ssh/panda-server-key.pem -L 5432:db-panda.c50icowg0x44.ap-northeast-2.rds.amazonaws.com:5432 ec2-user@54.180.96.152"
   },
@@ -17,6 +17,7 @@
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.12",
     "@types/multer-s3": "^3.0.3",
+    "@types/node": "^24.0.8",
     "@types/swagger-ui-express": "^4.1.6",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^8.0.0",
@@ -24,7 +25,7 @@
     "prettier": "^3.3.2",
     "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",

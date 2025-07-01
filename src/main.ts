@@ -15,13 +15,15 @@ import { UserRouter } from "./interface/UserRouter";
 import { HTTP_PORT } from "./constant/env";
 
 const app = express();
-app.use(cors({
-  origin: [
-    "https://your-vercel-domain.vercel.app", // 실제 배포 도메인으로 변경
-    "http://localhost:3000", // 로컬 개발용
-  ],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      "https://your-vercel-domain.vercel.app", // 실제 배포 도메인으로 변경
+      "http://localhost:3000", // 로컬 개발용
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -44,6 +46,11 @@ app.use(
  * S3 업로드로 변경된 경우, public 폴더 static 서빙은 더 이상 필요 없을 수 있습니다.
  */
 app.use("/static", express.static(path.join(path.resolve(), "public/")));
+app.use(
+  morgan("dev", {
+    skip: (req) => req.path === "/health",
+  })
+);
 
 app.use("/auth", AuthRouter);
 app.use("/articles", ArticleRouter);
@@ -65,4 +72,6 @@ app.use(
   }
 );
 
-app.listen(HTTP_PORT, () => console.log(`Server started on port: ${HTTP_PORT}`));
+app.listen(HTTP_PORT, () =>
+  console.log(`Server started on port: ${HTTP_PORT}`)
+);
