@@ -7,6 +7,7 @@ import {
   deleteProductService,
 } from "../services/product.service.js";
 import { CreateProductDTO } from "../dtos/product.dto.js";
+import { uploadToS3 } from "../utils/s3.js";
 
 interface AuthRequest extends Request {
   userId?: number;
@@ -25,7 +26,10 @@ export const createProductController = async (
 
   try {
     const { name, description, price, tags } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const image = req.file
+      ? await uploadToS3(req.file.buffer, req.file.originalname, req.file.mimetype)
+      : null;
 
     const dto: CreateProductDTO = {
       name,
@@ -47,6 +51,8 @@ export const createProductController = async (
     res.status(500).json({ message: "서버 오류" });
   }
 };
+
+
 
 // 상품 전체 조회
 export const getAllProductsController = async (
