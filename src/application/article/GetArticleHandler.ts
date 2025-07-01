@@ -1,25 +1,18 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-
-import { Article } from '../../domain/Article.js';
-import { User } from '../../domain/User.js';
-
-interface IRequester {
-  userId: number;
-}
-
-interface IGetArticleDTO {
-  articleId: string | number;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { Article } from "../../domain/Article";
+import { User } from "../../domain/User";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class GetArticleHandler {
-  static async handle(requester: IRequester, { articleId }: IGetArticleDTO) {
-    const numericArticleId = Number(articleId);
-
+  static async handle(
+    requester: Requester,
+    { articleId }: { articleId: number }
+  ) {
     const articleEntity = await prismaClient.article.findUnique({
       where: {
-        id: numericArticleId,
+        id: articleId,
       },
       include: {
         likes: {
@@ -32,35 +25,36 @@ export class GetArticleHandler {
     });
 
     if (!articleEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.ARTICLE_NOT_FOUND);
     }
 
     const article = new Article(articleEntity);
 
     const writerEntity = await prismaClient.user.findUnique({
       where: {
-        id: article.getWriterId(),
+        id: article.writerId,
       },
     });
 
     if (!writerEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
     const writer = new User(writerEntity);
 
     return {
-      id: article.getId(),
+      id: article.id,
       writer: {
-        id: writer.getId(),
-        nickname: writer.getNickname(),
+        id: writer.id,
+        nickname: writer.nickname,
+        image: writer.image,
       },
-      title: article.getTitle(),
-      content: article.getContent(),
-      image: article.getImage(),
-      createdAt: article.getCreatedAt(),
-      favoriteCount: article.getFavoriteCount(),
-      isFavorite: article.getIsFavorite(requester.userId),
+      title: article.title,
+      content: article.content,
+      image: article.image,
+      createdAt: article.createdAt,
+      favoriteCount: article.favoriteCount,
+      isFavorite: article.isFavorite(requester.userId),
     };
   }
 }

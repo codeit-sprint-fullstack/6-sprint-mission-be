@@ -1,13 +1,5 @@
-import { AuthTokenManager } from '../../infra/AuthTokenManager';
-import type { Request, Response, NextFunction } from 'express';
-
-declare global {
-  namespace Express {
-    interface Request {
-      requester?: { userId: number };
-    }
-  }
-}
+import { RequestHandler } from "express";
+import { AuthTokenManager } from "../../infra/AuthTokenManager";
 
 /**
  * 인증 미들웨어
@@ -19,17 +11,27 @@ declare global {
  * - JWT 토큰이 유효하지 않은 경우 (ex 시크릿 키가 일치하지 않는 경우)
  * - JWT 토큰이 만료된 경우
  */
-export function AuthN() {
-    return async function (req: Request, res: Response, next: NextFunction) {
-        const jwtToken = req?.headers?.authorization?.split(' ')[1]; 
+export function AuthN(): RequestHandler {
+  return function (req, res, next) {
+    const jwtToken = req?.headers?.authorization?.split(" ")[1]; // "bearer JWT_TOKEN" 형태로 전달받음
 
-        if (AuthTokenManager.isValidAccessToken(jwtToken) === false) {
-          res.status(401).send({
-            name: 'Unauthorized',
-            message: 'Invalid JWT token',
-          });
-          return; 
-        }
-        next();
-    };
+    if (!jwtToken) {
+      res.status(401).send({
+        name: "Unauthorized",
+        message: "JWT token is missing",
+      });
+      return;
+    }
+
+    if (AuthTokenManager.isValidAccessToken(jwtToken) === false) {
+      res.status(401).send({
+        name: "Unauthorized",
+        message: "Invalid JWT token",
+      });
+      return;
+    }
+
+    next();
+    return;
+  };
 }

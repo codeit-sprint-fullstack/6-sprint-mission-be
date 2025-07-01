@@ -1,11 +1,8 @@
-import { prismaClient } from '../../infra/prismaClient';
-import { NotFoundException } from '../../exceptions/NotFoundException';
-import { ExceptionMessage } from '../../constant/ExceptionMessage';
-import { User } from '../../domain/User';
-
-interface Requester {
-  userId: number;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { User } from "../../domain/User";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class GetUserProfileHandler {
   static async handle(requester: Requester) {
@@ -14,20 +11,19 @@ export class GetUserProfileHandler {
         id: requester.userId,
       },
     });
-
     if (!userEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
     const user = new User(userEntity);
 
     return {
-      id: user.getId(),
-      email: user.getEmail(),
-      nickname: user.getNickname(),
-      image: user.getImage(),
-      createdAt: user.getCreatedAt(),
-      updatedAt: user.getUpdatedAt(),
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      image: user.image,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 }

@@ -1,30 +1,28 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { UserPasswordBuilder } from '../../infra/UserPasswordBuilder.js';
-import { UnprocessableEntityException } from '../../exceptions/UnprocessableEntityException.js';
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-import { User } from '../../domain/User.js';
-
-interface Requester {
-  userId: number;
-}
-
-interface UpdatePasswordPayload {
-  password: string;
-  passwordConfirmation: string;
-  currentPassword: string;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { UserPasswordBuilder } from "../../infra/UserPasswordBuilder";
+import { UnprocessableEntityException } from "../../exceptions/UnprocessableEntityException";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { User } from "../../domain/User";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class UpdateUserPasswordHandler {
   static async handle(
     requester: Requester,
-    { password, passwordConfirmation, currentPassword }: UpdatePasswordPayload
+    {
+      password,
+      passwordConfirmation,
+      currentPassword,
+    }: {
+      password: string;
+      passwordConfirmation: string;
+      currentPassword: string;
+    }
   ) {
     // 패스워드와 패스워드 확인이 일치하는지 검증
     if (password !== passwordConfirmation) {
       throw new UnprocessableEntityException(
-        'Unprocessable Entity',
-        ExceptionMessage.PASSWORD_CONFIRMATION_NOT_MATCH,
+        ExceptionMessage.PASSWORD_CONFIRMATION_NOT_MATCH
       );
     }
 
@@ -34,25 +32,26 @@ export class UpdateUserPasswordHandler {
       },
     });
     if (!userEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
     const user = new User(userEntity);
 
     // 현재 패스워드가 일치하는지 검증
-    if (!user.checkPassword(UserPasswordBuilder.hashPassword(currentPassword))) {
+    if (
+      !user.checkPassword(UserPasswordBuilder.hashPassword(currentPassword))
+    ) {
       throw new UnprocessableEntityException(
-        'Unprocessable Entity',
-        ExceptionMessage.CURRENT_PASSWORD_NOT_MATCH,
+        ExceptionMessage.CURRENT_PASSWORD_NOT_MATCH
       );
     }
 
     // 비밀번호 변경 진행
     const hashedPassword = UserPasswordBuilder.hashPassword(password);
-    user.setPassword(hashedPassword);
+    user.password = hashedPassword;
     await prismaClient.user.update({
       where: {
-        id: user.getId(),
+        id: user.id,
       },
       data: {
         password: hashedPassword,
@@ -61,12 +60,12 @@ export class UpdateUserPasswordHandler {
 
     return {
       user: {
-        id: user.getId(),
-        email: user.getEmail(),
-        nickname: user.getNickname(),
-        image: user.getImage(),
-        createdAt: user.getCreatedAt(),
-        updatedAt: user.getUpdatedAt(),
+        id: user.id,
+        email: user.email,
+        nickname: user.nickname,
+        image: user.image,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
     };
   }

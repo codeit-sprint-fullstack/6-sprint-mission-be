@@ -1,13 +1,11 @@
-import superstruct from 'superstruct';
-import { Request, Response, NextFunction } from 'express';
-import { HttpException } from '../../exceptions/HttpException';
-import { BadRequestException } from '../../exceptions/BadRequestException';
-import { InternalServerErrorException } from '../../exceptions/InternalServerErrorException';
+import { RequestHandler, Response } from "express";
+import superstruct from "superstruct";
+import { HttpException } from "../../exceptions/HttpException";
+import { BadRequestException } from "../../exceptions/BadRequestException";
+import { InternalServerErrorException } from "../../exceptions/InternalServerErrorException";
 
-export function asyncErrorHandler(
-  handler: (req: Request, res: Response, next: NextFunction) => Promise<void>,
-) {
-  return async function (req: Request, res: Response, next: NextFunction) {
+export function asyncErrorHandler(handler: RequestHandler): RequestHandler {
+  return async function (req, res, next) {
     try {
       await handler(req, res, next);
     } catch (e) {
@@ -18,33 +16,22 @@ export function asyncErrorHandler(
 }
 
 function handleHttpException(httpError: HttpException, res: Response) {
-    res.status(httpError.status).send({
-        name: httpError.name,
-        message: httpError.message,
-    });
+  res.status(httpError.status).send({
+    name: httpError.name,
+    message: httpError.message,
+  });
 }
 
-/**
- * [에러로직 일관화를 위한, Exception 변환 메서드]
- *
- * 해당 메서드는 항상 HttpException 을 반환합니다.
- *
- * 동작:
- *   1. HttpException 이라면 그대로 반환합니다.
- *   2. Known Error 라면, 해당 에러에 맞는 HttpException 으로 변환합니다.
- *   3. Unknown Error 라면, InternalServerErrorException 으로 변환합니다.
- */
 function mapToHttpException(e: unknown): HttpException {
-      if (e instanceof HttpException) {
-        return e;
-      }
+  if (e instanceof HttpException) {
+    return e;
+  }
 
-    // Known Error
-    if (e instanceof superstruct.StructError) {
-        return new BadRequestException('Validation Failed', e.message);
-    }
+  if (e instanceof superstruct.StructError) {
+    return new BadRequestException(e.message);
+  }
 
-    // 마지막까지 처리되지 않았다면, Unknown Error 입니다.
-    // InternalServerErrorException 으로 변환합니다.
-    return new InternalServerErrorException('Internal Server Error', (e as Error).message);
+  return new InternalServerErrorException(
+    e instanceof Error ? e.message : "Unknown Error"
+  );
 }

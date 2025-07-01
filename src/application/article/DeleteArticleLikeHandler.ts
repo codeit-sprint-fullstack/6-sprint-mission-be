@@ -1,30 +1,24 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { Article } from '../../domain/Article.js';
-import { User } from '../../domain/User.js';
-
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-
-interface IRequester {
-  userId: number;
-}
-
-interface IDeleteArticleLikeDTO {
-  articleId: number;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { Article } from "../../domain/Article";
+import { User } from "../../domain/User";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class DeleteArticleLikeHandler {
   static async handle(
-    requester: IRequester,
-    { articleId }: IDeleteArticleLikeDTO
+    requester: Requester,
+    { articleId }: { articleId: number }
   ) {
     const articleEntity = await prismaClient.$transaction(async (tx) => {
       const targetArticleEntity = await tx.article.findUnique({
-        where: { id: articleId },
+        where: {
+          id: articleId,
+        },
       });
 
       if (!targetArticleEntity) {
-        throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND);
+        throw new NotFoundException(ExceptionMessage.ARTICLE_NOT_FOUND);
       }
 
       const likeEntity = await tx.like.findUnique({
@@ -50,10 +44,7 @@ export class DeleteArticleLikeHandler {
       return targetArticleEntity;
     });
 
-    const article = new Article({
-      ...articleEntity,
-      likes: [], // 좋아요 목록이 없을 경우 기본값으로 처리
-    });
+    const article = new Article(articleEntity);
 
     const writerEntity = await prismaClient.user.findUnique({
       where: {
@@ -62,22 +53,22 @@ export class DeleteArticleLikeHandler {
     });
 
     if (!writerEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
     const writer = new User(writerEntity);
 
     return {
-      id: article.getId(),
+      id: article.id,
       writer: {
-        id: writer.getId(),
-        nickname: writer.getNickname(),
+        id: writer.id,
+        nickname: writer.nickname,
       },
-      title: article.getTitle(),
-      content: article.getContent(),
-      image: article.getImage(),
-      createdAt: article.getCreatedAt(),
-      isFavorite: false,
+      title: article.title,
+      content: article.content,
+      image: article.image,
+      createdAt: article.createdAt,
+      isFavorite: article.isFavorite(requester.userId),
     };
   }
 }
