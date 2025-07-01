@@ -1,65 +1,85 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
+import { prismaClient } from "../../infra/prismaClient";
 
-import { Comment } from '../../domain/Comment.js';
-import { User } from '../../domain/User.js';
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
 
-interface IGetArticleCommentListDTO {
-  articleId: number;
-  cursor?: number;
-  take: number;
-}
+import { Comment } from "../../domain/Comment";
+import { User } from "../../domain/User";
 
 export class GetArticleCommentListHandler {
-  static async handle({ articleId, cursor, take }: IGetArticleCommentListDTO) {
-    const comments = await prismaClient.$transaction(async (tx) => {
+  static async handle({
+    articleId,
+    cursor,
+    limit,
+  }: {
+    articleId: number;
+    cursor: number;
+    limit: number;
+  }) {
+    const commentEntities = await prismaClient.$transaction(async (tx) => {
       const targetArticleEntity = await tx.article.findUnique({
-        where: { id: articleId },
+        where: {
+          id: articleId,
+        },
       });
 
       if (!targetArticleEntity) {
-        throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND);
+        throw new NotFoundException(ExceptionMessage.ARTICLE_NOT_FOUND);
       }
 
       return await tx.comment.findMany({
-        cursor: cursor ? { id: cursor } : undefined,
-        take: take + 1,
-        orderBy: { id: 'asc' },
-        where: { articleId },
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+        take: limit + 1,
+        where: {
+          articleId: articleId,
+        },
       });
     });
 
-    const commentInstances = comments.map((entity) => new Comment(entity));
+    const comments = commentEntities.map(
+      (commentEntity) => new Comment(commentEntity)
+    );
 
-    const writerIds = Array.from(new Set(commentInstances.map((c) => c.getWriterId())));
     const writerEntities = await prismaClient.user.findMany({
-      where: { id: { in: writerIds } },
+      where: {
+        id: {
+          in: Array.from(new Set(comments.map((comment) => comment.writerId))),
+        },
+      },
     });
-    const writers = writerEntities.map((entity) => new User(entity));
 
-    const hasNext = commentInstances.length > take;
-    const limitedComments = commentInstances.slice(0, take);
+    const writers = writerEntities.map(
+      (writerEntity) => new User(writerEntity)
+    );
+
+    const hasNext = comments.length === limit + 1;
 
     return {
-      data: limitedComments.map((comment) => {
-        const writer = writers.find((w) => w.getId() === comment.getWriterId());
-        if (!writer) throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      data: comments.slice(0, limit).map((comment) => {
+        const writer = writers.find((writer) => writer.id === comment.writerId);
+
+        if (!writer) {
+          throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
+        }
 
         return {
-          id: comment.getId(),
+          id: comment.id,
           writer: {
-            id: writer.getId(),
-            nickname: writer.getNickname(),
-            image: writer.getImage(),
+            id: writer.id,
+            nickname: writer.nickname,
+            image: writer.image,
           },
-          articleId: comment.getArticleId(),
-          content: comment.getContent(),
-          createdAt: comment.getCreatedAt(),
+          articleId: comment.articleId,
+          content: comment.content,
+          createdAt: comment.createdAt,
         };
       }),
       hasNext,
-      nextCursor: hasNext ? limitedComments[limitedComments.length - 1].getId() : null,
+      nextCursor: hasNext ? comments[comments.length - 1].id : null,
     };
   }
 }

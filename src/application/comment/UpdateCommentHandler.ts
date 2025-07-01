@@ -1,73 +1,66 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ForbiddenException } from '../../exceptions/ForbiddenException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-
-import { Comment } from '../../domain/Comment.js';
-import { User } from '../../domain/User.js';
-
-interface IRequester {
-  userId: number;
-}
-
-interface IParams {
-  commentId: number;
-  content: string;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ForbiddenException } from "../../exceptions/ForbiddenException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { Comment } from "../../domain/Comment";
+import { User } from "../../domain/User";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class UpdateCommentHandler {
-    static async handle(requester: IRequester, { commentId, content }: IParams) {
-        const commentEntity = await prismaClient.$transaction(async (tx) => {
-            const targetCommentEntity = await tx.comment.findUnique({
-                where: {
-                    id: commentId,
-                },
-            });
+  static async handle(
+    requester: Requester,
+    { commentId, content }: { commentId: number; content: string }
+  ) {
+    const commentEntity = await prismaClient.$transaction(async (tx) => {
+      const targetCommentEntity = await tx.comment.findUnique({
+        where: {
+          id: Number(commentId),
+        },
+      });
 
-            if (!targetCommentEntity) {
-                throw new NotFoundException('Not Found', ExceptionMessage.COMMENT_NOT_FOUND);
-            }
+      if (!targetCommentEntity) {
+        throw new NotFoundException(ExceptionMessage.COMMENT_NOT_FOUND);
+      }
 
-            if (targetCommentEntity.writerId !== requester.userId) {
-                throw new ForbiddenException('Forbidden', ExceptionMessage.FORBIDDEN);
-            }
+      if (targetCommentEntity.writerId !== requester.userId) {
+        throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
+      }
 
-            return await tx.comment.update({
-                where: {
-                    id: commentId,
-                },
-                data: {
-                    content,
-                },
-            });
-        });
+      return await tx.comment.update({
+        where: {
+          id: Number(commentId),
+        },
+        data: {
+          content,
+        },
+      });
+    });
 
-        const comment = new Comment(commentEntity);
+    const comment = new Comment(commentEntity);
 
-        const writerEntity = await prismaClient.user.findUnique({
-            where: {
-                id: comment.getWriterId(),
-            },
-        });
+    const writerEntity = await prismaClient.user.findUnique({
+      where: {
+        id: comment.writerId,
+      },
+    });
 
-        if (!writerEntity) {
-          throw new Error('Writer not found');
-        }
-
-        const writer = new User(writerEntity);
-
-        return {
-            id: comment.getId(),
-            writer: {
-                id: writer.getId(),
-                nickname: writer.getNickname(),
-                image: writer.getImage(),
-            },
-            articleId: comment.getArticleId(),
-            productId: comment.getProductId(),
-            content: comment.getContent(),
-            createdAt: comment.getCreatedAt(),
-        };
+    if (!writerEntity) {
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
+
+    const writer = new User(writerEntity);
+
+    return {
+      id: comment.id,
+      writer: {
+        id: writer.id,
+        nickname: writer.nickname,
+        image: writer.image,
+      },
+      articleId: comment.articleId,
+      productId: comment.productId,
+      content: comment.content,
+      createdAt: comment.createdAt,
+    };
+  }
 }

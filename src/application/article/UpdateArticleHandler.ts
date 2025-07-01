@@ -1,69 +1,77 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ForbiddenException } from '../../exceptions/ForbiddenException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-
-import { Article } from '../../domain/Article.js';
-import { User } from '../../domain/User.js';
-
-interface IRequester {
-  userId: number;
-}
-
-interface IUpdateArticleDTO {
-  articleId: number;
-  title?: string;
-  content?: string;
-  image?: string | null;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ForbiddenException } from "../../exceptions/ForbiddenException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { Article } from "../../domain/Article";
+import { User } from "../../domain/User";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class UpdateArticleHandler {
   static async handle(
-    requester: IRequester,
-    { articleId, title, content, image }: IUpdateArticleDTO
+    requester: Requester,
+    {
+      articleId,
+      title,
+      content,
+      image,
+    }: {
+      articleId: number;
+      title?: string;
+      content?: string;
+      image?: string | null;
+    }
   ) {
     const articleEntity = await prismaClient.$transaction(async (tx) => {
       const targetArticleEntity = await tx.article.findUnique({
-        where: { id: articleId },
+        where: {
+          id: articleId,
+        },
       });
 
       if (!targetArticleEntity) {
-        throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND);
+        throw new NotFoundException(ExceptionMessage.ARTICLE_NOT_FOUND);
       }
 
       if (targetArticleEntity.writerId !== requester.userId) {
-        throw new ForbiddenException('Forbidden', ExceptionMessage.FORBIDDEN);
+        throw new ForbiddenException(ExceptionMessage.FORBIDDEN);
       }
 
       return await tx.article.update({
-        where: { id: articleId },
-        data: { title, content, image },
+        where: {
+          id: articleId,
+        },
+        data: {
+          title,
+          content,
+          image,
+        },
       });
     });
 
-    const article = new Article({ ...articleEntity, likes: [] });
+    const article = new Article(articleEntity);
 
     const writerEntity = await prismaClient.user.findUnique({
-      where: { id: article.getWriterId() },
+      where: {
+        id: article.writerId,
+      },
     });
 
     if (!writerEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
     const writer = new User(writerEntity);
 
     return {
-      id: article.getId(),
+      id: article.id,
       writer: {
-        id: writer.getId(),
-        nickname: writer.getNickname(),
+        id: writer.id,
+        nickname: writer.nickname,
       },
-      title: article.getTitle(),
-      content: article.getContent(),
-      image: article.getImage(),
-      createdAt: article.getCreatedAt(),
-      updatedAt: article.getUpdatedAt(),
+      title: article.title,
+      content: article.content,
+      image: article.image,
+      createdAt: article.createdAt,
     };
   }
 }

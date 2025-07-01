@@ -1,32 +1,32 @@
-import path from 'path';
-import dotenv from 'dotenv';
-dotenv.config({ path: path.join(path.resolve(), '.env') });
+import path from "path";
+import fs from "fs";
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import yaml from "yaml";
 
-import express, { Express, Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import swaggerUi from 'swagger-ui-express';
-import yaml from 'yaml';
-import fs from 'fs';
-
-import { AuthRouter } from './interface/AuthRouter';
-import { ArticleRouter } from './interface/ArticleRouter';
-import { ProductRouter } from './interface/ProductRouter';
-import { CommentRouter } from './interface/CommentRouter';
-import { ImageRouter } from './interface/ImageRouter';
-import { UserRouter } from './interface/UserRouter';
+import { AuthRouter } from "./interface/AuthRouter";
+import { ArticleRouter } from "./interface/ArticleRouter";
+import { ProductRouter } from "./interface/ProductRouter";
+import { CommentRouter } from "./interface/CommentRouter";
+import { ImageRouter } from "./interface/ImageRouter";
+import { UserRouter } from "./interface/UserRouter";
+import { HTTP_PORT } from "./constant/env";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 app.use(
-    '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(
-        yaml.parse(fs.readFileSync(path.join(path.resolve(), 'openapi.yaml'), 'utf-8')),
-    ),
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(
+    yaml.parse(
+      fs.readFileSync(path.join(path.resolve(), "openapi.yaml"), "utf-8")
+    )
+  )
 );
 
 /**
@@ -35,20 +35,26 @@ app.use(
  *
  * @example http://localhost:3000/static/images/sample-image.jpg
  */
-app.use('/static', express.static(path.join(path.resolve(), 'public/')));
+app.use("/static", express.static(path.join(path.resolve(), "public/")));
 
-app.use('/auth', AuthRouter);
-app.use('/articles', ArticleRouter);
-app.use('/products', ProductRouter);
-app.use('/comments', CommentRouter);
-app.use('/images', ImageRouter);
-app.use('/users', UserRouter);
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use("/auth", AuthRouter);
+app.use("/articles", ArticleRouter);
+app.use("/products", ProductRouter);
+app.use("/comments", CommentRouter);
+app.use("/images", ImageRouter);
+app.use("/users", UserRouter);
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     console.error(err.stack);
     res.status(500).send({
-        message: '예기치 못한 오류가 발생했습니다.',
+      message: "예기치 못한 오류가 발생했습니다.",
     });
-});
+  }
+);
 
-const port = process.env.HTTP_PORT ?? 3000;
-app.listen(port, () => console.log(`Server started on port: ${port}`));
+app.listen(HTTP_PORT, () => console.log(`Server started on port: ${HTTP_PORT}`));

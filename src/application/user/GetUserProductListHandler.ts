@@ -1,48 +1,43 @@
-import { prismaClient } from '../../infra/prismaClient';
-import { NotFoundException } from '../../exceptions/NotFoundException';
-import { ExceptionMessage } from '../../constant/ExceptionMessage';
-import { Product } from '../../domain/Product';
-
-interface IRequester {
-  userId: number;
-}
-
-interface IGetUserProductListDTO {
-  page: number;
-  pageSize: number;
-  keyword?: string;
-}
+import { prismaClient } from "../../infra/prismaClient";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
+import { Product } from "../../domain/Product";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class GetUserProductListHandler {
   static async handle(
-    requester: IRequester,
-    { page, pageSize, keyword }: IGetUserProductListDTO
+    requester: Requester,
+    {
+      page,
+      pageSize,
+      keyword,
+    }: { page: number; pageSize: number; keyword?: string }
   ) {
     const userEntity = await prismaClient.user.findUnique({
       where: {
         id: requester.userId,
       },
     });
-
     if (!userEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
-    const whereClause = {
-      ownerId: requester.userId,
-      ...(keyword && {
+    const productCount = await prismaClient.product.count({
+      where: {
+        ownerId: requester.userId,
         name: {
           contains: keyword,
         },
-      }),
-    };
-
-    const productCount = await prismaClient.product.count({
-      where: whereClause,
+      },
     });
 
     const productEntities = await prismaClient.product.findMany({
-      where: whereClause,
+      where: {
+        ownerId: requester.userId,
+        name: {
+          contains: keyword,
+        },
+      },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -54,15 +49,17 @@ export class GetUserProductListHandler {
     return {
       totalCount: productCount,
       list: products.map((product) => ({
-        id: product.getId(),
-        ownerId: product.getOwnerId(),
-        name: product.getName(),
-        description: product.getDescription(),
-        price: product.getPrice(),
-        tags: product.getTags(),
-        images: product.getImages(),
-        createdAt: product.getCreatedAt(),
-        updatedAt: product.getUpdatedAt(),
+        id: product.id,
+        ownerId: product.ownerId,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        tags: product.tags,
+        images: product.images,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+        favoriteCount: product.favoriteCount,
+        isFavorite: product.isFavorite(requester.userId),
       })),
     };
   }

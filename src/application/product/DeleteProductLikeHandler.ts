@@ -1,59 +1,61 @@
-import { prismaClient } from '../../infra/prismaClient.js';
+import { prismaClient } from "../../infra/prismaClient";
+import { Requester } from "../../infra/AuthTokenManager";
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
 
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
-
-import { Product } from '../../domain/Product.js';
+import { Product } from "../../domain/Product";
 
 export class DeleteProductLikeHandler {
-    static async handle(requester: {userId: number},
-    { productId }: {productId: number}) {
-        const productEntity = await prismaClient.$transaction(async (tx) => {
-            const targetProductEntity = await tx.product.findUnique({
-                where: {
-                    id: productId,
-                },
-            });
+  static async handle(
+    requester: Requester,
+    { productId }: { productId: number }
+  ) {
+    const productEntity = await prismaClient.$transaction(async (tx) => {
+      const targetProductEntity = await tx.product.findUnique({
+        where: {
+          id: Number(productId),
+        },
+      });
 
-            if (!targetProductEntity) {
-                throw new NotFoundException('Not Found', ExceptionMessage.PRODUCT_NOT_FOUND);
-            }
+      if (!targetProductEntity) {
+        throw new NotFoundException(ExceptionMessage.PRODUCT_NOT_FOUND);
+      }
 
-            const likeEntity = await tx.like.findUnique({
-                where: {
-                    userId_productId: {
-                        userId: requester.userId,
-                        productId,
-                    },
-                },
-            });
+      const likeEntity = await tx.like.findUnique({
+        where: {
+          userId_productId: {
+            userId: requester.userId,
+            productId: Number(productId),
+          },
+        },
+      });
 
-            if (likeEntity) {
-                await tx.like.delete({
-                    where: {
-                        userId_productId: {
-                            userId: requester.userId,
-                            productId,
-                        },
-                    },
-                });
-            }
-
-            return targetProductEntity;
+      if (likeEntity) {
+        await tx.like.delete({
+          where: {
+            userId_productId: {
+              userId: requester.userId,
+              productId: Number(productId),
+            },
+          },
         });
+      }
 
-        const product = new Product(productEntity);
+      return targetProductEntity;
+    });
 
-        return {
-            id: product.getId(),
-            ownerId: product.getOwnerId(),
-            name: product.getName(),
-            description: product.getDescription(),
-            price: product.getPrice(),
-            tags: product.getTags(),
-            images: product.getImages(),
-            createdAt: product.getCreatedAt(),
-            isFavorite: false,
-        };
-    }
+    const product = new Product(productEntity);
+
+    return {
+      id: product.id,
+      ownerId: product.ownerId,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      tags: product.tags,
+      images: product.images,
+      createdAt: product.createdAt,
+      isFavorite: false,
+    };
+  }
 }

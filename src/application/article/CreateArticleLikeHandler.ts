@@ -1,16 +1,17 @@
-import { prismaClient } from '../../infra/prismaClient.js';
-import { NotFoundException } from '../../exceptions/NotFoundException.js';
-import { ExceptionMessage } from '../../constant/ExceptionMessage.js';
+import { prismaClient } from "../../infra/prismaClient";
 
-import { Article } from '../../domain/Article.js';
-import { User } from '../../domain/User.js';
+import { NotFoundException } from "../../exceptions/NotFoundException";
+import { ExceptionMessage } from "../../constant/ExceptionMessage";
 
-interface IRequester {
-  userId: number;
-}
+import { Article } from "../../domain/Article";
+import { User } from "../../domain/User";
+import { Requester } from "../../infra/AuthTokenManager";
 
 export class CreateArticleLikeHandler {
-  static async handle(requester: IRequester, { articleId }: { articleId: number }) {
+  static async handle(
+    requester: Requester,
+    { articleId }: { articleId: number }
+  ) {
     const articleEntity = await prismaClient.$transaction(async (tx) => {
       const targetArticleEntity = await tx.article.findUnique({
         where: {
@@ -19,7 +20,7 @@ export class CreateArticleLikeHandler {
       });
 
       if (!targetArticleEntity) {
-        throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND);
+        throw new NotFoundException(ExceptionMessage.ARTICLE_NOT_FOUND);
       }
 
       const likeEntity = await tx.like.findUnique({
@@ -42,10 +43,7 @@ export class CreateArticleLikeHandler {
 
       return targetArticleEntity;
     });
-
-    if (!articleEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.ARTICLE_NOT_FOUND);
-    }
+    const article = new Article(articleEntity);
 
     const writerEntity = await prismaClient.user.findUnique({
       where: {
@@ -54,26 +52,22 @@ export class CreateArticleLikeHandler {
     });
 
     if (!writerEntity) {
-      throw new NotFoundException('Not Found', ExceptionMessage.USER_NOT_FOUND);
+      throw new NotFoundException(ExceptionMessage.USER_NOT_FOUND);
     }
 
-    const article = new Article({
-      ...articleEntity,
-      likes: [], // 혹은 적절한 likes 배열을 넣어주세요
-    });
     const writer = new User(writerEntity);
 
     return {
-      id: article.getId(),
+      id: article.id,
       writer: {
-        id: writer.getId(),
-        nickname: writer.getNickname(),
+        id: writer.id,
+        nickname: writer.nickname,
       },
-      title: article.getTitle(),
-      content: article.getContent(),
-      image: article.getImage(),
-      createdAt: article.getCreatedAt(),
-      isFavorite: true,
+      title: article.title,
+      content: article.content,
+      image: article.image,
+      createdAt: article.createdAt,
+      isFavorite: article.isFavorite(requester.userId),
     };
   }
 }

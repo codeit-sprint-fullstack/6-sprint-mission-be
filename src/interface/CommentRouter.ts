@@ -1,59 +1,52 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { create } from 'superstruct';
-
-import { AuthTokenManager } from '../infra/AuthTokenManager';
-import { asyncErrorHandler } from './utils/asyncErrorHandler';
-import { AuthN } from './utils/AuthN.js';
-
-import { UpdateCommentRequestStruct } from './structs/comment/UpdateCommentRequestStruct';
-
-import { UpdateCommentHandler } from '../application/comment/UpdateCommentHandler';
-import { DeleteCommentHandler } from '../application/comment/DeleteCommentHandler';
+import express from "express";
+import { create } from "superstruct";
+import { AuthTokenManager } from "../infra/AuthTokenManager";
+import { asyncErrorHandler } from "./utils/asyncErrorHandler";
+import { AuthN } from "./utils/AuthN";
+import { UpdateCommentRequestStruct } from "./structs/comment/UpdateCommentRequestStruct";
+import { UpdateCommentHandler } from "../application/comment/UpdateCommentHandler";
+import { DeleteCommentHandler } from "../application/comment/DeleteCommentHandler";
 
 export const CommentRouter = express.Router();
 
-// 댓글 수정 API
+// 댓글 수정 api
 CommentRouter.patch(
-  '/:commentId',
+  "/:commentId",
   AuthN(),
-  asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
-      const { commentId } = req.params;
-      const { content } = create(req.body, UpdateCommentRequestStruct);
-      
-      if (typeof content !== 'string') {
-          throw new Error('Content is required');
-        }
+  asyncErrorHandler(async (req, res) => {
+    const requester = AuthTokenManager.getRequesterFromToken(
+      req.headers.authorization
+    );
 
-      const commentView = await UpdateCommentHandler.handle(requester, {
-        commentId: Number(commentId),
-        content,
-      });
+    const { commentId } = req.params;
+    const { content = "" } = create(req.body, UpdateCommentRequestStruct);
 
-      res.send(commentView);
-    } catch (err) {
-      next(err);
-    }
-  }),
+    const commentView = await UpdateCommentHandler.handle(requester, {
+      commentId: Number(commentId),
+      content,
+    });
+
+    res.send(commentView);
+    return;
+  })
 );
 
-// 댓글 삭제 API
+// 댓글 삭제 api
 CommentRouter.delete(
-  '/:commentId',
+  "/:commentId",
   AuthN(),
-  asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const requester = AuthTokenManager.getRequesterFromToken(req.headers.authorization);
-      const { commentId } = req.params;
+  asyncErrorHandler(async (req, res) => {
+    const requester = AuthTokenManager.getRequesterFromToken(
+      req.headers.authorization
+    );
 
-      await DeleteCommentHandler.handle(requester, {
-        commentId: Number(commentId),
-      });
+    const { commentId } = req.params;
 
-      res.status(204).send();
-    } catch (err) {
-      next(err);
-    }
-  }),
+    await DeleteCommentHandler.handle(requester, {
+      commentId: Number(commentId),
+    });
+
+    res.status(204).send();
+    return;
+  })
 );
