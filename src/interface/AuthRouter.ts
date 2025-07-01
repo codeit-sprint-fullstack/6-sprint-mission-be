@@ -9,7 +9,6 @@ import { SignInLocalUserHandler } from "../application/auth/SignInLocalUserHandl
 import { RefreshTokenHandler } from "../application/auth/RefreshTokenHandler";
 import { AuthByGoogleHandler } from "../application/auth/AuthByGoogleHandler";
 import { googleOAuthHelper } from "../infra/GoogleOAuthAdapter";
-import { ExceptionMessage } from "../constant/ExceptionMessage";
 import { BadRequestException } from "../exceptions/BadRequestException";
 
 export const AuthRouter = express.Router();
@@ -76,7 +75,7 @@ AuthRouter.post(
  */
 AuthRouter.get(
   "/google",
-  asyncErrorHandler(async (req, res) => {
+  asyncErrorHandler(async (_req, res) => {
     const redirectURI = googleOAuthHelper.generateAuthURI();
     res.status(302).redirect(redirectURI);
     return;

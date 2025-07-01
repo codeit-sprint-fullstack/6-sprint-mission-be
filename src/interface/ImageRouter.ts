@@ -2,7 +2,6 @@ import express from "express";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import AWS from "aws-sdk";
-import path from "path";
 
 import { asyncErrorHandler } from "./utils/asyncErrorHandler";
 import { AuthN } from "./utils/AuthN";
@@ -19,18 +18,18 @@ const s3 = new AWS.S3({
 
 const imageUpload = multer({
   storage: multerS3({
-    s3: s3,
-    bucket: process.env.AWS_S3_BUCKET_NAME,
+    s3: s3 as any,
+    bucket: process.env.AWS_S3_BUCKET_NAME || "default-bucket",
     acl: "public-read",
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    key: function (req, file, cb) {
+    key: function (_req, file, cb) {
       cb(null, `images/${Date.now()}-${file.originalname}`);
     },
   }),
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
-  fileFilter: function (req, file, cb) {
+  fileFilter: function (_req, file, cb) {
     if (["image/png", "image/jpeg"].includes(file.mimetype) === false) {
       return cb(new Error("Only png and jpeg are allowed"));
     }
