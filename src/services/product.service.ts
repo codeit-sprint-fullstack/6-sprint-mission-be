@@ -57,7 +57,7 @@ const getProduct = async (userId: User["id"], productId: Product["id"]) => {
 const createProduct = async (
   userId: User["id"],
   body: Pick<Product, "name" | "description" | "price"> & { tags: string },
-  images: Express.Multer.File[]
+  images: (Express.Multer.File & { location: string })[]
 ) => {
   const { tags } = body;
 
@@ -85,7 +85,7 @@ const createProduct = async (
         const newImage = await productRepository.createProductImage(
           userId,
           newProduct.id,
-          image.filename,
+          image.location,
           { tx }
         );
 
@@ -102,7 +102,7 @@ const updateProduct = async (
   userId: User["id"],
   productId: Product["id"],
   body: Pick<Product, "name" | "description" | "price"> & { tags: string },
-  images: Express.Multer.File[]
+  images: (Express.Multer.File & { location: string })[]
 ) => {
   const { tags } = body;
 
@@ -136,7 +136,7 @@ const updateProduct = async (
         const updatedImage = await productRepository.createProductImage(
           userId,
           productId,
-          image.filename,
+          image.location,
           { tx }
         );
 

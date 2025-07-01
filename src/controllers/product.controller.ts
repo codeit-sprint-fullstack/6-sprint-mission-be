@@ -72,14 +72,15 @@ const createProduct: RequestHandler<{}, {}, productDto> = async (
     const newProduct = await productService.createProduct(
       userId,
       body,
-      images as Express.Multer.File[]
+      images as (Express.Multer.File & { location: string })[]
     );
 
-    const imageUrls = newProduct.images.map(
-      (imageUrl) => `${baseUrl}/${imageUrl}`
-    );
+    // const imageUrls = newProduct.images.map(
+    //   (imageUrl) => `${baseUrl}/${imageUrl}`
+    // );
 
-    res.status(201).json({ ...newProduct, images: imageUrls });
+    // res.status(201).json({ ...newProduct, images: imageUrls });
+    res.status(201).json(newProduct);
   } catch (e) {
     next(e);
   }
@@ -106,14 +107,15 @@ const updateProduct: RequestHandler<productParamsDto, {}, productDto> = async (
       userId,
       productId,
       body,
-      images as Express.Multer.File[]
+      images as (Express.Multer.File & { location: string })[]
     );
 
-    const imageUrls = updatedProduct.images.map(
-      (imageUrl) => `${baseUrl}/${imageUrl}`
-    );
+    // const imageUrls = updatedProduct.images.map(
+    //   (imageUrl) => `${baseUrl}/${imageUrl}`
+    // );
 
-    res.status(200).json({ ...updatedProduct, images: imageUrls });
+    // res.status(200).json({ ...updatedProduct, images: imageUrls });
+    res.status(200).json(updatedProduct);
   } catch (e) {
     next(e);
   }
