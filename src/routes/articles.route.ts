@@ -1,24 +1,10 @@
 import express from "express";
-import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
 import articleController from "../controllers/articleController";
+import commentController from "../controllers/commentController";
 import auth from "../middlewares/users/auth";
+import { generatePresignedUrls } from "../middlewares/common/presignedUrl";
 
 const articlesRouter = express.Router();
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    // UUID를 사용하여 안전한 파일명 생성
-    const ext = file.originalname.split(".").pop();
-    const filename = `${uuidv4()}.${ext}`;
-    cb(null, filename);
-  },
-});
-
-const upload = multer({ storage });
 
 /**
  * @swagger
@@ -26,6 +12,93 @@ const upload = multer({ storage });
  *   name: Article
  *   description: 게시글 관련 API
  */
+
+/**
+ * @swagger
+ * /articles/presigned-urls:
+ *   post:
+ *     summary: 게시글 이미지 업로드용 Presigned URL 생성
+ *     tags: [Article]
+ *     security:
+ *       - accessToken: []
+ *     parameters:
+ *       - name: access
+ *         in: query
+ *         description: 접근 권한 (private 시 presigned URL로 접근)
+ *         schema:
+ *           type: string
+ *           enum: [public, private]
+ *           default: public
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - filename
+ *                 - contentType
+ *               properties:
+ *                 filename:
+ *                   type: string
+ *                   example: "image.jpg"
+ *                   description: 업로드할 파일명
+ *                 contentType:
+ *                   type: string
+ *                   example: "image/jpeg"
+ *                   description: 파일의 MIME 타입
+ *     responses:
+ *       200:
+ *         description: Presigned URL 생성 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   uploadUrl:
+ *                     type: string
+ *                     description: 클라이언트가 업로드할 때 사용할 임시 URL (5분 유효)
+ *                     example: "https://bucket.s3.ap-northeast-2.amazonaws.com/public/1234567890_image.jpg?signature=..."
+ *                   fileUrl:
+ *                     type: string
+ *                     description: 업로드 완료 후 접근할 최종 URL
+ *                     example: "https://bucket.s3.ap-northeast-2.amazonaws.com/public/1234567890_image.jpg"
+ *                   key:
+ *                     type: string
+ *                     description: S3 객체 키
+ *                     example: "public/1234567890_image.jpg"
+ *       400:
+ *         description: 잘못된 요청 데이터
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "파일 정보가 필요합니다."
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         description: 서버 오류
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Presigned URL 생성 중 오류가 발생했습니다."
+ */
+articlesRouter.post(
+  "/presigned-urls",
+  auth.verifyAccessToken,
+  generatePresignedUrls
+);
 
 /**
  * @swagger
@@ -201,7 +274,7 @@ articlesRouter.get(
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -218,8 +291,7 @@ articlesRouter.get(
  *                 type: array
  *                 items:
  *                   type: string
- *                   format: binary
- *                 description: 최대 3개의 이미지 파일을 업로드할 수 있습니다.
+ *                 description: S3 이미지 URL 배열 (최대 3개)
  *     responses:
  *       201:
  *         description: 게시글 생성 성공
@@ -280,7 +352,6 @@ articlesRouter.get(
 articlesRouter.post(
   "/",
   auth.verifyAccessToken,
-  upload.array("images", 3),
   articleController.createArticle
 );
 
@@ -302,7 +373,7 @@ articlesRouter.post(
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -316,13 +387,7 @@ articlesRouter.post(
  *                 type: array
  *                 items:
  *                   type: string
- *                   format: binary
- *                 description: 최대 3개의 이미지 파일을 업로드할 수 있습니다.
- *               existingImages:
- *                 type: string
- *                 format: json
- *                 example: "['/uploads/image1.jpg', '/uploads/image2.jpg']"
- *                 description: 유지할 기존 이미지 경로의 JSON 배열
+ *                 description: S3 이미지 URL 배열 (최대 3개)
  *     responses:
  *       200:
  *         description: 게시글 수정 성공
@@ -385,7 +450,6 @@ articlesRouter.post(
 articlesRouter.patch(
   "/:articleId",
   auth.verifyAccessToken,
-  upload.array("images", 3),
   articleController.updateArticle
 );
 

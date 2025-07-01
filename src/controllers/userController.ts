@@ -26,14 +26,29 @@ const updateUser = async (
 ) => {
   try {
     const userId = req.auth!.userId;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const { image: newImage, ...otherData } = req.body;
 
+    // 기존 유저 정보 조회 (프로필 이미지 정보 필요)
+    const existingUser = await userService.getUserById(userId);
+    const oldImage = existingUser.image;
+
+    // 이미지는 이미 S3에 업로드되어 URL로 전달됨
     const data = {
-      ...req.body,
-      image: imagePath,
+      ...otherData,
+      image: newImage,
     };
 
+    // DB 업데이트
     const updated = await userService.updateUser(userId, data);
+
+    // 🗑️ 기존 프로필 이미지가 있고, 새 이미지와 다르면 S3에서 삭제 (비동기)
+    if (oldImage && newImage && oldImage !== newImage) {
+      const { deleteS3Image } = await import("../utils/s3Helper");
+      deleteS3Image(oldImage).catch((error) => {
+        console.error("프로필 이미지 삭제 중 오류:", error);
+      });
+    }
+
     res.json({ user: updated });
   } catch (error) {
     next(error);

@@ -35,8 +35,125 @@ _위 이미지는 판다마켓의 대표 이미지입니다. 프로젝트가 진
    - Express.js를 이용해 더 복잡한 백엔드 기능을 구현하는 미션입니다. 데이터베이스 연동, 인증 및 권한 관리 등 고급 API 설계가 포함됩니다.
    - **스프린트 미션 6부터 12까지**의 백엔드 내용이 들어 있어요.
 
-
 > _스프린트 미션 내 프론트엔드 요구사항은 [프론트엔드 레포지토리](https://github.com/codeit-sprint-fullstack/6-Sprint-mission-FE)의 브랜치에서 관리해주세요_
 
-
 본 프로젝트는 [코드잇](https://www.codeit.kr)의 소유이며, 교육 목적으로만 사용됩니다. © 2024 Codeit. All rights reserved.
+
+## 이미지 업로드 시스템
+
+### Presigned URL 방식 (클라이언트 직접 업로드)
+
+이 프로젝트는 **Presigned URL**을 이용한 클라이언트 직접 업로드 방식을 사용합니다.
+
+#### 장점
+
+- 서버 부하 감소 (이미지 파일이 서버를 거치지 않음)
+- 빠른 업로드 속도
+- 확장성 향상
+- 보안성 향상 (임시 URL, 5분 유효)
+
+#### 업로드 플로우
+
+1. **Presigned URL 요청**
+
+   ```
+   POST /articles/presigned-urls?access=public
+   POST /products/presigned-urls?access=public
+   POST /user/presigned-url?access=public
+   ```
+
+2. **클라이언트가 S3에 직접 업로드**
+
+   - 생성된 `uploadUrl`로 PUT 요청
+   - 5분 내에 업로드 완료 필요
+
+3. **서버에 데이터 저장**
+   - `fileUrl`을 포함한 데이터로 생성/수정 API 호출
+
+#### Public vs Private 접근
+
+- **Public**: 누구나 접근 가능한 이미지 (상품, 프로필 등)
+- **Private**: 인증된 사용자만 접근 가능한 이미지 (임시 URL로 5분간 접근)
+
+#### 사용 예시
+
+```javascript
+// 1. Presigned URL 생성
+const response = await fetch("/articles/presigned-urls?access=public", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify([
+    {
+      filename: "image.jpg",
+      contentType: "image/jpeg",
+    },
+  ]),
+});
+const [urlInfo] = await response.json();
+
+// 2. S3에 직접 업로드
+await fetch(urlInfo.uploadUrl, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "image/jpeg",
+  },
+  body: imageFile,
+});
+
+// 3. 서버에 데이터 저장
+await fetch("/articles", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    title: "제목",
+    content: "내용",
+    images: [urlInfo.fileUrl],
+  }),
+});
+```
+
+### 엔드포인트
+
+#### 게시글 (Articles)
+
+- `POST /articles/presigned-urls` - 이미지 업로드용 Presigned URL 생성
+- `POST /articles` - 게시글 생성
+- `PATCH /articles/:id` - 게시글 수정
+
+#### 상품 (Products)
+
+- `POST /products/presigned-urls` - 이미지 업로드용 Presigned URL 생성
+- `POST /products` - 상품 생성
+- `PATCH /products/:id` - 상품 수정
+
+#### 사용자 (Users)
+
+- `POST /user/presigned-url` - 프로필 이미지 업로드용 Presigned URL 생성
+- `PATCH /user/me` - 사용자 정보 수정
+
+### 환경 변수
+
+```
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_BUCKET_NAME=your_s3_bucket_name
+```
+
+## 설치 및 실행
+
+```bash
+npm install
+npm run dev
+```
+
+## API 문서
+
+Swagger UI를 통해 API 문서를 확인할 수 있습니다:
+
+- 개발 환경: http://localhost:7777/api-docs

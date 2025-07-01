@@ -5,7 +5,7 @@ GET http://localhost:7777/user/me
 Content-Type: application/json
 Authorization: {{accessToken}}
 
-### 유저 정보 수정
+### 유저 정보 수정 (텍스트만)
 PATCH http://localhost:7777/user/me
 Content-Type: application/json
 Authorization: {{accessToken}}
@@ -13,6 +13,38 @@ Authorization: {{accessToken}}
 {
   "nickname": "홍길동"
 }
+
+### 유저 프로필 이미지 수정 (Public)
+PATCH http://localhost:7777/user/me
+Authorization: {{accessToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nickname"
+
+홍길동
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profile"; filename="profile.jpg"
+Content-Type: image/jpeg
+
+< ./profile.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 유저 프로필 이미지 수정 (Private, Presigned URL)
+PATCH http://localhost:7777/user/me?access=private
+Authorization: {{accessToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nickname"
+
+홍길동 (프라이빗 이미지)
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profile"; filename="private-profile.jpg"
+Content-Type: image/jpeg
+
+< ./private-profile.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### 유저 비밀번호 수정
 PATCH http://localhost:7777/user/me/password
@@ -22,4 +54,54 @@ Authorization: {{accessToken}}
 {
   "currentPassword": "1rhdiddl!",
   "newPassword": "1rhdiddl!"
+}
+
+### User API 테스트 ###
+
+### 1. 프로필 이미지 Presigned URL 생성 (public)
+POST {{baseUrl}}/user/presigned-url?access=public
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+[
+  {
+    "filename": "profile.jpg",
+    "contentType": "image/jpeg"
+  }
+]
+
+### 2. 프로필 이미지 Presigned URL 생성 (private)
+POST {{baseUrl}}/user/presigned-url?access=private
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+[
+  {
+    "filename": "private-profile.jpg",
+    "contentType": "image/jpeg"
+  }
+]
+
+### 3. 사용자 정보 조회
+GET {{baseUrl}}/user/me
+Authorization: Bearer {{accessToken}}
+
+### 4. 사용자 정보 수정 (프로필 이미지 포함)
+PATCH {{baseUrl}}/user/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "nickname": "새로운닉네임",
+  "image": "https://your-bucket.s3.ap-northeast-2.amazonaws.com/public/1234567890_profile.jpg"
+}
+
+### 5. 비밀번호 변경
+PATCH {{baseUrl}}/user/me/password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "현재비밀번호",
+  "newPassword": "새비밀번호"
 }

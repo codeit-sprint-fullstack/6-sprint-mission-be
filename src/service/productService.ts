@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import productRepository from "../repositories/productRepository";
 import { ProductCreateDto, ProductParamsDto } from "../dtos/product.dto";
 import { UserParamsDto } from "../dtos/user.dto";
+import { processImageUrls } from "../utils/s3Helper";
 
 // 상품조회
 async function getProducts({
@@ -56,17 +57,23 @@ async function getProducts({
     likedProductIds = likes.map((like) => like.productId);
   }
 
-  // ✅ isLiked 필드 추가
-  const productsWithLike = products.map((product) => {
-    // user 정보 추출
-    const { user, ...productData } = product;
+  // ✅ isLiked 필드 추가 및 이미지 처리
+  const productsWithLike = await Promise.all(
+    products.map(async (product) => {
+      // user 정보 추출
+      const { user, images, ...productData } = product;
 
-    return {
-      ...productData,
-      author: user, // 작성자 정보 추가
-      isLiked: likedProductIds.includes(product.id),
-    };
-  });
+      // 이미지 URL 처리 (private이면 presigned URL 생성)
+      const processedImages = await processImageUrls(images || []);
+
+      return {
+        ...productData,
+        images: processedImages,
+        author: user, // 작성자 정보 추가
+        isLiked: likedProductIds.includes(product.id),
+      };
+    })
+  );
 
   return {
     products: productsWithLike,
@@ -92,11 +99,14 @@ async function getProductById(
   const isLiked = userId ? product.productLikes.length > 0 : false;
 
   // ProductLike와 user 정보 추출
-  const { productLikes, user, ...rest } = product;
+  const { productLikes, user, images, ...rest } = product;
 
-  // ProductLike 제외
+  // 이미지 URL 처리 (private이면 presigned URL 생성)
+  const processedImages = await processImageUrls(images || []);
+
   return {
     ...rest,
+    images: processedImages,
     author: user, // 작성자 정보 추가
     isLiked,
   };

@@ -3,6 +3,7 @@ import productService from "../service/productService";
 import { NotFoundError } from "../types/commonError";
 import { prisma } from "../db/prisma/client.prisma";
 import { ProductParamsDto } from "../dtos/product.dto";
+import { Express } from "express";
 
 // 전체 상품 목록 조회
 const getProducts = async (
@@ -75,6 +76,7 @@ const createProduct = async (
       description?: string;
       price?: number | string;
       tags?: string | string[];
+      images?: string[];
     }
   >,
   res: Response,
@@ -82,7 +84,7 @@ const createProduct = async (
 ) => {
   try {
     const userId = req.auth!.userId;
-    const { name, description, price, tags } = req.body;
+    const { name, description, price, tags, images } = req.body;
 
     // tags 데이터 처리: 문자열로 전송된 경우 배열로 변환
     let processedTags: string[] = Array.isArray(tags) ? tags : [];
@@ -101,11 +103,8 @@ const createProduct = async (
       }
     }
 
-    // 여러 이미지 파일 처리
-    const imagePaths =
-      req.files && Array.isArray(req.files) && req.files.length > 0
-        ? req.files.map((file) => `/uploads/${file.filename}`)
-        : [];
+    // 이미지는 이미 S3에 업로드되어 URL로 전달됨
+    const imagePaths = images || [];
 
     const product = await productService.createProduct({
       name,
@@ -133,8 +132,8 @@ const updateProduct = async (
     {
       name?: string;
       description?: string;
-      price?: number;
-      existingImages?: string;
+      price?: number | string;
+      images?: string[];
       tags?: string | string[];
     }
   >,
@@ -143,29 +142,21 @@ const updateProduct = async (
 ) => {
   try {
     const productId = req.params.id;
-    const { existingImages, tags, ...otherData } = req.body;
+    const { images, tags, price, ...otherData } = req.body;
 
-    // 여러 이미지 파일 처리
-    const newImagePaths =
-      req.files && Array.isArray(req.files) && req.files.length > 0
-        ? req.files.map((file) => `/uploads/${file.filename}`)
-        : [];
+    // 기존 상품 조회 (권한 확인 + 이미지 정보 필요)
+    const existingProduct = await productService.getProductById(productId);
 
-    // 기존 이미지 처리: 문자열로 전송된 경우 배열로 변환
-    let existingImagePaths = [];
-    if (existingImages) {
-      try {
-        existingImagePaths =
-          typeof existingImages === "string"
-            ? JSON.parse(existingImages)
-            : existingImages;
-      } catch (e) {
-        existingImagePaths = [];
-      }
+    if (existingProduct.userId !== req.auth!.userId) {
+      res.status(403).json({ message: "수정 권한이 없습니다." });
+      return;
     }
 
-    // 새 이미지와 기존 이미지 병합
-    const finalImagePaths = [...existingImagePaths, ...newImagePaths];
+    // 기존 이미지 정보
+    const oldImages = existingProduct.images || [];
+
+    // 이미지는 이미 S3에 업로드되어 URL로 전달됨
+    const newImages = images || [];
 
     // tags 데이터 처리: 문자열로 전송된 경우 배열로 변환
     let processedTags: string[] = Array.isArray(tags) ? tags : [];
@@ -184,21 +175,32 @@ const updateProduct = async (
       }
     }
 
-    const existingProduct = await productService.getProductById(productId);
-
-    if (existingProduct.userId !== req.auth!.userId) {
-      res.status(403).json({ message: "수정 권한이 없습니다." });
-      return;
-    }
+    // price 데이터 처리: 문자열인 경우 숫자로 변환
+    const processedPrice = price !== undefined ? Number(price) : undefined;
 
     // Prisma 모델에 맞는 데이터 구성
     const data = {
       ...otherData,
+      ...(processedPrice !== undefined && { price: processedPrice }),
       ...(processedTags !== undefined && { tags: processedTags }),
-      ...(finalImagePaths.length > 0 && { images: finalImagePaths }),
+      ...(newImages.length > 0 && { image: newImages }),
     };
 
+    // DB 업데이트
     const updatedProduct = await productService.updateProduct(productId, data);
+
+    // 🗑️ 사용하지 않는 기존 이미지들 S3에서 삭제 (비동기)
+    const { findImagesToDelete, deleteS3Images } = await import(
+      "../utils/s3Helper"
+    );
+    const imagesToDelete = findImagesToDelete(oldImages, newImages);
+
+    if (imagesToDelete.length > 0) {
+      // 비동기로 삭제 처리 (응답 속도에 영향 주지 않음)
+      deleteS3Images(imagesToDelete).catch((error) => {
+        console.error("상품 이미지 삭제 중 오류:", error);
+      });
+    }
 
     res.status(200).json({
       message: "상품이 성공적으로 수정되었습니다.",
@@ -225,6 +227,7 @@ const deleteProduct = async (
   try {
     const productId = req.params.id;
 
+    // 권한 확인 + 이미지 정보 조회
     const existingProduct = await productService.getProductById(productId);
 
     if (existingProduct.userId !== req.auth!.userId) {
@@ -232,7 +235,18 @@ const deleteProduct = async (
       return;
     }
 
+    const imagesToDelete = existingProduct.images || [];
+
+    // DB에서 상품 삭제
     await productService.deleteProduct(productId);
+
+    // 🗑️ 상품과 관련된 이미지들 S3에서 삭제 (비동기)
+    if (imagesToDelete.length > 0) {
+      const { deleteS3Images } = await import("../utils/s3Helper");
+      deleteS3Images(imagesToDelete).catch((error) => {
+        console.error("상품 삭제 후 이미지 삭제 중 오류:", error);
+      });
+    }
 
     res.status(200).json({
       message: "상품이 성공적으로 삭제되었습니다.",
