@@ -1,5 +1,5 @@
-import prisma from "../../prisma/client";
-import { Comment, User } from "../generated/prisma";
+import prisma from "../config/client.prisma";
+import { Comment, User } from "@prisma/client";
 
 async function getById(id: Comment["id"]) {
   return await prisma.comment.findUnique({
@@ -8,12 +8,12 @@ async function getById(id: Comment["id"]) {
 }
 
 async function save(
-  type: "item" | "article",
+  type: "items" | "articles",
   id: Comment["id"],
   userId: User["id"],
   content: Comment["content"]
 ) {
-  if (type === "item") {
+  if (type === "items") {
     return await prisma.comment.create({
       data: {
         content,

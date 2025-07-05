@@ -1,4 +1,4 @@
-import { Article, User } from "../generated/prisma/index.js";
+import { Article, User } from "@prisma/client";
 import articleRepository from "../repositories/articleRepository";
 
 async function createArticle(

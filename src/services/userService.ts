@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import userRepository from "../repositories/userRepository";
 import jwt from "jsonwebtoken";
-import { User } from "../generated/prisma";
+import { User } from "@prisma/client";
 import { TError } from "../types/error";
 
 function hashPassword(password: string) {
