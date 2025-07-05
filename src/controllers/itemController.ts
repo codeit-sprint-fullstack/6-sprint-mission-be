@@ -349,7 +349,7 @@ itemController.post(
         error.code = 422;
         throw error;
       }
-      const type = "item";
+      const type = "items";
       const comment = await commentService.createComment(
         type,
         id,
