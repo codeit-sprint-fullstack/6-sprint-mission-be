@@ -1,3 +1,4 @@
+import { JsonKeyToVariableMap } from "aws-sdk/clients/frauddetector";
 import prisma from "../config/client.prisma";
 import itemRepository from "./itemRepository";
 
@@ -5,6 +6,9 @@ jest.mock("../config/client.prisma", () => ({
   item: {
     findUnique: jest.fn(),
     create: jest.fn(),
+    findFirst: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   },
 }));
 
@@ -22,15 +26,20 @@ describe.only("ItemRepository", () => {
       const itemId = "cmccy9kiy00013ayqlkln58br";
       const userId = "cmccy8dz000003ayqquvh7a2b";
       const expecteditem = {
-        id: 1,
+        id: "randomId",
         name: "Test item",
         price: 10000,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
+      const expectedFavorite = { id: expecteditem.id };
 
       (mockedPrisma.item.findUnique as jest.Mock).mockResolvedValue(
         expecteditem
+      );
+
+      (mockedPrisma.item.findFirst as jest.Mock).mockResolvedValue(
+        expectedFavorite
       );
 
       // Exercise
@@ -38,12 +47,25 @@ describe.only("ItemRepository", () => {
 
       // Assertion
       expect(mockedPrisma.item.findUnique).toHaveBeenCalledWith({
+        where: { id: itemId },
+        include: {
+          comments: {
+            include: { user: true },
+          },
+        },
+      });
+
+      expect(mockedPrisma.item.findFirst).toHaveBeenCalledWith({
         where: {
           id: itemId,
+          favoriteUsers: {
+            some: { id: userId },
+          },
         },
       });
       expect(mockedPrisma.item.findUnique).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(expecteditem);
+      expect(mockedPrisma.item.findFirst).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ ...expecteditem, isFavorite: expectedFavorite });
     });
 
     test("상품이 존재하지 않는 경우 null을 반환해야 한다", async () => {
@@ -57,8 +79,11 @@ describe.only("ItemRepository", () => {
 
       // Assertion
       expect(mockedPrisma.item.findUnique).toHaveBeenCalledWith({
-        where: {
-          id: itemId,
+        where: { id: itemId },
+        include: {
+          comments: {
+            include: { user: true },
+          },
         },
       });
       expect(result).toBeNull();
@@ -91,13 +116,17 @@ describe.only("ItemRepository", () => {
       };
 
       const expectedItem = {
-        id: expect.any(String),
+        id: "randomId",
         name: "New item",
         description: "새로운 아이템",
         price: 15000,
         tags: ["전자"],
         images: ["example.com"],
-        userId: "cmccy8dz000003ayqquvh7a2b",
+        user: {
+          connect: {
+            id: "cmccy8dz000003ayqquvh7a2b",
+          },
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -115,7 +144,7 @@ describe.only("ItemRepository", () => {
           price: itemData.price,
           tags: itemData.tags,
           images: itemData.images,
-          userId: itemData.userId,
+          user: { connect: { id: itemData.userId } },
         },
       });
       expect(mockedPrisma.item.create).toHaveBeenCalledTimes(1);
@@ -134,13 +163,17 @@ describe.only("ItemRepository", () => {
       };
 
       const expecteditem = {
-        id: expect.any(String),
+        id: "randomId",
         name: "Zero item",
         description: "새로운 아이템",
         price: 15000,
         tags: ["전자"],
         images: ["example.com"],
-        userId: "cmccy8dz000003ayqquvh7a2b",
+        user: {
+          connect: {
+            id: "cmccy8dz000003ayqquvh7a2b",
+          },
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -158,7 +191,7 @@ describe.only("ItemRepository", () => {
           price: itemData.price,
           tags: itemData.tags,
           images: itemData.images,
-          userId: itemData.userId,
+          user: { connect: { id: itemData.userId } },
         },
       });
       expect(result).toEqual(expecteditem);
@@ -176,13 +209,17 @@ describe.only("ItemRepository", () => {
       };
 
       const expectedItem = {
-        id: 1,
+        id: "randomId",
         name: "Expensive item",
         description: "새로운 아이템",
         price: 150000000,
         tags: ["전자"],
         images: ["example.com"],
-        userId: "cmccy8dz000003ayqquvh7a2b",
+        user: {
+          connect: {
+            id: "cmccy8dz000003ayqquvh7a2b",
+          },
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -200,7 +237,7 @@ describe.only("ItemRepository", () => {
           price: itemData.price,
           tags: itemData.tags,
           images: itemData.images,
-          userId: itemData.userId,
+          user: { connect: { id: itemData.userId } },
         },
       });
       expect(result).toEqual(expectedItem);
@@ -224,6 +261,58 @@ describe.only("ItemRepository", () => {
       await expect(itemRepository.save(itemData)).rejects.toThrow(
         "Database connection failed"
       );
+    });
+  });
+  describe("edit", () => {
+    test("상품 수정이 성공적으로 완료되어야 한다", async () => {
+      const itemId = "cmccy9kiy00013ayqlkln58br";
+      const updateData = {
+        name: "Updated item",
+        description: "수정된 설명",
+        price: 20000,
+        tags: ["전자", "할인"],
+        images: ["updated.com"],
+      };
+      const updatedItem = {
+        id: itemId,
+        ...updateData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      (mockedPrisma.item.update as jest.Mock).mockResolvedValue(updatedItem);
+
+      const result = await itemRepository.edit(itemId, updateData);
+
+      expect(mockedPrisma.item.update).toHaveBeenCalledWith({
+        where: { id: itemId },
+        data: updateData,
+      });
+
+      expect(mockedPrisma.item.update).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(updatedItem);
+    });
+  });
+  describe("remove", () => {
+    test("상품 삭제가 성공적으로 완료되어야 한다", async () => {
+      const itemId = "cmccy9kiy00013ayqlkln58br";
+      const deletedItem = {
+        id: itemId,
+        name: "Deleted item",
+        price: 10_000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      (mockedPrisma.item.delete as jest.Mock).mockResolvedValue(deletedItem);
+
+      const result = await itemRepository.remove(itemId);
+
+      expect(mockedPrisma.item.delete).toHaveBeenCalledWith({
+        where: { id: itemId },
+      });
+      expect(mockedPrisma.item.delete).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(deletedItem);
     });
   });
 });

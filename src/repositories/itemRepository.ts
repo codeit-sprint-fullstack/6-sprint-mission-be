@@ -16,6 +16,7 @@ async function getById(id: Item["id"], userId: User["id"]) {
       },
     },
   });
+  if (!item) return null;
   const isFavorite = await prisma.item.findFirst({
     where: {
       id,
