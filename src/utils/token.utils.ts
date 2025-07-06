@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import userRepository from "../repositories/userRepository";
+import userRepository from "../repositories/user.repository";
 import { UnauthorizedError } from "../types/exceptions";
 import { User } from "@prisma/client";
-import { ExceptionMessage } from "../ExceptionMessage";
+import { ExceptionMessage } from "../constants/ExceptionMessage";
 
 // 토큰 생성 함수
 function createToken(

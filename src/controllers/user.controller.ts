@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import userService from "../services/userService";
-import { createToken, refreshAccessToken } from "../utils/tokenUtils";
+import userService from "../services/user.service";
+import { createToken, refreshAccessToken } from "../utils/token.utils";
+
+// TODO: env 개발용, 배포용 설정
+const isProduction = process.env.NODE_ENV === "production";
 
 // 회원가입
-export async function signUp(
+export async function signUpController(
   req: Request<{}, {}, { email: string; nickname: string; password: string }>,
   res: Response,
   next: NextFunction
@@ -19,7 +22,7 @@ export async function signUp(
 }
 
 // 로그인
-export async function signIn(
+export async function signInController(
   req: Request<{}, {}, { email: string; password: string }>,
   res: Response,
   next: NextFunction
@@ -35,14 +38,14 @@ export async function signIn(
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       sameSite: "none",
-      secure: true,
+      secure: false,
       path: "/",
       maxAge: 60 * 60 * 1000, // 1시간
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "none",
-      secure: true,
+      secure: false,
       path: "/auth/refresh-token",
       maxAge: 14 * 24 * 60 * 60 * 1000, // 14일
     });
@@ -53,7 +56,7 @@ export async function signIn(
 }
 
 // 토큰 갱신
-export async function refreshToken(
+export async function refreshTokenController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -86,7 +89,11 @@ export async function refreshToken(
 }
 
 // 유저 정보 조회
-export async function getUser(req: Request, res: Response, next: NextFunction) {
+export async function getUserController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { userId } = req.auth;
     const user = await userService.getUserById(userId);
@@ -97,7 +104,11 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
 }
 
 // 소셜 로그인
-export function socialLogin(req: Request, res: Response, next: NextFunction) {
+export function socialLoginController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { userId } = req.auth;
     const accessToken = createToken(userId);

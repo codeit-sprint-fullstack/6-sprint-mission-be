@@ -1,5 +1,5 @@
 import { Comment, User } from "@prisma/client";
-import prisma from "../config/prisma";
+import prisma from "../configs/prisma.config";
 
 async function findAll(where: any, take: number, cursor?: number) {
   return prisma.comment.findMany({

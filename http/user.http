@@ -1,4 +1,4 @@
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxOWY5ZDYxNy1kYTA5LTRjZTUtYTk3ZS02ZDViNDk5ZmM4ZjEiLCJpYXQiOjE3NDk4MzAxMTksImV4cCI6MTc0OTgzMzcxOX0.hVVyGhQZQXDB8FDxlD2KfMLaZfoCV3pCVg0L7lW5kag
+@token=
 
 ### 회원가입
 POST http://localhost:8080/auth/signUp
@@ -7,26 +7,38 @@ Content-Type: application/json
 {
   "email": "test@test.com",
   "nickname": "test",
-  "password": "testtest",
-  "passwordConfirmation": "testtest"
+  "password": "test1234",
+  "passwordConfirmation": "test1234"
 }
 
+###
+POST https://api.panda-market.store/auth/signUp
+Content-Type: application/json
+
+{
+  "email": "kk123@gmail.com",
+  "nickname": "kk",
+  "password": "kk123123",
+  "passwordConfirmation": "kk123123"
+}
+
+
 ### 로그인
-POST http://localhost:8080/auth/signIn
+POST https://api.panda-market.store/auth/signIn
 Content-Type: application/json
 
 {
   "email": "test@test.com",
-  "password": "testtest"
+  "password": "test1234"
 }
 
 ### 로그인2
-POST http://localhost:8080/auth/signIn
+POST https://api.panda-market.store/auth/signIn
 Content-Type: application/json
 
 {
-  "email": "test1@test.com",
-  "password": "testtest"
+  "email": "kk123@gmail.com",
+  "password": "kk123123"
 }
 
 ### 토큰 갱신

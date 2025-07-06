@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  createComment,
-  deleteComment,
-  getComments,
-  updateComment,
-} from "../controllers/commentController";
+  createCommentController,
+  deleteCommentController,
+  getCommentsController,
+  updateCommentController,
+} from "../controllers/comment.controller";
 import { commentValidator, validator } from "../middlewares/validator";
 import { verifyAccessToken } from "../middlewares/verifyToken";
 
@@ -16,16 +16,16 @@ commentRouter.post(
   verifyAccessToken,
   commentValidator,
   validator,
-  createComment
+  createCommentController
 );
-commentRouter.get("/", getComments);
+commentRouter.get("/", getCommentsController);
 commentRouter.patch(
   "/:commentId",
   verifyAccessToken,
   commentValidator,
   validator,
-  updateComment
+  updateCommentController
 );
-commentRouter.delete("/:commentId", verifyAccessToken, deleteComment);
+commentRouter.delete("/:commentId", verifyAccessToken, deleteCommentController);
 
 export default commentRouter;

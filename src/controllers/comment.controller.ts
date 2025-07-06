@@ -1,7 +1,7 @@
 import { ForbiddenError } from "../types/exceptions";
 import { NextFunction, Request, Response } from "express";
 import { Comment } from "@prisma/client";
-import commentService from "../services/commentService";
+import commentService from "../services/comment.service";
 
 interface CommentParams {
   articleId?: string;
@@ -19,7 +19,7 @@ interface CommentListResponse {
 }
 
 // 댓글 목록 조회
-export async function getComments(
+export async function getCommentsController(
   req: Request<CommentParams, {}, {}, CommentQuery>,
   res: Response,
   next: NextFunction
@@ -51,7 +51,7 @@ export async function getComments(
 }
 
 // 댓글 등록
-export async function createComment(
+export async function createCommentController(
   req: Request<CommentParams>,
   res: Response,
   next: NextFunction
@@ -87,7 +87,7 @@ export async function createComment(
 }
 
 // 댓글 수정
-export async function updateComment(
+export async function updateCommentController(
   req: Request<
     { commentId: string },
     {},
@@ -112,7 +112,7 @@ export async function updateComment(
 }
 
 // 댓글 삭제
-export async function deleteComment(
+export async function deleteCommentController(
   req: Request,
   res: Response,
   next: NextFunction

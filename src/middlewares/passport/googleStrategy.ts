@@ -3,7 +3,7 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import userService from "../../services/userService";
+import userService from "../../services/user.service";
 
 const googleStrategyOptions = {
   clientID: process.env.GOOGLE_CLIENT_ID as string,

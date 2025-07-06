@@ -1,27 +1,21 @@
 import { BadRequestError } from "../types/exceptions";
-import productRepository from "../repositories/productRepository";
+import productRepository from "../repositories/product.repository";
 import { Product, User } from "@prisma/client";
-
-interface GetProductsInput {
-  page: number;
-  pageSize: number;
-  orderBy: "recent" | "favorite";
-  keyword?: string | null;
-}
+import { GetListInput } from "../types";
 
 async function getProducts({
   page = 1,
   pageSize = 10,
   orderBy = "recent",
   keyword,
-}: GetProductsInput) {
+}: GetListInput) {
   const offset = (page - 1) * pageSize;
   const options = { skip: offset, take: pageSize, orderBy: {}, where: {} };
 
   if (orderBy === "recent") {
     options.orderBy = { createdAt: "desc" };
-  } else if (orderBy === "favorite") {
-    options.orderBy = { favoriteCount: "desc" };
+  } else if (orderBy === "like") {
+    options.orderBy = { likeCount: "desc" };
   }
   if (keyword) {
     options.where = {

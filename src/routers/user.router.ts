@@ -1,12 +1,11 @@
 import express from "express";
-
 import {
-  getUser,
-  refreshToken,
-  signIn,
-  signUp,
-  socialLogin,
-} from "../controllers/userController";
+  getUserController,
+  refreshTokenController,
+  signInController,
+  signUpController,
+  socialLoginController,
+} from "../controllers/user.controller";
 import {
   signInValidator,
   signUpValidator,
@@ -20,17 +19,21 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.get("/users/me", verifyAccessToken, getUser);
-userRouter.post("/auth/signUp", signUpValidator, validator, signUp);
-userRouter.post("/auth/signIn", signInValidator, validator, signIn);
-userRouter.post("/auth/refresh-token", verifyRefreshToken, refreshToken);
+userRouter.get("/users/me", verifyAccessToken, getUserController);
+userRouter.post("/auth/signUp", signUpValidator, validator, signUpController);
+userRouter.post("/auth/signIn", signInValidator, validator, signInController);
+userRouter.post(
+  "/auth/refresh-token",
+  verifyRefreshToken,
+  refreshTokenController
+);
 userRouter.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/login",
     session: false,
   }),
-  socialLogin
+  socialLoginController
 );
 userRouter.get(
   "/auth/google",
@@ -45,7 +48,7 @@ userRouter.get(
     failureRedirect: "/login",
     session: false,
   }),
-  socialLogin
+  socialLoginController
 );
 userRouter.get(
   "/auth/kakao",

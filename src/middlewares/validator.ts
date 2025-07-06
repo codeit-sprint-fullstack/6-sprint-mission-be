@@ -18,7 +18,7 @@ export function validator(req: Request, res: Response, next: NextFunction) {
         };
       }
     });
-    const errorMsg = "Validation Failed";
+    const errorMsg = errorArr[0]?.msg || "Validation Failed";
 
     return next(new BadRequestError(errorMsg, validationErrors));
   }
@@ -26,6 +26,7 @@ export function validator(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
+// TODO: 에러 메세지 상수 분리
 // 회원가입 유효성 검사
 export const signUpValidator = [
   body("email")
@@ -51,9 +52,7 @@ export const signUpValidator = [
 export const signInValidator = [
   body("email")
     .isEmail()
-    .withMessage(
-      "Not match in '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-    )
+    .withMessage("잘못된 이메일 형식입니다.")
     .normalizeEmail(),
   body("password").isLength({ min: 8 }).withMessage("minLength 8"),
 ];

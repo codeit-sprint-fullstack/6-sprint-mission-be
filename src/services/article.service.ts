@@ -1,20 +1,14 @@
 import { BadRequestError } from "../types/exceptions";
-import articleRepository from "../repositories/articleRepository";
+import articleRepository from "../repositories/article.repository";
 import { Article, User } from "@prisma/client";
-
-interface GetArticlesInput {
-  page: number;
-  pageSize: number;
-  orderBy: "recent" | "like";
-  keyword?: string | null;
-}
+import { GetListInput } from "../types";
 
 async function getArticles({
   page = 1,
   pageSize = 10,
   orderBy = "recent",
   keyword,
-}: GetArticlesInput) {
+}: GetListInput) {
   const offset = (page - 1) * pageSize;
   const options = { skip: offset, take: pageSize, orderBy: {}, where: {} };
 

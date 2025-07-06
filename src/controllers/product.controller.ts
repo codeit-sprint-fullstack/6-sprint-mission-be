@@ -1,36 +1,30 @@
-import { ExceptionMessage } from "../ExceptionMessage";
+import { ExceptionMessage } from "../constants/ExceptionMessage";
 import { NotFoundError } from "../types/exceptions";
 import { NextFunction, Request, Response } from "express";
-import productService from "../services/productService";
-
-interface ProductQuery {
-  page?: string;
-  pageSize?: string;
-  orderBy: "recent" | "favorite";
-  keyword?: string;
-}
+import productService from "../services/product.service";
+import { GetListQuery } from "../types";
 
 // 상품 목록 조회
-export async function getProducts(
-  req: Request<{}, {}, {}, ProductQuery>,
+export async function getProductsController(
+  req: Request<{}, {}, {}, GetListQuery>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const products = await productService.getProducts({
-      page: Number(req.query.page),
-      pageSize: Number(req.query.pageSize),
-      orderBy: req.query.orderBy,
-      keyword: req.query.keyword,
+    const { totalCount, products } = await productService.getProducts({
+      page: Number(req.query.page) || 1,
+      pageSize: Number(req.query.pageSize) || 10,
+      orderBy: req.query.orderBy || "recent",
+      keyword: req.query.keyword || null,
     });
-    res.json({ totalCount: products.length, list: products });
+    res.json({ totalCount, list: products });
   } catch (e) {
     next(e);
   }
 }
 
 // 상품 등록
-export async function createProduct(
+export async function createProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -46,7 +40,7 @@ export async function createProduct(
 }
 
 // 상품 조회
-export async function getProduct(
+export async function getProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -73,7 +67,7 @@ export async function getProduct(
 }
 
 // 상품 수정
-export async function updateProduct(
+export async function updateProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -89,7 +83,7 @@ export async function updateProduct(
 }
 
 // 상품 삭제
-export async function deleteProduct(
+export async function deleteProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -104,7 +98,7 @@ export async function deleteProduct(
 }
 
 // 상품 좋아요
-export async function likeProduct(
+export async function likeProductController(
   req: Request,
   res: Response,
   next: NextFunction
@@ -120,7 +114,7 @@ export async function likeProduct(
 }
 
 // 상품 좋아요 취소
-export async function unlikeProduct(
+export async function unlikeProductController(
   req: Request,
   res: Response,
   next: NextFunction
