@@ -1,4 +1,4 @@
-@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxOWY5ZDYxNy1kYTA5LTRjZTUtYTk3ZS02ZDViNDk5ZmM4ZjEiLCJpYXQiOjE3NDk4NzcxNTMsImV4cCI6MTc0OTg4MDc1M30.c-esTK2icQuK_R68ReUOo07pnZgmDwGUW3_7QOvRaBY
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4NjQ5YzdiZS00NTdhLTQ5YWEtYmI3My1kNDI4N2IzOGU2M2IiLCJpYXQiOjE3NTA0MDA3NTksImV4cCI6MTc1MDQwNDM1OX0.kIDdQWBcPXKkZrF4C0_tt4sj0U-Ieznc2lNW5LnfqeQ
 
 ### 상품 등록
 POST http://localhost:8080/products
@@ -16,7 +16,7 @@ Cookie: accessToken={{accessToken}}
 }
 
 ### 상품 목록 조회
-GET http://localhost:8080/products?page=1&pageSize=10&orderBy=favorite
+GET https://api.panda-market.store/products?page=1&pageSize=6
 
 ### 상품 상세 조회
 GET http://localhost:8080/products/1

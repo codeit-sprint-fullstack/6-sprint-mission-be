@@ -1,5 +1,34 @@
-node_modules
-.DS_Store
-.env
+# Node.js
 package-lock.json
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# Environment variables
+.env
+.env.*
+
+# Build artifacts
+dist/
+build/
+public/build/ # If you have a separate frontend build output within public
+
+# Logs
+logs/
+*.log
 migrations/
+
+# IDE and OS specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Uploads
+uploads/ # If your application handles file uploads
