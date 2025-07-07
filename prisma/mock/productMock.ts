@@ -170,27 +170,27 @@ export const PRODUCT_LIKE_MOCK: TProductLike = [
 
 export const PRODUCT_IMAGE_MOCK: TProductImage = [
   {
-    imageUrl: "example1.com",
+    imageUrl: "http://localhost:3000/image/1",
     userId: "",
     productId: 1,
   },
   {
-    imageUrl: "example2.com",
+    imageUrl: "http://localhost:3000/image/2",
     userId: "",
     productId: 2,
   },
   {
-    imageUrl: "example3.com",
+    imageUrl: "http://localhost:3000/image/3",
     userId: "",
     productId: 3,
   },
   {
-    imageUrl: "example4.com",
+    imageUrl: "http://localhost:3000/image/4",
     userId: "",
     productId: 4,
   },
   {
-    imageUrl: "example5.com",
+    imageUrl: "http://localhost:3000/image/5",
     userId: "",
     productId: 5,
   },

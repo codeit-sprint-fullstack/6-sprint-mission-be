@@ -14,7 +14,7 @@ const getProducts: RequestHandler<{}, {}, {}, productQueryDto> = async (
   res,
   next
 ) => {
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
 
   try {
     const [products, totalCount] = await productService.getProducts(req.query);
@@ -22,7 +22,8 @@ const getProducts: RequestHandler<{}, {}, {}, productQueryDto> = async (
     const productsWithImages = products.map(
       ({ productImages, ...product }) => ({
         ...product,
-        images: productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
+        images: productImages.map((img) => img.imageUrl),
+        // images: productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
       })
     );
 
@@ -38,16 +39,17 @@ const getProduct: RequestHandler<productParamsDto> = async (req, res, next) => {
 
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
 
   try {
     const product = await productService.getProduct(userId, productId);
 
-    const imageUrls = product.images.map(
-      (imageUrl) => `${baseUrl}/${imageUrl}`
-    );
+    // const imageUrls = product.images.map(
+    //   (imageUrl) => `${baseUrl}/${imageUrl}`
+    // );
 
-    res.status(200).json({ ...product, images: imageUrls });
+    // res.status(200).json({ ...product, images: imageUrls });
+    res.status(200).json(product);
   } catch (e) {
     next(e);
   }
@@ -65,7 +67,7 @@ const createProduct: RequestHandler<{}, {}, productDto> = async (
 
   const userId = req.auth.id;
   const images = req.files;
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
   const body = parseProductDto(req.body);
 
   try {
@@ -99,7 +101,7 @@ const updateProduct: RequestHandler<productParamsDto, {}, productDto> = async (
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
   const images = req.files;
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
   const body = parseProductDto(req.body);
 
   try {
