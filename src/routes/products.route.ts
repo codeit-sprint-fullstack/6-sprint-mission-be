@@ -1,26 +1,11 @@
 import express from "express";
-import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
 import productController from "../controllers/productController";
 import commentController from "../controllers/commentController";
 import { validateProduct } from "../middlewares/products/validateProduct";
 import auth from "../middlewares/users/auth";
+import { generatePresignedUrls } from "../middlewares/common/presignedUrl";
 
 const productsRouter = express.Router();
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    // UUID를 사용하여 안전한 파일명 생성
-    const ext = file.originalname.split(".").pop();
-    const filename = `${uuidv4()}.${ext}`;
-    cb(null, filename);
-  },
-});
-
-const upload = multer({ storage });
 
 /**
  * @swagger
@@ -170,6 +155,74 @@ productsRouter.get(
 
 /**
  * @swagger
+ * /products/presigned-urls:
+ *   post:
+ *     summary: 상품 이미지 업로드용 Presigned URL 생성
+ *     tags: [Product]
+ *     security:
+ *       - accessToken: []
+ *     parameters:
+ *       - name: access
+ *         in: query
+ *         description: 접근 권한 (private 시 presigned URL로 접근)
+ *         schema:
+ *           type: string
+ *           enum: [public, private]
+ *           default: public
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - filename
+ *                 - contentType
+ *               properties:
+ *                 filename:
+ *                   type: string
+ *                   example: "product.jpg"
+ *                   description: 업로드할 파일명
+ *                 contentType:
+ *                   type: string
+ *                   example: "image/jpeg"
+ *                   description: 파일의 MIME 타입
+ *     responses:
+ *       200:
+ *         description: Presigned URL 생성 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   uploadUrl:
+ *                     type: string
+ *                     description: 클라이언트가 업로드할 때 사용할 임시 URL (5분 유효)
+ *                   fileUrl:
+ *                     type: string
+ *                     description: 업로드 완료 후 접근할 최종 URL
+ *                   key:
+ *                     type: string
+ *                     description: S3 객체 키
+ *       400:
+ *         description: 잘못된 요청 데이터
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         description: 서버 오류
+ */
+productsRouter.post(
+  "/presigned-urls",
+  auth.verifyAccessToken,
+  generatePresignedUrls
+);
+
+/**
+ * @swagger
  * /products:
  *   post:
  *     summary: 상품 등록
@@ -179,7 +232,7 @@ productsRouter.get(
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -193,12 +246,15 @@ productsRouter.get(
  *                 type: number
  *               description:
  *                 type: string
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *               images:
  *                 type: array
  *                 items:
  *                   type: string
- *                   format: binary
- *                 description: 최대 3개의 이미지 파일 (선택사항)
+ *                 description: S3 이미지 URL 배열
  *     responses:
  *       201:
  *         description: 상품 등록 성공
@@ -210,7 +266,6 @@ productsRouter.get(
 productsRouter.post(
   "/",
   auth.verifyAccessToken,
-  upload.array("images", 3),
   validateProduct,
   productController.createProduct
 );
@@ -233,7 +288,7 @@ productsRouter.post(
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -243,12 +298,15 @@ productsRouter.post(
  *                 type: number
  *               description:
  *                 type: string
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *               images:
  *                 type: array
  *                 items:
  *                   type: string
- *                   format: binary
- *                 description: 최대 3개의 이미지 파일 (선택사항)
+ *                 description: S3 이미지 URL 배열
  *     responses:
  *       200:
  *         description: 상품 수정 성공
@@ -262,7 +320,6 @@ productsRouter.post(
 productsRouter.patch(
   "/:id",
   auth.verifyAccessToken,
-  upload.array("images", 3),
   validateProduct,
   productController.updateProduct
 );

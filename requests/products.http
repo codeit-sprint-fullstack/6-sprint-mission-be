@@ -1,4 +1,5 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWJya25tZGwwMDAwaHAzMmhvcjYxaTR2IiwiaWF0IjoxNzUwMTIzNzE2LCJleHAiOjE3NTAxMjQ2MTZ9.qkuvCshHgqm-GwDkTt7B1NI8bBbu6zZIDWueyaRs8ns
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWNjeXJudDAwMDAwNDhscXM0ZmtoYWdnIiwiaWF0IjoxNzUwOTI1NTM5LCJleHAiOjE3NTA5MjY0Mzl9.hk5iumwqkVLEDjMZLMZN3XV61565vsv6l89Vt1qLlf
+
 ### 제품 목록 조회
 GET http://localhost:7777/products?page=0&pageSize=10&orderBy=likes
 Authorization: {{accessToken}}
@@ -11,7 +12,55 @@ Authorization: {{accessToken}}
 GET http://localhost:7777/products/cmbu51cy40001up7cadhlsn2r
 # Authorization: {{accessToken}}
 
-### 제품 생성
+### Presigned URL 생성 (Public 이미지)
+POST http://localhost:7777/products/presigned-urls?access=public
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+[
+  {
+    "filename": "product1.jpg",
+    "contentType": "image/jpeg"
+  },
+  {
+    "filename": "product2.png",
+    "contentType": "image/png"
+  }
+]
+
+### Presigned URL 생성 (Private 이미지)
+POST http://localhost:7777/products/presigned-urls?access=private
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+[
+  {
+    "filename": "private-product1.jpg",
+    "contentType": "image/jpeg"
+  },
+  {
+    "filename": "private-product2.png", 
+    "contentType": "image/png"
+  }
+]
+
+### 제품 생성 (Presigned URL로 업로드된 이미지 사용)
+POST http://localhost:7777/products
+Content-Type: application/json
+Authorization: {{accessToken}}
+
+{
+  "name": "Presigned URL로 생성된 상품",
+  "description": "이 상품은 Presigned URL을 통해 업로드된 이미지를 사용합니다.",
+  "price": 180000,
+  "tags": ["키보드", "게이밍"],
+  "images": [
+    "https://your-bucket.s3.ap-northeast-2.amazonaws.com/public/1234567890_product1.jpg",
+    "https://your-bucket.s3.ap-northeast-2.amazonaws.com/public/1234567890_product2.png"
+  ]
+}
+
+### 제품 생성 (텍스트만)
 POST http://localhost:7777/products
 Content-Type: application/json
 Authorization: {{accessToken}}
@@ -22,6 +71,72 @@ Authorization: {{accessToken}}
   "price": 150000,
   "tags": ["키보드", "게이밍"]
 }
+
+### 제품 생성 (이미지 포함 - Public)
+POST http://3.38.228.28:7777/products
+Authorization: {{accessToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+이미지가 포함된 상품
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+이 상품에는 이미지가 포함되어 있습니다.
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+250000
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="tags"
+
+["전자제품", "키보드"]
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="product1.jpg"
+Content-Type: image/jpeg
+
+< ./product1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="product2.jpg"
+Content-Type: image/jpeg
+
+< ./product2.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 제품 생성 (이미지 포함 - Private, Presigned URL)
+POST http://3.38.228.28:7777/products?access=private
+Authorization: {{accessToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+프라이빗 이미지 상품
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+이 상품의 이미지는 프라이빗으로 저장되며 presigned URL로 접근됩니다.
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+350000
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="tags"
+
+["프리미엄", "한정판"]
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="private-product1.jpg"
+Content-Type: image/jpeg
+
+< ./private-product1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="private-product2.jpg"
+Content-Type: image/jpeg
+
+< ./private-product2.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### 제품 수정
 PATCH http://localhost:7777/products/cmbu2yws60001up2417zl6bi9

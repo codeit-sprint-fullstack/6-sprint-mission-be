@@ -63,10 +63,11 @@ const getArticleById = async (
 // 게시글 생성
 const createArticle: RequestHandler = async (req, res, next) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, images } = req.body;
     const userId = req.auth!.userId;
-    const files = req.files as Express.Multer.File[];
-    const imagePaths = files?.map((file) => `/uploads/${file.filename}`) || [];
+
+    // 이미지는 이미 S3에 업로드되어 URL로 전달됨
+    const imagePaths = images || [];
 
     const article = await articleService.createArticle({
       title,
@@ -74,6 +75,7 @@ const createArticle: RequestHandler = async (req, res, next) => {
       images: imagePaths,
       userId,
     });
+
     res
       .status(201)
       .json({ message: "게시글이 성공적으로 등록되었습니다.", article });
@@ -86,36 +88,36 @@ const createArticle: RequestHandler = async (req, res, next) => {
 const updateArticle: RequestHandler = async (req, res, next) => {
   try {
     const articleId = req.params.articleId;
-    const { title, content, existingImages } = req.body;
-    const files = req.files as Express.Multer.File[];
+    const { title, content, images } = req.body;
 
-    // 새 이미지 경로 처리
-    const newImagePaths =
-      files?.map((file) => `/uploads/${file.filename}`) || [];
+    // 기존 게시글 조회 (이미지 정보 필요)
+    const existingArticle = await articleService.getArticleById(articleId);
+    const oldImages = existingArticle.images || [];
 
-    // 기존 이미지 처리
-    let existingImagePaths = [];
-    if (existingImages) {
-      try {
-        existingImagePaths =
-          typeof existingImages === "string"
-            ? JSON.parse(existingImages)
-            : existingImages;
-      } catch (e) {
-        existingImagePaths = [];
-      }
-    }
-
-    // 최종 이미지 경로 배열
-    const finalImagePaths = [...existingImagePaths, ...newImagePaths];
+    // 이미지는 이미 S3에 업로드되어 URL로 전달됨
+    const newImages = images || [];
 
     const data = {
       title,
       content,
-      images: finalImagePaths,
+      images: newImages,
     };
 
+    // DB 업데이트
     const article = await articleService.updateArticle(articleId, data);
+
+    // 🗑️ 사용하지 않는 기존 이미지들 S3에서 삭제 (비동기)
+    const { findImagesToDelete, deleteS3Images } = await import(
+      "../utils/s3Helper"
+    );
+    const imagesToDelete = findImagesToDelete(oldImages, newImages);
+
+    if (imagesToDelete.length > 0) {
+      // 비동기로 삭제 처리 (응답 속도에 영향 주지 않음)
+      deleteS3Images(imagesToDelete).catch((error) => {
+        console.error("이미지 삭제 중 오류:", error);
+      });
+    }
 
     res.status(200).json({
       message: "게시글이 성공적으로 수정되었습니다.",
@@ -134,7 +136,21 @@ const deleteArticle = async (
 ) => {
   try {
     const articleId = req.params.articleId;
+
+    // 삭제 전 게시글 정보 조회 (이미지 정보 필요)
+    const existingArticle = await articleService.getArticleById(articleId);
+    const imagesToDelete = existingArticle.images || [];
+
+    // DB에서 게시글 삭제
     await articleService.deleteArticle(articleId);
+
+    // 🗑️ 게시글과 관련된 이미지들 S3에서 삭제 (비동기)
+    if (imagesToDelete.length > 0) {
+      const { deleteS3Images } = await import("../utils/s3Helper");
+      deleteS3Images(imagesToDelete).catch((error) => {
+        console.error("게시글 삭제 후 이미지 삭제 중 오류:", error);
+      });
+    }
 
     res.status(200).json({
       message: "게시글이 성공적으로 삭제되었습니다.",

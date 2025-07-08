@@ -7,6 +7,7 @@ import {
   ValidationError,
 } from "../types/commonError";
 import { UserParamsDto, UserSignUpDto, UserUpdateDto } from "../dtos/user.dto";
+import { processImageUrl } from "../utils/s3Helper";
 
 // 패스워드 암호화
 function hashPassword(password: string) {
@@ -54,7 +55,14 @@ async function getUserById(id: UserParamsDto["id"]) {
     throw error;
   }
 
-  return authService.filterSensitiveUserData(user);
+  const filteredUser = authService.filterSensitiveUserData(user);
+
+  // 프로필 이미지 URL 처리 (private이면 presigned URL 생성)
+  if (filteredUser.image) {
+    filteredUser.image = await processImageUrl(filteredUser.image);
+  }
+
+  return filteredUser;
 }
 
 // 유저 정보 업데이트
@@ -63,7 +71,14 @@ async function updateUser(
   data: Partial<UserUpdateDto>
 ) {
   const updatedUser = await userRepository.update(id, data);
-  return authService.filterSensitiveUserData(updatedUser);
+  const filteredUser = authService.filterSensitiveUserData(updatedUser);
+
+  // 프로필 이미지 URL 처리 (private이면 presigned URL 생성)
+  if (filteredUser.image) {
+    filteredUser.image = await processImageUrl(filteredUser.image);
+  }
+
+  return filteredUser;
 }
 
 export default {

@@ -4,6 +4,7 @@ import { P2025Error } from "../types/dbError";
 import { NotFoundError } from "../types/commonError";
 import { UserParamsDto } from "../dtos/user.dto";
 import { ArticleCreateDto, ArticleParamsDto } from "../dtos/article.dto";
+import { processImageUrls } from "../utils/s3Helper";
 
 // 게시글 목록 조회 (검색 및 페이지네이션)
 async function getArticles({
@@ -70,17 +71,23 @@ async function getArticles({
     likedArticleIds = likes.map((like) => like.articleId);
   }
 
-  // ✅ products에 isLiked 필드 추가
-  const articlesWithLike = articles.map((article) => {
-    // user 객체 분리 (user 필드는 include에서 가져옴)
-    const { user, ...articleData } = article;
+  // ✅ articles에 isLiked 필드 추가 및 이미지 처리
+  const articlesWithLike = await Promise.all(
+    articles.map(async (article) => {
+      // user 객체 분리 (user 필드는 include에서 가져옴)
+      const { user, images, ...articleData } = article;
 
-    return {
-      ...articleData,
-      author: user, // 작성자 정보
-      isLiked: likedArticleIds.includes(article.id),
-    };
-  });
+      // 이미지 URL 처리 (private이면 presigned URL 생성)
+      const processedImages = await processImageUrls(images || []);
+
+      return {
+        ...articleData,
+        images: processedImages,
+        author: user, // 작성자 정보
+        isLiked: likedArticleIds.includes(article.id),
+      };
+    })
+  );
 
   return {
     articles: articlesWithLike,
@@ -107,10 +114,14 @@ async function getArticleById(
 
   const isLiked = userId ? article.articleLikes.length > 0 : false;
   // ArticleLike와 user 객체 분리
-  const { articleLikes, user, ...rest } = article;
+  const { articleLikes, user, images, ...rest } = article;
+
+  // 이미지 URL 처리 (private이면 presigned URL 생성)
+  const processedImages = await processImageUrls(images || []);
 
   return {
     ...rest,
+    images: processedImages,
     author: user, // 작성자 정보
     isLiked,
   };
