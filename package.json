@@ -6,7 +6,12 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "nodemon --watch src --ext ts,json --exec ts-node src/server.ts",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "prisma": {
+    "schema": "src/models/prisma/schema.prisma"
   },
   "repository": {
     "type": "git",
@@ -20,7 +25,11 @@
   },
   "homepage": "https://github.com/rakaso598/6-sprint-mission-be#readme",
   "dependencies": {
-    "@prisma/client": "^6.7.0",
+    "@aws-sdk/client-s3": "^3.837.0",
+    "@aws-sdk/lib-storage": "^3.837.0",
+    "@prisma/client": "^6.10.1",
+    "@types/multer-s3": "^3.0.3",
+    "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -30,27 +39,30 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.2",
-    "path": "^0.12.7",
-    "ts-node": "^10.9.2"
+    "multer-s3": "^3.0.1",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^1.4.13",
-    "@types/node": "^22.15.31",
+    "@types/node": "^22.15.33",
+    "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "jest": "^30.0.3",
     "nodemon": "^3.1.10",
-    "prisma": "^6.7.0",
+    "prisma": "^6.10.1",
+    "supertest": "^7.1.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
-  },
-  "prisma": {
-    "schema": "src/models/prisma/schema.prisma"
   }
 }
