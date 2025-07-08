@@ -5,13 +5,16 @@
   "scripts": {
     "dev": "ts-node-dev --respawn src/app.ts",
     "build": "tsc",
-    "start": "node --enable-source-maps dist/app.js"
+    "start": "node --enable-source-maps dist/app.js",
+    "ssh": "dotenv -- bash -c 'ssh -i \"$SSH_KEY_PATH\" -L 5050:$DB_HOST:5432 $EC2_USER_NAME@$EC2_HOST'",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.839.0",
     "@prisma/client": "^6.7.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -27,7 +30,10 @@
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.13",
+    "@types/multer-s3": "^3.0.3",
     "@types/node": "^22.13.10",
+    "dotenv-cli": "^8.0.0",
+    "multer-s3": "^3.0.1",
     "nodemon": "^3.1.9",
     "prisma": "^6.7.0",
     "ts-node-dev": "^2.0.0",

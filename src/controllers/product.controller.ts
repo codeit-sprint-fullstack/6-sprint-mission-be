@@ -14,7 +14,7 @@ const getProducts: RequestHandler<{}, {}, {}, productQueryDto> = async (
   res,
   next
 ) => {
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
 
   try {
     const [products, totalCount] = await productService.getProducts(req.query);
@@ -22,7 +22,8 @@ const getProducts: RequestHandler<{}, {}, {}, productQueryDto> = async (
     const productsWithImages = products.map(
       ({ productImages, ...product }) => ({
         ...product,
-        images: productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
+        images: productImages.map((img) => img.imageUrl),
+        // images: productImages.map((img) => `${baseUrl}/${img.imageUrl}`),
       })
     );
 
@@ -38,16 +39,17 @@ const getProduct: RequestHandler<productParamsDto> = async (req, res, next) => {
 
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
 
   try {
     const product = await productService.getProduct(userId, productId);
 
-    const imageUrls = product.images.map(
-      (imageUrl) => `${baseUrl}/${imageUrl}`
-    );
+    // const imageUrls = product.images.map(
+    //   (imageUrl) => `${baseUrl}/${imageUrl}`
+    // );
 
-    res.status(200).json({ ...product, images: imageUrls });
+    // res.status(200).json({ ...product, images: imageUrls });
+    res.status(200).json(product);
   } catch (e) {
     next(e);
   }
@@ -65,21 +67,22 @@ const createProduct: RequestHandler<{}, {}, productDto> = async (
 
   const userId = req.auth.id;
   const images = req.files;
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
   const body = parseProductDto(req.body);
 
   try {
     const newProduct = await productService.createProduct(
       userId,
       body,
-      images as Express.Multer.File[]
+      images as (Express.Multer.File & { location: string })[]
     );
 
-    const imageUrls = newProduct.images.map(
-      (imageUrl) => `${baseUrl}/${imageUrl}`
-    );
+    // const imageUrls = newProduct.images.map(
+    //   (imageUrl) => `${baseUrl}/${imageUrl}`
+    // );
 
-    res.status(201).json({ ...newProduct, images: imageUrls });
+    // res.status(201).json({ ...newProduct, images: imageUrls });
+    res.status(201).json(newProduct);
   } catch (e) {
     next(e);
   }
@@ -98,7 +101,7 @@ const updateProduct: RequestHandler<productParamsDto, {}, productDto> = async (
   const userId = req.auth.id;
   const productId = Number(req.params.productId);
   const images = req.files;
-  const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
+  // const baseUrl: string = `${req.protocol}://${req.get("host")}/images`;
   const body = parseProductDto(req.body);
 
   try {
@@ -106,14 +109,15 @@ const updateProduct: RequestHandler<productParamsDto, {}, productDto> = async (
       userId,
       productId,
       body,
-      images as Express.Multer.File[]
+      images as (Express.Multer.File & { location: string })[]
     );
 
-    const imageUrls = updatedProduct.images.map(
-      (imageUrl) => `${baseUrl}/${imageUrl}`
-    );
+    // const imageUrls = updatedProduct.images.map(
+    //   (imageUrl) => `${baseUrl}/${imageUrl}`
+    // );
 
-    res.status(200).json({ ...updatedProduct, images: imageUrls });
+    // res.status(200).json({ ...updatedProduct, images: imageUrls });
+    res.status(200).json(updatedProduct);
   } catch (e) {
     next(e);
   }
