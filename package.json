@@ -1,0 +1,48 @@
+{
+  "name": "6-sprint-mission-be",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "> _이 저장소는 판다마켓 프로젝트의 백엔드 코드를 관리하는 곳입니다. 프로젝트를 클론하여 개발 환경을 설정하고, 각 브랜치에서 해당 스프린트 미션을 수행해 주세요!_ 🛠️",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch ./src/app.ts",
+    "migrate": "prisma migrate dev --schema=./src/db/prisma/schema.prisma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeit-sprint-fullstack/6-sprint-mission-be.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeit-sprint-fullstack/6-sprint-mission-be/issues"
+  },
+  "homepage": "https://github.com/codeit-sprint-fullstack/6-sprint-mission-be#readme",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.839.0",
+    "@prisma/client": "^6.5.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^1.4.13",
+    "@types/node": "^22.15.34",
+    "nodemon": "^3.1.9",
+    "prisma": "^6.5.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "prisma": {
+    "schema": "./src/db/prisma/schema.prisma",
+    "seed": "node src/db/prisma/seed.js"
+  }
+}
