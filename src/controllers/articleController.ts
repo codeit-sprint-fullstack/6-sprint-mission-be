@@ -37,8 +37,8 @@ articleController.get(
     try {
       const id = req.params.id;
       const userId = req.auth?.userId as string;
-      const items = await articleService.getById(id, userId);
-      res.status(200).json(items);
+      const articles = await articleService.getById(id, userId);
+      res.status(200).json(articles);
     } catch (error) {
       next(error);
     }
@@ -63,17 +63,17 @@ articleController.post(
         throw error;
       }
       let imagePaths = [] as string[];
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
-      const item = await articleService.createArticle({
+      const article = await articleService.createArticle({
         title,
         content,
         images: imagePaths,
         userId,
       });
-      res.status(201).json(item);
+      res.status(201).json(article);
     } catch (error) {
       next(error);
     }
@@ -87,8 +87,8 @@ articleController.get(
     try {
       const id = req.params.id;
       const userId = req.auth?.userId as string;
-      const items = await articleService.getById(id, userId);
-      res.status(200).json(items);
+      const articles = await articleService.getById(id, userId);
+      res.status(200).json(articles);
     } catch (error) {
       next(error);
     }
@@ -110,17 +110,17 @@ articleController.post(
       }
 
       let imagePaths = [] as string[];
-      const files = req.files as Express.Multer.File[];
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
-      const item = await articleService.createArticle({
+      const article = await articleService.createArticle({
         title,
         content,
         images: imagePaths,
         userId,
       });
-      res.status(201).json(item);
+      res.status(201).json(article);
     } catch (error) {
       next(error);
     }
@@ -140,15 +140,15 @@ articleController.patch(
       const id = req.params.id;
       let { title, content } = req.body;
       const userId = req.auth?.userId as string;
-      const item = await articleService.getById(id, userId);
-      if (!item) {
+      const article = await articleService.getById(id, userId);
+      if (!article) {
         const error = new Error(
           "수정하려는 물건이 존재하지 않습니다."
         ) as TError;
         error.code = 422;
         throw error;
       }
-      if (item.userId !== userId) {
+      if (article.userId !== userId) {
         const error = new Error(
           "권한이 없습니다.-작성자가 아닙니다."
         ) as TError;
@@ -156,17 +156,17 @@ articleController.patch(
         throw error;
       }
 
-      let imagePaths = item.images;
-      const files = req.files as Express.Multer.File[];
+      let imagePaths = article.images;
+      const files = req.files as Express.MulterS3.File[];
       if (files.length > 0) {
-        imagePaths = files.map((file) => `/uploads/${file.filename}`);
+        imagePaths = files.map((file) => file.location);
       }
-      const updatedItem = await articleService.patchArticle(id, {
+      const updatedarticle = await articleService.patchArticle(id, {
         title,
         content,
         images: imagePaths,
       });
-      res.status(201).json(updatedItem);
+      res.status(201).json(updatedarticle);
     } catch (error) {
       next(error);
     }
@@ -181,15 +181,15 @@ articleController.delete(
       const id = req.params.id;
       const userId = req.auth?.userId as string;
 
-      const item = await articleService.getById(id, userId);
-      if (!item) {
+      const article = await articleService.getById(id, userId);
+      if (!article) {
         const error = new Error(
           "삭제하려는 물건이 존재하지 않습니다."
         ) as TError;
         error.code = 422;
         throw error;
       }
-      if (item.userId !== userId) {
+      if (article.userId !== userId) {
         const error = new Error(
           "권한이 없습니다.-작성자가 아닙니다."
         ) as TError;
@@ -221,7 +221,7 @@ articleController.post(
         error.code = 422;
         throw error;
       }
-      const type = "item";
+      const type = "articles";
       const comment = await commentService.createComment(
         type,
         id,

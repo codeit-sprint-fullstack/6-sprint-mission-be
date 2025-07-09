@@ -1,5 +1,5 @@
-import prisma from "../../prisma/client";
-import { Item, User } from "../generated/prisma";
+import prisma from "../config/client.prisma";
+import { Item, User, Prisma } from "@prisma/client";
 
 async function getByOptions(options: any) {
   return await prisma.item.findMany(options);
@@ -16,6 +16,7 @@ async function getById(id: Item["id"], userId: User["id"]) {
       },
     },
   });
+  if (!item) return null;
   const isFavorite = await prisma.item.findFirst({
     where: {
       id,
@@ -74,7 +75,7 @@ async function remove(id: Item["id"]) {
 }
 
 async function createFavorite(id: Item["id"], userId: User["id"]) {
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const isFavorite = await tx.item.findFirst({
       where: {
         id,
@@ -101,7 +102,7 @@ async function createFavorite(id: Item["id"], userId: User["id"]) {
 }
 
 async function removeFavorite(id: Item["id"], userId: User["id"]) {
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const isFavorite = await tx.item.findFirst({
       where: {
         id,
